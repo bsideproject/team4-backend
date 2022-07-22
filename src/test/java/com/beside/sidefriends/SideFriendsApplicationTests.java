@@ -1,10 +1,10 @@
-package com.example.pet_knowhow;
+package com.beside.sidefriends;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class PetKnowhowApplicationTests {
+class SideFriendsApplicationTests {
 
 	@Test
 	void contextLoads() {
