@@ -1,4 +1,4 @@
-package com.bside.sidefriedns;
+package com.bside.sidefriends;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

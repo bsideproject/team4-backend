@@ -1,16 +1,16 @@
 server:
   port: 8080
 
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://db-b11vh.pub-cdb.ntruss.com:3306/SF?characterEncoding=UTF-8
-    username:
-    password: 
-    maximum-pool-size: 10
-    minimum-idle: 10
-
-  jpa:
-    hibernate:
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://db-b11vh.pub-cdb.ntruss.com:3306/SF?characterEncoding=UTF-8
+#    username:
+#    password:
+#    maximum-pool-size: 10
+#    minimum-idle: 10
+#
+#  jpa:
+#    hibernate:
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
