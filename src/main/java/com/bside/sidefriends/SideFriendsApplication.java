@@ -1,13 +1,13 @@
-package com.example.pet_knowhow;
+package com.bside.sidefriends;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class PetKnowhowApplication {
+public class SideFriendsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(PetKnowhowApplication.class, args);
+		SpringApplication.run(SideFriendsApplication.class, args);
 	}
 
 }
