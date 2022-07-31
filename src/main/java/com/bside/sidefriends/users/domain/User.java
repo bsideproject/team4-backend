@@ -56,10 +56,12 @@ public class User {
     String providerId;
 
     // 사용자 계정 생성 시각
+    @Column(nullable = false, updatable = false)
     @CreationTimestamp
     LocalDateTime createdAt;
 
     // 사용자 계정 업데이트 시각
+    @Column(nullable = false)
     @UpdateTimestamp
     LocalDateTime updatedAt;
 
