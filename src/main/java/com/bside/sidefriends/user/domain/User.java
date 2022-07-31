@@ -1,5 +1,6 @@
-package com.bside.sidefriends.domain.user;
+package com.bside.sidefriends.user.domain;
 
+import lombok.Builder;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -16,9 +17,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    // 회원 정보
+    // 회원 이름
     @Column(nullable = false)
-    String username;
+    String name;
+
+    // 회원 닉네임
+    String nickname;
+
+    // 회원 전화번호
+    String phoneNumber;
 
     /**
      * 회원 이메일
@@ -47,6 +54,20 @@ public class User {
     @UpdateTimestamp
     LocalDateTime updatedAt;
 
+    @Builder
+    public User(String name, String nickname, String phoneNumber, String email, Role role,
+                String provider, String providerId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+        this.name = name;
+        this.nickname = nickname;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+        this.role = role;
+        this.provider = provider;
+        this.providerId = providerId;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
     public enum Role {
         /**
          * ROLE_USER: 일반 가족 구성원
@@ -54,5 +75,6 @@ public class User {
          */
         ROLE_USER, ROLE_MANAGER;
     }
+
 
 }
