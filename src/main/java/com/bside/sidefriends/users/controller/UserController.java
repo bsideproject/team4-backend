@@ -1,8 +1,8 @@
-package com.bside.sidefriends.user.controller;
+package com.bside.sidefriends.users.controller;
 
-import com.bside.sidefriends.user.service.UserService;
-import com.bside.sidefriends.user.service.dto.UserCreateRequestDto;
-import com.bside.sidefriends.user.service.dto.UserCreateResponseDto;
+import com.bside.sidefriends.users.service.UserService;
+import com.bside.sidefriends.users.service.dto.UserCreateRequestDto;
+import com.bside.sidefriends.users.service.dto.UserCreateResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

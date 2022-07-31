@@ -1,6 +1,6 @@
-package com.bside.sidefriends.user.repository;
+package com.bside.sidefriends.users.repository;
 
-import com.bside.sidefriends.user.domain.User;
+import com.bside.sidefriends.users.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

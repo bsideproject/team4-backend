@@ -1,4 +1,4 @@
-package com.bside.sidefriends.user.domain;
+package com.bside.sidefriends.users.domain;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @Getter
+@Table(name = "users")
 public class User {
 
     @Id
@@ -25,6 +26,12 @@ public class User {
 
     // 회원 닉네임
     String nickname;
+
+    /**
+     * 스프링 시큐리티 세션에서의 회원 관리를 위한 username
+     * - oauth 로그인 시 provider_providerId 형태
+     */
+    String username;
 
     // 회원 전화번호
     String phoneNumber;

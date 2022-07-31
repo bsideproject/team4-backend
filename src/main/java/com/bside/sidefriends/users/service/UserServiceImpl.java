@@ -1,14 +1,12 @@
-package com.bside.sidefriends.user.service;
+package com.bside.sidefriends.users.service;
 
-import com.bside.sidefriends.user.domain.User;
-import com.bside.sidefriends.user.repository.UserRepository;
-import com.bside.sidefriends.user.service.dto.UserCreateRequestDto;
-import com.bside.sidefriends.user.service.dto.UserCreateResponseDto;
+import com.bside.sidefriends.users.domain.User;
+import com.bside.sidefriends.users.repository.UserRepository;
+import com.bside.sidefriends.users.service.dto.UserCreateRequestDto;
+import com.bside.sidefriends.users.service.dto.UserCreateResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor

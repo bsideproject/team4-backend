@@ -1,7 +1,7 @@
-package com.bside.sidefriends.user.service;
+package com.bside.sidefriends.users.service;
 
-import com.bside.sidefriends.user.service.dto.UserCreateRequestDto;
-import com.bside.sidefriends.user.service.dto.UserCreateResponseDto;
+import com.bside.sidefriends.users.service.dto.UserCreateRequestDto;
+import com.bside.sidefriends.users.service.dto.UserCreateResponseDto;
 
 public interface UserService {
 

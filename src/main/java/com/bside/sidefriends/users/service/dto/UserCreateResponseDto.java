@@ -1,4 +1,4 @@
-package com.bside.sidefriends.user.service.dto;
+package com.bside.sidefriends.users.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
