@@ -22,8 +22,6 @@ dependencies {
 //	implementation 'mysql:mysql-connector-java:8.0.29'
 	runtimeOnly 'com.h2database:h2'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-
-	runtimeOnly 'com.h2database:h2'
 	compileOnly 'org.projectlombok:lombok:1.18.24'
 	annotationProcessor 'org.projectlombok:lombok:1.18.24'
 }
