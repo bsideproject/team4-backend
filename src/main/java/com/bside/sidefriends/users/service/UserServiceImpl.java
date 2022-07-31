@@ -15,18 +15,12 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
 
-    /**
-     * 회원가입
-     * @param userCreateRequestDto 회원가입 요청 DTO
-     * @return
-     * @throws IllegalStateException
-     */
     @Override
     @Transactional
     public UserCreateResponseDto createUser(UserCreateRequestDto userCreateRequestDto) throws IllegalStateException{
 
         // TODO: 예외 처리 분리
-        if (validateIfExistsByEmail(userCreateRequestDto.getEmail())) {
+        if (checkIfExistsByEmail(userCreateRequestDto.getEmail())) {
             throw new IllegalStateException("이미 존재하는 이메일입니다.");
         }
 
@@ -41,22 +35,18 @@ public class UserServiceImpl implements UserService {
                 .providerId(userCreateRequestDto.getProviderId())
                 .build();
 
-        userRepository.save(userEntity);
+        User user = userRepository.save(userEntity);
 
         return new UserCreateResponseDto(
-                userEntity.getId(), userEntity.getCreatedAt(), userEntity.getUpdatedAt()
+                user.getId(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
         );
     }
 
-    /**
-     * 이메일 주소로 이미 존재하는 회원인지 검사
-     * @param userEmail 존재 여부를 검사할 회원의 이메일
-     * @return 회원 존재 여부
-     * IR
-     */
     @Override
-    public boolean validateIfExistsByEmail(String userEmail) {
+    public boolean checkIfExistsByEmail(String userEmail) {
 
-        return userRepository.findByEmail(userEmail).isPresent();
+        return userRepository.existsByEmail(userEmail);
     }
 }
