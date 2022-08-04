@@ -3,6 +3,7 @@ package com.bside.sidefriends.users.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -21,7 +22,7 @@ public class User {
     Long id;
 
     // 회원 이름
-    @Column(nullable = false)
+//    @Column(nullable = false)
     String name;
 
     // 회원 닉네임
@@ -41,6 +42,7 @@ public class User {
      * - 소셜 로그인 기반 회원가입의 경우 oauth 인증 정보에서 얻어 오게 됨
      */
     @Email
+    @Setter
     @Column(nullable = false)
     String email;
 
@@ -64,10 +66,11 @@ public class User {
     LocalDateTime updatedAt;
 
     @Builder
-    public User(String name, String nickname, String phoneNumber, String email, Role role,
+    public User(String name, String nickname, String username, String phoneNumber, String email, Role role,
                 String provider, String providerId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.name = name;
         this.nickname = nickname;
+        this.username = username;
         this.phoneNumber = phoneNumber;
         this.email = email;
         this.role = role;
@@ -83,6 +86,7 @@ public class User {
          * ROLE_MANAGER: 가족 그룹장
          */
         ROLE_USER, ROLE_MANAGER;
+
     }
 
 
