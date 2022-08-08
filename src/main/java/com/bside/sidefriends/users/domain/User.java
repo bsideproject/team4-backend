@@ -4,6 +4,7 @@ import com.bside.sidefriends.users.service.dto.ModifyUserRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -30,6 +31,7 @@ public class User {
 
     // 회원 이메일
     @Email
+    @Setter
     @Column(nullable = false)
     private String email;
 
@@ -87,6 +89,7 @@ public class User {
          * ROLE_MANAGER: 가족 그룹장
          */
         ROLE_USER, ROLE_MANAGER;
+
     }
 
     public void modify(ModifyUserRequestDto modifyUserRequestDto) {

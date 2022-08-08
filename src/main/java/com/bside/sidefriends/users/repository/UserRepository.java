@@ -14,5 +14,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // provider, providerId로 유저 조회
     Optional<User> findByProviderAndProviderId(String provider, String providerId);
-
 }
