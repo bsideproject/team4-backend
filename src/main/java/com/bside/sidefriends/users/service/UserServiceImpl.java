@@ -19,11 +19,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserCreateResponseDto createUser(UserCreateRequestDto userCreateRequestDto) throws IllegalStateException{
 
-        // TODO: 예외 처리 분리
-        if (checkIfExistsByEmail(userCreateRequestDto.getEmail())) {
-            throw new IllegalStateException("이미 존재하는 이메일입니다.");
-        }
-
         User userEntity = User.builder()
                 .name(userCreateRequestDto.getName())
                 .nickname(userCreateRequestDto.getNickname())
@@ -43,9 +38,4 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    @Override
-    public boolean checkIfExistsByEmail(String userEmail) {
-
-        return userRepository.existsByEmail(userEmail);
-    }
 }
