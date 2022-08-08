@@ -18,6 +18,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public CreateUserResponseDto createUser(CreateUserRequestDto userCreateRequestDto) throws IllegalStateException{
 
+        // TODO: provider, providerId 이미 있으면?
+
         User userEntity = User.builder()
                 .name(userCreateRequestDto.getName())
                 .email(userCreateRequestDto.getEmail())
@@ -58,6 +60,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ModifyUserResponseDto modifyUser(Long userId, ModifyUserRequestDto modifyUserRequestDto) {
 
         User findUser = userRepository.findByUserId(userId)
@@ -78,6 +81,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public DeleteUserResponseDto deleteUser(Long userId) {
 
         User findUser = userRepository.findByUserId(userId)
