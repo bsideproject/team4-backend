@@ -1,9 +1,6 @@
 package com.bside.sidefriends.users.service;
 
-import com.bside.sidefriends.users.service.dto.UserCreateRequestDto;
-import com.bside.sidefriends.users.service.dto.UserCreateResponseDto;
-
-import java.util.Optional;
+import com.bside.sidefriends.users.service.dto.*;
 
 public interface UserService {
 
@@ -13,6 +10,41 @@ public interface UserService {
      * @return
      * @throws IllegalStateException
      */
-    UserCreateResponseDto createUser(UserCreateRequestDto userCreateRequestDto);
+    CreateUserResponseDto createUser(CreateUserRequestDto userCreateRequestDto);
+
+    /**
+     * 회원 id로 회원 조회
+     * @param userId
+     * @return
+     */
+    FindUserByUserIdResponseDto findUserByUserId(Long userId);
+
+    /**
+     * 회원 정보 수정
+     * @param userId
+     * @param modifyUserRequestDto
+     * @return
+     */
+    ModifyUserResponseDto modifyUser(Long userId, ModifyUserRequestDto modifyUserRequestDto);
+
+    /**
+     * 회원 권한 변경
+     * @param userId
+     * @param modifyUserRoleRequestDto
+     * @return
+     */
+    ModifyUserRoleResponseDto modifyUserRole(Long userId, ModifyUserRoleRequestDto modifyUserRoleRequestDto);
+
+    /**
+     * 회원 정보 삭제
+     * @param userId
+     * @return
+     */
+    DeleteUserResponseDto deleteUser(Long userId);
+
+
+
+
+
 
 }

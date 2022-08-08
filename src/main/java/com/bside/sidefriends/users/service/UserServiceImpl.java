@@ -2,8 +2,8 @@ package com.bside.sidefriends.users.service;
 
 import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.repository.UserRepository;
-import com.bside.sidefriends.users.service.dto.UserCreateRequestDto;
-import com.bside.sidefriends.users.service.dto.UserCreateResponseDto;
+import com.bside.sidefriends.users.service.dto.CreateUserRequestDto;
+import com.bside.sidefriends.users.service.dto.CreateUserResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,7 +17,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserCreateResponseDto createUser(UserCreateRequestDto userCreateRequestDto) throws IllegalStateException{
+    public CreateUserResponseDto createUser(CreateUserRequestDto userCreateRequestDto) throws IllegalStateException{
 
         User userEntity = User.builder()
                 .name(userCreateRequestDto.getName())
@@ -31,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.save(userEntity);
 
-        return new UserCreateResponseDto(
+        return new CreateUserResponseDto(
                 user.getId(),
                 user.getCreatedAt(),
                 user.getUpdatedAt()
