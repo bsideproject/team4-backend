@@ -5,6 +5,10 @@ import com.bside.sidefriends.security.provider.KakaoUserInfo;
 import com.bside.sidefriends.security.provider.OAuth2UserInfo;
 import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.repository.UserRepository;
+import com.bside.sidefriends.users.service.UserServiceImpl;
+import com.bside.sidefriends.users.service.dto.UserCreateRequestDto;
+import com.bside.sidefriends.users.service.dto.UserCreateResponseDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
@@ -16,16 +20,20 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class MainOauth2UserService extends DefaultOAuth2UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+
+    private final UserServiceImpl userService;
+
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User oAuth2User = super.loadUser(userRequest);
         System.out.println("MainOauth2UserService userRequest info : " + userRequest.getClientRegistration());
         System.out.println("MainOauth2UserService oAuth2 user : " + oAuth2User);
+        System.out.println("MainOauth2UserService oAuth2 user attributes: " + oAuth2User.getAttributes());
 
         OAuth2UserInfo oAuth2UserInfo = null;
         if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
@@ -45,14 +53,18 @@ public class MainOauth2UserService extends DefaultOAuth2UserService {
             user.setEmail(oAuth2UserInfo.getEmail());
             userRepository.save(user);
         } else {
-            user = User.builder()
-                    .username(oAuth2UserInfo.getProvider() + "_" + oAuth2UserInfo.getProviderId())
+            // TODO-jh : profile도 저장해야 한다
+            UserCreateRequestDto userCreateRequestDto = UserCreateRequestDto.builder()
+                    .name(oAuth2UserInfo.getName())
                     .email(oAuth2UserInfo.getEmail())
-                    .role(User.Role.ROLE_USER)
+                    .isFamilyLeader(false)
                     .provider(oAuth2UserInfo.getProvider())
                     .providerId(oAuth2UserInfo.getProviderId())
                     .build();
-            userRepository.save(user);
+            UserCreateResponseDto userResponseDto = userService.createUser(userCreateRequestDto);
+
+            user = userRepository.findById(userResponseDto.getId()).get();
+
         }
 
         return new mainOAuth2User(user, oAuth2User.getAttributes());

@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User userEntity = User.builder()
+                .username(userCreateRequestDto.getProvider() + "_" + userCreateRequestDto.getProviderId())
                 .name(userCreateRequestDto.getName())
                 .nickname(userCreateRequestDto.getNickname())
                 .phoneNumber(userCreateRequestDto.getPhoneNumber())
