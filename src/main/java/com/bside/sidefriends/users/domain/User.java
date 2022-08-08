@@ -20,39 +20,44 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
 
-    // 회원 이름
+    /**
+     * 회원 이름
+     * - Oauth 로그인 시 SNS 계정 이름으로 기본값 설정
+     * - 추후 변경 가능
+     */
     @Column(nullable = false)
     String name;
 
-    // 회원 닉네임
+    /**
+     * 회원 가족 별칭
+     */
     String nickname;
 
     /**
-     * 스프링 시큐리티 세션에서의 회원 관리를 위한 username
-     * - oauth 로그인 시 provider_providerId 형태
-     */
-    String username;
-
-    // 회원 전화번호
-    String phoneNumber;
-
-    /**
      * 회원 이메일
-     * - 소셜 로그인 기반 회원가입의 경우 oauth 인증 정보에서 얻어 오게 됨
+     * - 소셜 로그인 시 SNS 계정 이메일로 설정
      */
     @Email
     @Column(nullable = false)
     String email;
+
+    /**
+     * 회원별 대표펫 id
+     */
+    String mainPetId;
 
     // 회원 권한
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     Role role;
 
-    // oauth 로그인 provider
+    // 스프링 시큐리티 사용자 정보
+    String username;
+
+    // oauth 인증 제공자
     String provider;
 
-    // oauth 로그인 정보 id
+    // oauth 인증 제공 서버에서의 사용자 id
     String providerId;
 
     // 사용자 계정 생성 시각
@@ -66,11 +71,10 @@ public class User {
     LocalDateTime updatedAt;
 
     @Builder
-    public User(String name, String nickname, String phoneNumber, String email, Role role,
+    public User(String name, String nickname, String email, Role role,
                 String provider, String providerId, LocalDateTime createdAt, LocalDateTime updatedAt) {
         this.name = name;
         this.nickname = nickname;
-        this.phoneNumber = phoneNumber;
         this.email = email;
         this.role = role;
         this.provider = provider;

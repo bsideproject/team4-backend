@@ -27,7 +27,6 @@ public class UserServiceImpl implements UserService {
         User userEntity = User.builder()
                 .name(userCreateRequestDto.getName())
                 .nickname(userCreateRequestDto.getNickname())
-                .phoneNumber(userCreateRequestDto.getPhoneNumber())
                 .email(userCreateRequestDto.getEmail())
                 .role(userCreateRequestDto.isFamilyLeader() ?
                         User.Role.ROLE_MANAGER : User.Role.ROLE_USER)
