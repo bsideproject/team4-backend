@@ -2,8 +2,7 @@ package com.bside.sidefriends.users.service;
 
 import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.repository.UserRepository;
-import com.bside.sidefriends.users.service.dto.CreateUserRequestDto;
-import com.bside.sidefriends.users.service.dto.CreateUserResponseDto;
+import com.bside.sidefriends.users.service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,20 +20,79 @@ public class UserServiceImpl implements UserService {
 
         User userEntity = User.builder()
                 .name(userCreateRequestDto.getName())
-                .nickname(userCreateRequestDto.getNickname())
                 .email(userCreateRequestDto.getEmail())
-                .role(userCreateRequestDto.isFamilyLeader() ?
-                        User.Role.ROLE_MANAGER : User.Role.ROLE_USER)
+                .role(User.Role.ROLE_USER) // 회원 가입 시 회원 권한 기본값 ROLE_USER
                 .provider(userCreateRequestDto.getProvider())
                 .providerId(userCreateRequestDto.getProviderId())
+                .isDeleted(false) // 회원 가입 시 회원 삭제 여부 false
                 .build();
 
         User user = userRepository.save(userEntity);
 
         return new CreateUserResponseDto(
                 user.getId(),
-                user.getCreatedAt(),
-                user.getUpdatedAt()
+                user.getName(),
+                user.getEmail(),
+                user.isDeleted()
+        );
+    }
+
+    @Override
+    public FindUserByUserIdResponseDto findUserByUserId(Long userId) {
+
+        User findUser = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+
+        if (findUser.isDeleted()) {
+            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+        }
+
+        return new FindUserByUserIdResponseDto(
+                findUser.getId(),
+                findUser.getName(),
+                findUser.getNickname(),
+                findUser.getEmail(),
+                findUser.getMainPetId(),
+                findUser.getRole()
+        );
+    }
+
+    @Override
+    public ModifyUserResponseDto modifyUser(Long userId, ModifyUserRequestDto modifyUserRequestDto) {
+
+        User findUser = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+
+        if (findUser.isDeleted()) {
+            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+        }
+
+        findUser.modify(modifyUserRequestDto);
+        userRepository.save(findUser);
+
+        return new ModifyUserResponseDto(
+                findUser.getId(),
+                findUser.getName(),
+                findUser.getEmail()
+        );
+    }
+
+    @Override
+    public DeleteUserResponseDto deleteUser(Long userId) {
+
+        User findUser = userRepository.findByUserId(userId)
+                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+
+        if (findUser.isDeleted()) {
+            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+        }
+
+        findUser.delete();
+        userRepository.save(findUser);
+
+        return new DeleteUserResponseDto(
+                findUser.getId(),
+                findUser.isDeleted()
         );
     }
 

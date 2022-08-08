@@ -12,15 +12,10 @@ public class CreateUserRequestDto {
     @NotNull
     String name;
 
-    String nickname;
-    String phoneNumber;
-
     @NotNull
     String email;
 
-    @NotNull
-    boolean isFamilyLeader;
-
+    String username;
     String provider;
     String providerId;
 

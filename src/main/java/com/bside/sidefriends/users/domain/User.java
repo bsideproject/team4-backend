@@ -1,5 +1,6 @@
 package com.bside.sidefriends.users.domain;
 
+import com.bside.sidefriends.users.service.dto.ModifyUserRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,61 +19,56 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long id;
 
-    /**
-     * 회원 이름
-     * - Oauth 로그인 시 SNS 계정 이름으로 기본값 설정
-     * - 추후 변경 가능
-     */
+    // 회원 이름
     @Column(nullable = false)
-    String name;
+    private String name;
 
-    /**
-     * 회원 가족 별칭
-     */
-    String nickname;
+    // 회원 가족 별칭
+    private String nickname;
 
-    /**
-     * 회원 이메일
-     * - 소셜 로그인 시 SNS 계정 이메일로 설정
-     */
+    // 회원 이메일
     @Email
     @Column(nullable = false)
-    String email;
+    private String email;
 
-    /**
-     * 회원별 대표펫 id
-     */
-    String mainPetId;
+    // 회원별 대표펫 id
+    private String mainPetId;
 
     // 회원 권한
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    Role role;
+    private Role role;
 
     // 스프링 시큐리티 사용자 정보
-    String username;
+    private String username;
 
     // oauth 인증 제공자
-    String provider;
+    private String provider;
 
     // oauth 인증 제공 서버에서의 사용자 id
-    String providerId;
+    private String providerId;
 
     // 사용자 계정 생성 시각
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     // 사용자 계정 업데이트 시각
     @Column(nullable = false)
     @UpdateTimestamp
-    LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
+
+    // 사용자 계정 삭제 여부
+    @Column(nullable = false)
+    private boolean isDeleted;
+
 
     @Builder
-    public User(String name, String nickname, String email, Role role,
-                String provider, String providerId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(String name, String nickname, String email,
+                Role role, String provider, String providerId,
+                LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDeleted) {
         this.name = name;
         this.nickname = nickname;
         this.email = email;
@@ -81,6 +77,7 @@ public class User {
         this.providerId = providerId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.isDeleted = isDeleted;
     }
 
     public enum Role {
@@ -91,5 +88,12 @@ public class User {
         ROLE_USER, ROLE_MANAGER;
     }
 
+    public void modify(ModifyUserRequestDto modifyUserRequestDto) {
+        this.name = modifyUserRequestDto.getName();
+    }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 
 }

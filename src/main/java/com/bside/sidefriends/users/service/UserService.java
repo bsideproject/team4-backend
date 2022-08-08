@@ -27,13 +27,13 @@ public interface UserService {
      */
     ModifyUserResponseDto modifyUser(Long userId, ModifyUserRequestDto modifyUserRequestDto);
 
-    /**
-     * 회원 권한 변경
-     * @param userId
-     * @param modifyUserRoleRequestDto
-     * @return
-     */
-    ModifyUserRoleResponseDto modifyUserRole(Long userId, ModifyUserRoleRequestDto modifyUserRoleRequestDto);
+//    /**
+//     * TODO: 회원 권한 변경 -> 가족 그룹 권한 변경으로 하는 게 나을 듯
+//     * @param userId
+//     * @param modifyUserRoleRequestDto
+//     * @return
+//     */
+//    ModifyUserRoleResponseDto modifyUserRole(Long userId, ModifyUserRoleRequestDto modifyUserRoleRequestDto);
 
     /**
      * 회원 정보 삭제
