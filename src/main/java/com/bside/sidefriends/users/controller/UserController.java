@@ -39,5 +39,13 @@ public class UserController {
         return ResponseEntity.ok().body(modifyUserResponseDto);
     }
 
+    @DeleteMapping("/api/v1/users/{userId}")
+    public ResponseEntity<DeleteUserResponseDto> deleteUser(@PathVariable("userId") Long userId) {
+
+        DeleteUserResponseDto deleteUserResponseDto = userService.deleteUser(userId);
+
+        return ResponseEntity.ok().body(deleteUserResponseDto);
+    }
+
 
 }

@@ -24,6 +24,7 @@ public class UserServiceImpl implements UserService {
                 .name(userCreateRequestDto.getName())
                 .email(userCreateRequestDto.getEmail())
                 .role(User.Role.ROLE_USER) // 회원 가입 시 회원 권한 기본값 ROLE_USER
+                .username(userCreateRequestDto.getUsername())
                 .provider(userCreateRequestDto.getProvider())
                 .providerId(userCreateRequestDto.getProviderId())
                 .isDeleted(false) // 회원 가입 시 회원 삭제 여부 false
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.save(userEntity);
 
         return new CreateUserResponseDto(
-                user.getId(),
+                user.getUserId(),
                 user.getName(),
                 user.getEmail(),
                 user.isDeleted()
@@ -50,7 +51,7 @@ public class UserServiceImpl implements UserService {
         }
 
         return new FindUserByUserIdResponseDto(
-                findUser.getId(),
+                findUser.getUserId(),
                 findUser.getName(),
                 findUser.getNickname(),
                 findUser.getEmail(),
@@ -70,11 +71,15 @@ public class UserServiceImpl implements UserService {
             throw new IllegalStateException("이미 삭제된 사용자입니다.");
         }
 
+        if (modifyUserRequestDto.getName().equals(findUser.getName())) {
+            throw new IllegalStateException("변경하려는 이름이 동일합니다.");
+        }
+
         findUser.modify(modifyUserRequestDto);
         userRepository.save(findUser);
 
         return new ModifyUserResponseDto(
-                findUser.getId(),
+                findUser.getUserId(),
                 findUser.getName(),
                 findUser.getEmail()
         );
@@ -95,7 +100,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(findUser);
 
         return new DeleteUserResponseDto(
-                findUser.getId(),
+                findUser.getUserId(),
                 findUser.isDeleted()
         );
     }
