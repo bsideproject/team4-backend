@@ -1,5 +1,6 @@
 package com.bside.sidefriends.users.domain;
 
+import com.bside.sidefriends.family.domain.Family;
 import com.bside.sidefriends.users.service.dto.ModifyUserRequestDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Entity
 @NoArgsConstructor
@@ -18,8 +20,7 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 public class User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
 
     // 회원 이름
@@ -63,6 +64,14 @@ public class User {
     @Column(nullable = false)
     private boolean isDeleted;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "family_id")
+    private Family family;
+
+    public void setFamily(Family family) {
+        this.family = family;
+    }
+
 
     @Builder
     public User(String name, String email, String mainPetId, String username, Role role, String provider, String providerId,
@@ -94,6 +103,11 @@ public class User {
 
     public void delete() {
         this.isDeleted = true;
+        this.setFamily(null);
+    }
+
+    public void changeRole(Role role) {
+        this.role = role;
     }
 
 }
