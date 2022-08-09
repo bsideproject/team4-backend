@@ -1,5 +1,6 @@
 package com.bside.sidefriends.users.domain;
 
+import com.bside.sidefriends.users.service.dto.ModifyUserRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,65 +20,63 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    Long id;
+    private Long userId;
 
     // 회원 이름
-//    @Column(nullable = false)
-    String name;
+    @Column(nullable = false)
+    private String name;
 
-    // 회원 닉네임
-    String nickname;
-
-    /**
-     * 스프링 시큐리티 세션에서의 회원 관리를 위한 username
-     * - oauth 로그인 시 provider_providerId 형태
-     */
-    String username;
-
-    // 회원 전화번호
-    String phoneNumber;
-
-    /**
-     * 회원 이메일
-     * - 소셜 로그인 기반 회원가입의 경우 oauth 인증 정보에서 얻어 오게 됨
-     */
+    // 회원 이메일
     @Email
     @Setter
     @Column(nullable = false)
-    String email;
+    private String email;
+
+    // 회원별 대표펫 id
+    private String mainPetId;
 
     // 회원 권한
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    Role role;
+    private Role role;
 
-    // oauth 로그인 provider
-    String provider;
+    // 스프링 시큐리티 사용자 정보
+    private String username;
 
-    // oauth 로그인 정보 id
-    String providerId;
+    // oauth 인증 제공자
+    private String provider;
+
+    // oauth 인증 제공 서버에서의 사용자 id
+    private String providerId;
 
     // 사용자 계정 생성 시각
+    @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     // 사용자 계정 업데이트 시각
+    @Column(nullable = false)
     @UpdateTimestamp
-    LocalDateTime updatedAt;
+    private LocalDateTime updatedAt;
+
+    // 사용자 계정 삭제 여부
+    @Column(nullable = false)
+    private boolean isDeleted;
+
 
     @Builder
-    public User(String name, String nickname, String username, String phoneNumber, String email, Role role,
-                String provider, String providerId, LocalDateTime createdAt, LocalDateTime updatedAt) {
+    public User(String name, String email, String mainPetId, String username, Role role, String provider, String providerId,
+                LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDeleted) {
         this.name = name;
-        this.nickname = nickname;
-        this.username = username;
-        this.phoneNumber = phoneNumber;
         this.email = email;
+        this.mainPetId = mainPetId;
+        this.username = username;
         this.role = role;
         this.provider = provider;
         this.providerId = providerId;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.isDeleted = isDeleted;
     }
 
     public enum Role {
@@ -89,5 +88,12 @@ public class User {
 
     }
 
+    public void modify(ModifyUserRequestDto modifyUserRequestDto) {
+        this.name = modifyUserRequestDto.getName();
+    }
+
+    public void delete() {
+        this.isDeleted = true;
+    }
 
 }

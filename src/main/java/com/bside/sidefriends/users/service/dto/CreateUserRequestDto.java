@@ -7,20 +7,15 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class UserCreateRequestDto {
+public class CreateUserRequestDto {
 
     @NotNull
     String name;
 
-    String nickname;
-    String phoneNumber;
-
     @NotNull
     String email;
 
-    @NotNull
-    boolean isFamilyLeader;
-
+    String username;
     String provider;
     String providerId;
 

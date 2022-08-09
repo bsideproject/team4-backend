@@ -1,13 +1,10 @@
 package com.bside.sidefriends.users.controller;
 
 import com.bside.sidefriends.users.service.UserService;
-import com.bside.sidefriends.users.service.dto.UserCreateRequestDto;
-import com.bside.sidefriends.users.service.dto.UserCreateResponseDto;
+import com.bside.sidefriends.users.service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -18,12 +15,36 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/api/v1/users")
-    public ResponseEntity<UserCreateResponseDto> createUser(@Valid @RequestBody UserCreateRequestDto userCreateRequestDto) {
+    public ResponseEntity<CreateUserResponseDto> createUser(@Valid @RequestBody CreateUserRequestDto userCreateRequestDto) {
 
-        UserCreateResponseDto userCreateResponseDto = userService.createUser(userCreateRequestDto);
+        CreateUserResponseDto userCreateResponseDto = userService.createUser(userCreateRequestDto);
 
-        // TODO: 응답 형식 분리. 2022.07.31. IR
         return ResponseEntity.ok().body(userCreateResponseDto);
+    }
+
+    @GetMapping("/api/v1/users/{userId}")
+    public ResponseEntity<FindUserByUserIdResponseDto> findUserByUserId(@PathVariable("userId") Long userId) {
+
+        FindUserByUserIdResponseDto findUserByUserIdResponseDto = userService.findUserByUserId(userId);
+
+        return ResponseEntity.ok().body(findUserByUserIdResponseDto);
+    }
+
+    @PutMapping("/api/v1/users/{userId}")
+    public ResponseEntity<ModifyUserResponseDto> modifyUser(@PathVariable("userId") Long userId,
+                                                            @Valid @RequestBody ModifyUserRequestDto modifyUserRequestDto) {
+
+        ModifyUserResponseDto modifyUserResponseDto = userService.modifyUser(userId, modifyUserRequestDto);
+
+        return ResponseEntity.ok().body(modifyUserResponseDto);
+    }
+
+    @DeleteMapping("/api/v1/users/{userId}")
+    public ResponseEntity<DeleteUserResponseDto> deleteUser(@PathVariable("userId") Long userId) {
+
+        DeleteUserResponseDto deleteUserResponseDto = userService.deleteUser(userId);
+
+        return ResponseEntity.ok().body(deleteUserResponseDto);
     }
 
 
