@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -18,7 +20,11 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public CreateUserResponseDto createUser(CreateUserRequestDto userCreateRequestDto) throws IllegalStateException{
 
-        // TODO: provider, providerId 이미 있으면?
+        if (userRepository.findByProviderAndProviderId(
+                userCreateRequestDto.getProvider(), userCreateRequestDto.getProviderId())
+                .isPresent()) {
+            throw new IllegalStateException("이미 존재하는 사용자입니다.");
+        }
 
         User userEntity = User.builder()
                 .name(userCreateRequestDto.getName())
