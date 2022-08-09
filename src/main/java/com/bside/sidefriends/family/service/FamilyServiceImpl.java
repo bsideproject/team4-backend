@@ -7,6 +7,7 @@ import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
@@ -14,6 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class FamilyServiceImpl implements FamilyService {
 
     private final UserRepository userRepository;
@@ -21,6 +23,7 @@ public class FamilyServiceImpl implements FamilyService {
 
 
     @Override
+    @Transactional
     public CreateFamilyReponseDto createFamily(CreateFamilyRequestDto createFamilyRequestDto) {
 
         User mangerUser = userRepository.findByUserId(createFamilyRequestDto.getGroupManagerId())
@@ -64,6 +67,7 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
+    @Transactional
     public AddFamilyMemberResponseDto addFamilyMember(Long familyId, AddFamilyMemberRequestDto addFamilyMemberRequestDto) {
 
         Family findFamily = familyRepository.findByFamilyId(familyId)
@@ -103,6 +107,7 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
+    @Transactional
     public DeleteFamilyMemberResponseDto deleteFamilyMember(Long familyId, DeleteFamilyMemberRequestDto deleteFamilyMemberRequestDto) {
 
         Family findFamily = familyRepository.findByFamilyId(familyId)
