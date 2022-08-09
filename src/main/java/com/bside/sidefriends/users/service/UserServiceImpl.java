@@ -53,7 +53,6 @@ public class UserServiceImpl implements UserService {
         return new FindUserByUserIdResponseDto(
                 findUser.getUserId(),
                 findUser.getName(),
-                findUser.getNickname(),
                 findUser.getEmail(),
                 findUser.getMainPetId(),
                 findUser.getRole()

@@ -26,9 +26,6 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    // 회원 가족 별칭
-    private String nickname;
-
     // 회원 이메일
     @Email
     @Setter
@@ -68,10 +65,9 @@ public class User {
 
 
     @Builder
-    public User(String name, String nickname, String email, String mainPetId, String username, Role role, String provider, String providerId,
+    public User(String name, String email, String mainPetId, String username, Role role, String provider, String providerId,
                 LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDeleted) {
         this.name = name;
-        this.nickname = nickname;
         this.email = email;
         this.mainPetId = mainPetId;
         this.username = username;

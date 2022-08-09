@@ -17,8 +17,6 @@ public class FindUserByUserIdResponseDto {
     @NotNull
     String name;
 
-    String nickname;
-
     @Email
     String email;
 
