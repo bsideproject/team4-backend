@@ -12,16 +12,20 @@ import javax.validation.constraints.NotNull;
 public class FindUserByUserIdResponseDto {
 
     @NotNull
-    Long id;
+    private Long id;
 
     @NotNull
-    String name;
+    private String name;
 
     @Email
-    String email;
+    private String email;
 
-    String mainPetId;
+    private String mainPetId;
 
-    User.Role role;
+    private User.Role role;
+
+    boolean isDeleted;
+
+    private Long familyId;
 
 }
