@@ -63,5 +63,8 @@ class UserServiceTest {
     @DisplayName("이미 삭제된 회원인 경우 회원 삭제에 실패한다.")
     void whenDeleteDeletedUser_thenThrowsException() {}
 
+    @Test
+    @DisplayName("그룹장인 경우 회원 삭제에 실패한다.")
+    void whenDeleteRoleManagerUser_thenThrowsException() {}
 
 }

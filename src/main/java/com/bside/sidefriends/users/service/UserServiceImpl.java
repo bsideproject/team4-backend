@@ -96,6 +96,13 @@ public class UserServiceImpl implements UserService {
             throw new IllegalStateException("이미 삭제된 사용자입니다.");
         }
 
+        // 그룹장인 경우 탈퇴 불가
+        if (findUser.getRole().equals(User.Role.ROLE_MANAGER)) {
+            throw new IllegalStateException("가족 그룹장은 탈퇴할 수 없습니다.");
+        }
+
+
+
         findUser.delete();
         userRepository.save(findUser);
 
