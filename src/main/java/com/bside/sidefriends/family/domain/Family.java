@@ -12,17 +12,22 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
-@Setter
 public class Family {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long familyId;
 
-    @NotNull
+    // TODO: 엔티티 세터 괜찮은가
+    @NotNull @Setter
     private boolean isDeleted;
 
     @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<>();
+
+    // 가족 그룹 삭제
+    public void delete() {
+        this.isDeleted = true;
+    }
 
     public void addUser(User user) {
         users.add(user);

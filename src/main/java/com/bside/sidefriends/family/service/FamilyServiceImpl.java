@@ -23,7 +23,7 @@ public class FamilyServiceImpl implements FamilyService {
 
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public CreateFamilyReponseDto createFamily(CreateFamilyRequestDto createFamilyRequestDto) {
 
         User mangerUser = userRepository.findByUserId(createFamilyRequestDto.getGroupManagerId())
@@ -67,7 +67,7 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public AddFamilyMemberResponseDto addFamilyMember(Long familyId, AddFamilyMemberRequestDto addFamilyMemberRequestDto) {
 
         Family findFamily = familyRepository.findByFamilyId(familyId)
@@ -107,7 +107,7 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public DeleteFamilyMemberResponseDto deleteFamilyMember(Long familyId, DeleteFamilyMemberRequestDto deleteFamilyMemberRequestDto) {
 
         Family findFamily = familyRepository.findByFamilyId(familyId)
@@ -141,6 +141,28 @@ public class FamilyServiceImpl implements FamilyService {
         return new DeleteFamilyMemberResponseDto(
                 findFamily.getFamilyId(),
                 familyMemberList
+        );
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public DeleteFamilyResponseDto deleteFamily(Long familyId) {
+
+        Family findFamily = familyRepository.findByFamilyId(familyId)
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 가족 그룹입니다."));
+
+        if (findFamily.isDeleted()) {
+            throw new IllegalStateException("이미 삭제된 가족 그룹입니다.");
+        }
+
+        // TODO: 그룹장 권한 확인
+        findFamily.delete();
+        findFamily.getUsers().forEach(User::leaveFamily);
+        familyRepository.save(findFamily);
+
+        return new DeleteFamilyResponseDto(
+                findFamily.getFamilyId(),
+                findFamily.isDeleted()
         );
     }
 }

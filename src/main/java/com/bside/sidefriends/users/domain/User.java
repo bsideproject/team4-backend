@@ -68,11 +68,6 @@ public class User {
     @JoinColumn(name = "family_id")
     private Family family;
 
-    public void setFamily(Family family) {
-        this.family = family;
-    }
-
-
     @Builder
     public User(String name, String email, String mainPetId, String username, Role role, String provider, String providerId,
                 LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDeleted) {
@@ -88,6 +83,31 @@ public class User {
         this.isDeleted = isDeleted;
     }
 
+    // 가족 그룹 가입
+    public void setFamily(Family family) {
+        this.family = family;
+    }
+
+    // 가족 그룹 해제
+    public void leaveFamily() {
+        this.setFamily(null);
+    }
+
+    public void modify(ModifyUserRequestDto modifyUserRequestDto) {
+        this.name = modifyUserRequestDto.getName();
+    }
+
+    // 사용자 계정 삭제
+    public void delete() {
+        this.isDeleted = true;
+        this.leaveFamily();
+    }
+
+    public void changeRole(Role role) {
+        this.role = role;
+    }
+
+
     public enum Role {
         /**
          * ROLE_USER: 일반 가족 구성원
@@ -95,19 +115,6 @@ public class User {
          */
         ROLE_USER, ROLE_MANAGER;
 
-    }
-
-    public void modify(ModifyUserRequestDto modifyUserRequestDto) {
-        this.name = modifyUserRequestDto.getName();
-    }
-
-    public void delete() {
-        this.isDeleted = true;
-        this.setFamily(null);
-    }
-
-    public void changeRole(Role role) {
-        this.role = role;
     }
 
 }

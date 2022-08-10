@@ -3,6 +3,7 @@ package com.bside.sidefriends.family.controller;
 import com.bside.sidefriends.family.service.FamilyService;
 import com.bside.sidefriends.family.service.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,15 @@ public class FamilyController {
                 = familyService.findFamilyMembersByFamilyId(familyId);
 
         return ResponseEntity.ok().body(findFamilyMembersByFamilyIdResponseDto);
+    }
+
+    @DeleteMapping("/api/v1/family/{familyId}")
+    ResponseEntity<DeleteFamilyResponseDto> deleteFamily(@PathVariable("familyId") Long familyId) {
+
+        DeleteFamilyResponseDto deleteFamilyResponseDto = familyService.deleteFamily(familyId);
+
+        return ResponseEntity.ok().body(deleteFamilyResponseDto);
+
     }
 
     @PostMapping("/api/v1/family/{familyId}/members")

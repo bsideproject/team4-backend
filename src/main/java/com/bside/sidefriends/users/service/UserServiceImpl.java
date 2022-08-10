@@ -24,7 +24,6 @@ public class UserServiceImpl implements UserService {
             throw new IllegalStateException("이미 존재하는 사용자입니다.");
         }
 
-
         User userEntity = User.builder()
                 .name(userCreateRequestDto.getName())
                 .email(userCreateRequestDto.getEmail())
@@ -114,6 +113,5 @@ public class UserServiceImpl implements UserService {
                 findUser.isDeleted()
         );
     }
-
 
 }
