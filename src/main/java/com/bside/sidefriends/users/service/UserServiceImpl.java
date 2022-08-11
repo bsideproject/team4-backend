@@ -28,9 +28,9 @@ public class UserServiceImpl implements UserService {
                 .name(userCreateRequestDto.getName())
                 .email(userCreateRequestDto.getEmail())
                 .role(User.Role.ROLE_USER) // 회원 가입 시 회원 권한 기본값 ROLE_USER
-                .username(userCreateRequestDto.getUsername())
                 .provider(userCreateRequestDto.getProvider())
                 .providerId(userCreateRequestDto.getProviderId())
+                .username(userCreateRequestDto.getProvider() + "_" + userCreateRequestDto.getProviderId())
                 .isDeleted(false) // 회원 가입 시 회원 삭제 여부 false
                 .build();
 
