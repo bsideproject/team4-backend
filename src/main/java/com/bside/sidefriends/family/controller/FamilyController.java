@@ -1,21 +1,21 @@
 package com.bside.sidefriends.family.controller;
 
+import com.bside.sidefriends.common.annotation.SideFriendsController;
 import com.bside.sidefriends.family.service.FamilyService;
 import com.bside.sidefriends.family.service.dto.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
+@SideFriendsController
 @RequiredArgsConstructor
 public class FamilyController {
 
     private final FamilyService familyService;
 
-    @PostMapping("/api/v1/family")
+    @PostMapping("/family")
     ResponseEntity<CreateFamilyReponseDto> createFamily(@Valid @RequestBody CreateFamilyRequestDto createFamilyRequestDto) {
 
         CreateFamilyReponseDto createFamilyReponseDto = familyService.createFamily(createFamilyRequestDto);
@@ -23,7 +23,7 @@ public class FamilyController {
         return ResponseEntity.ok().body(createFamilyReponseDto);
     }
 
-    @GetMapping("/api/v1/family/{familyId}")
+    @GetMapping("family/{familyId}")
     ResponseEntity<FindFamilyMembersByFamilyIdResponseDto> findFamily(@PathVariable("familyId") Long familyId) {
 
         FindFamilyMembersByFamilyIdResponseDto findFamilyMembersByFamilyIdResponseDto
@@ -32,7 +32,7 @@ public class FamilyController {
         return ResponseEntity.ok().body(findFamilyMembersByFamilyIdResponseDto);
     }
 
-    @DeleteMapping("/api/v1/family/{familyId}")
+    @DeleteMapping("family/{familyId}")
     ResponseEntity<DeleteFamilyResponseDto> deleteFamily(@PathVariable("familyId") Long familyId) {
 
         DeleteFamilyResponseDto deleteFamilyResponseDto = familyService.deleteFamily(familyId);
@@ -41,7 +41,7 @@ public class FamilyController {
 
     }
 
-    @PostMapping("/api/v1/family/{familyId}/members")
+    @PostMapping("family/{familyId}/members")
     ResponseEntity<AddFamilyMemberResponseDto> addFamilyMember(@PathVariable("familyId") Long familyId,
                                                                @Valid @RequestBody AddFamilyMemberRequestDto addFamilyMemberRequestDto) {
 
@@ -51,7 +51,7 @@ public class FamilyController {
         return ResponseEntity.ok().body(addFamilyMemberResponseDto);
     }
 
-    @DeleteMapping("/api/v1/family/{familyId}/members")
+    @DeleteMapping("family/{familyId}/members")
     ResponseEntity<DeleteFamilyMemberResponseDto> deleteFamilyMember(@PathVariable("familyId") Long familyId,
                                                                      @Valid @RequestBody DeleteFamilyMemberRequestDto deleteFamilyMemberRequestDto) {
         DeleteFamilyMemberResponseDto deleteFamilyMemberResponseDto
@@ -60,7 +60,7 @@ public class FamilyController {
         return ResponseEntity.ok().body(deleteFamilyMemberResponseDto);
     }
 
-    @PutMapping("/api/v1/family/{familyId}/manager")
+    @PutMapping("family/{familyId}/manager")
     ResponseEntity<ChangeFamilyManagerResponseDto> changeFamilyManager(@PathVariable("familyId") Long familyId,
                                                                        @Valid @RequestBody ChangeFamilyManagerRequestDto changeFamilyManagerRequestDto) {
         ChangeFamilyManagerResponseDto changeFamilyManagerResponseDto

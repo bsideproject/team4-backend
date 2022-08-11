@@ -1,5 +1,6 @@
 package com.bside.sidefriends.users.controller;
 
+import com.bside.sidefriends.common.annotation.SideFriendsController;
 import com.bside.sidefriends.users.service.UserService;
 import com.bside.sidefriends.users.service.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -8,13 +9,13 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
+@SideFriendsController
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/api/v1/users")
+    @PostMapping("/users")
     public ResponseEntity<CreateUserResponseDto> createUser(@Valid @RequestBody CreateUserRequestDto userCreateRequestDto) {
 
         CreateUserResponseDto userCreateResponseDto = userService.createUser(userCreateRequestDto);
@@ -22,7 +23,7 @@ public class UserController {
         return ResponseEntity.ok().body(userCreateResponseDto);
     }
 
-    @GetMapping("/api/v1/users/{userId}")
+    @GetMapping("/users/{userId}")
     public ResponseEntity<FindUserByUserIdResponseDto> findUserByUserId(@PathVariable("userId") Long userId) {
 
         FindUserByUserIdResponseDto findUserByUserIdResponseDto = userService.findUserByUserId(userId);
@@ -30,7 +31,7 @@ public class UserController {
         return ResponseEntity.ok().body(findUserByUserIdResponseDto);
     }
 
-    @PutMapping("/api/v1/users/{userId}")
+    @PutMapping("/users/{userId}")
     public ResponseEntity<ModifyUserResponseDto> modifyUser(@PathVariable("userId") Long userId,
                                                             @Valid @RequestBody ModifyUserRequestDto modifyUserRequestDto) {
 
@@ -39,14 +40,12 @@ public class UserController {
         return ResponseEntity.ok().body(modifyUserResponseDto);
     }
 
-    @DeleteMapping("/api/v1/users/{userId}")
+    @DeleteMapping("/users/{userId}")
     public ResponseEntity<DeleteUserResponseDto> deleteUser(@PathVariable("userId") Long userId) {
 
         DeleteUserResponseDto deleteUserResponseDto = userService.deleteUser(userId);
 
         return ResponseEntity.ok().body(deleteUserResponseDto);
     }
-
-
 
 }
