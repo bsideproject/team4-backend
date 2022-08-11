@@ -26,14 +26,14 @@ public class FamilyServiceImpl implements FamilyService {
     @Transactional(rollbackFor = Exception.class)
     public CreateFamilyReponseDto createFamily(CreateFamilyRequestDto createFamilyRequestDto) {
 
-        User mangerUser = userRepository.findByUserId(createFamilyRequestDto.getGroupManagerId())
+        User managerUser = userRepository.findByUserId(createFamilyRequestDto.getGroupManagerId())
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 사용자입니다."));
 
-        if (mangerUser.isDeleted()) {
+        if (managerUser.isDeleted()) {
             throw new IllegalStateException("이미 삭제된 사용자입니다.");
         }
 
-        if (mangerUser.getFamily() != null && mangerUser.getFamily().getFamilyId() != null) {
+        if (managerUser.getFamily() != null && managerUser.getFamily().getFamilyId() != null) {
             throw new IllegalStateException("이미 가족 그룹이 존재하는 사용자입니다.");
         }
 
@@ -41,14 +41,14 @@ public class FamilyServiceImpl implements FamilyService {
 
         // 가족 생성
         Family family = new Family();
-        mangerUser.changeRole(User.Role.ROLE_MANAGER); // 가족 그룹장 권한 부여
-        family.addUser(mangerUser);
+        managerUser.changeRole(User.Role.ROLE_MANAGER); // 가족 그룹장 권한 부여
+        family.addUser(managerUser);
         family.setDeleted(false); // TODO: 가족 삭제 여부
         familyRepository.save(family);
 
         return new CreateFamilyReponseDto(
                 family.getFamilyId(),
-                mangerUser.getUserId() // TODO: 엔티티 안에서 연관관계?
+                managerUser.getUserId() // TODO: 엔티티 안에서 연관관계?
         );
     }
 
