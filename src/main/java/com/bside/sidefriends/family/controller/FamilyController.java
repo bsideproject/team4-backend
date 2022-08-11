@@ -59,4 +59,13 @@ public class FamilyController {
 
         return ResponseEntity.ok().body(deleteFamilyMemberResponseDto);
     }
+
+    @PutMapping("/api/v1/family/{familyId}/manager")
+    ResponseEntity<ChangeFamilyManagerResponseDto> changeFamilyManager(@PathVariable("familyId") Long familyId,
+                                                                       @Valid @RequestBody ChangeFamilyManagerRequestDto changeFamilyManagerRequestDto) {
+        ChangeFamilyManagerResponseDto changeFamilyManagerResponseDto
+                = familyService.changeFamilyManager(familyId, changeFamilyManagerRequestDto);
+
+        return ResponseEntity.ok().body(changeFamilyManagerResponseDto);
+    }
 }

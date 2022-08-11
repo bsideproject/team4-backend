@@ -165,4 +165,74 @@ public class FamilyServiceImpl implements FamilyService {
                 findFamily.isDeleted()
         );
     }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ChangeFamilyManagerResponseDto changeFamilyManager(Long familyId, ChangeFamilyManagerRequestDto changeFamilyManagerRequestDto) {
+
+        Family findFamily = familyRepository.findByFamilyId(familyId)
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 가족 그룹입니다."));
+
+        if (findFamily.isDeleted()) {
+            throw new IllegalStateException("이미 삭제된 가족 그룹입니다.");
+        }
+
+        User prevManagerUser = userRepository.findByUserId(changeFamilyManagerRequestDto.getPrevManagerId())
+                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+
+        if (prevManagerUser.isDeleted()) {
+            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+        }
+
+        User nextManagerUser = userRepository.findByUserId(changeFamilyManagerRequestDto.getNextManagerId())
+                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+
+        if (nextManagerUser.isDeleted()) {
+            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+        }
+
+        // 권한 변경 관련 예외 처리
+
+        if (prevManagerUser.getFamily() == null) {
+            throw new IllegalStateException("가족 그룹에 속해 있지 않은 사용자입니다.");
+        }
+
+        if (prevManagerUser.getFamily() != null && !prevManagerUser.getFamily().getFamilyId().equals(familyId)) {
+            throw new IllegalStateException("사용자가 변경 대상 가족 그룹의 구성원이 아닙니다.");
+        }
+
+        if (!prevManagerUser.getRole().equals(User.Role.ROLE_MANAGER)) {
+            throw new IllegalStateException("사용자가 가족 그룹의 그룹장이 아닙니다.");
+        }
+
+        if (nextManagerUser.getFamily() == null) {
+            throw new IllegalStateException("가족 그룹에 속해 있지 않은 사용자입니다.");
+        }
+
+        if (nextManagerUser.getFamily() != null && !nextManagerUser.getFamily().getFamilyId().equals(familyId)) {
+            throw new IllegalStateException("사용자가 변경 대상 가족 그룹의 구성원이 아닙니다.");
+        }
+
+        if (nextManagerUser.getRole().equals(User.Role.ROLE_MANAGER)) {
+            throw new IllegalStateException("사용자가 이미 가족 그룹의 그룹장입니다.");
+        }
+
+        // TODO: 가족 그룹장 권한 확인
+        prevManagerUser.changeRole(User.Role.ROLE_USER);
+        nextManagerUser.changeRole(User.Role.ROLE_MANAGER);
+        userRepository.save(prevManagerUser);
+        userRepository.save(nextManagerUser);
+
+        List<ChangeFamilyManagerResponseDto.FamilyMember> familyMemberList = findFamily.getActiveMemberList().stream()
+                .map(user -> new ChangeFamilyManagerResponseDto.FamilyMember(
+                        user.getUserId(), user.getName(), user.getRole()
+                ))
+                .collect(Collectors.toList());
+
+        return new ChangeFamilyManagerResponseDto(
+                findFamily.getFamilyId(),
+                nextManagerUser.getUserId(),
+                familyMemberList
+        );
+    }
 }

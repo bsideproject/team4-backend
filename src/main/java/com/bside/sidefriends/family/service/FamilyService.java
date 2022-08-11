@@ -46,7 +46,6 @@ public interface FamilyService {
      */
     DeleteFamilyMemberResponseDto deleteFamilyMember(Long familyId, DeleteFamilyMemberRequestDto deleteFamilyMemberRequestDto);
 
-    // TODO: 가족 그룹장 권한 변경
-
+    ChangeFamilyManagerResponseDto changeFamilyManager(Long familyId, ChangeFamilyManagerRequestDto changeFamilyManagerRequestDto);
 
 }
