@@ -27,6 +27,7 @@ public class UserServiceImpl implements UserService {
         }
 
         User userEntity = User.builder()
+                .username(userCreateRequestDto.getProvider() + "_" + userCreateRequestDto.getProviderId())
                 .name(userCreateRequestDto.getName())
                 .email(userCreateRequestDto.getEmail())
                 .role(User.Role.ROLE_USER) // 회원 가입 시 회원 권한 기본값 ROLE_USER

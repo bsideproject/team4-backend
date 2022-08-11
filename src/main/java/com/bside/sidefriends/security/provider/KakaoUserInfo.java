@@ -52,7 +52,7 @@ public class KakaoUserInfo<T> implements OAuth2UserInfo {
 
     @Override
     public String getProviderId() {
-        return (String) attributes.get("id");
+        return String.valueOf(attributes.get("id"));
     }
 
     @Override
@@ -68,5 +68,10 @@ public class KakaoUserInfo<T> implements OAuth2UserInfo {
     @Override
     public String getName() {
         return (String) attributesProfile.get("nickname");
+    }
+
+    @Override
+    public String getImageUrl() {
+        return "";
     }
 }

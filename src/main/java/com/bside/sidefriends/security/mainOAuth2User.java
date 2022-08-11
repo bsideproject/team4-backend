@@ -35,7 +35,7 @@ public class mainOAuth2User implements OAuth2User {
 
     @Override
     public String getName() {
-        return user.getId().toString(); // User의 Primary Key
+        return user.getUserId().toString(); // User의 Primary Key
     }
 
     public String getUsername() {
