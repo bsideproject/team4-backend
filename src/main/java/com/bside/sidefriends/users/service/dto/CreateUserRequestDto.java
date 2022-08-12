@@ -17,8 +17,13 @@ public class CreateUserRequestDto {
     @NotNull
     String email;
 
+    @NotNull
     String username;
+
+    @NotNull
     String provider;
+
+    @NotNull
     String providerId;
 
     @Builder
