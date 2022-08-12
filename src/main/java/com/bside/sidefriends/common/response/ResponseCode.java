@@ -1,5 +1,8 @@
 package com.bside.sidefriends.common.response;
 
+import lombok.Getter;
+
+@Getter
 public enum ResponseCode {
 
     // 로그인(101-150)
