@@ -15,7 +15,7 @@ public enum ResponseCode {
     MODIFY_USER_SUCCESS("155", "회원 정보 수정에 성공하였습니다."),
     MODIFY_USER_FAIL("156", "회원 정보 수정에 실패하였습니다."),
     DELETE_USER_SUCCESS("157", "회원 삭제에 성공하였습니다."),
-    DELETE_USER_FAIL("158", "회원 삭제에 실패하였습니다.")
+    DELETE_USER_FAIL("158", "회원 삭제에 실패하였습니다."),
 
     // 반려동물(201-299)
 
@@ -28,6 +28,20 @@ public enum ResponseCode {
     // 양육일지(501-599)
 
     // 가족 그룹(601-699)
+    CREATE_FAMILY_SUCCESS("601", "가족 그룹 생성에 성공하였습니다."),
+    CREATE_FAMILY_FAIL("602", "가족 그룹 생성에 실패하였습니다."),
+    FIND_FAMILY_SUCCESS("603", "가족 그룹 조회에 성공하였습니다."),
+    FIND_FAMILY_FAIL("604", "가족 그룹 조회에 실패하였습니다."),
+    MODIFY_FAMILY_MANAGER_SUCCESS("605", "가족 그룹장 변경에 성공하였습니다."),
+    MODIFY_FAMILY_MANAGER_FAIL("606", "가족 그룹장 변경에 실패하였습니다."),
+    ADD_FAMILY_MEMBER_SUCCESS("607", "가족 그룹 구성원 추가에 성공하였습니다."),
+    ADD_FAMILY_MEMBER_FAIL("608", "가족 그룹 구성원 추가에 실패하였습니다."),
+    DELETE_FAMILY_MEMBER_SUCCESS("609", "가족 그룹 구성원 삭제에 성공하였습니다."),
+    DELETE_FAMILY_MEMBER_FAIL("610", "가족 그룹 구성원 삭제에 실패하였습니다."),
+    DELETE_FAMILY_SUCCESS("611", "가족 그룹 삭제에 성공하였습니다."),
+    DELETE_FAMILY_FAIL("612", "가족 그룹 삭제에 실패하였습니다."),
+
+
 
     ;
 
