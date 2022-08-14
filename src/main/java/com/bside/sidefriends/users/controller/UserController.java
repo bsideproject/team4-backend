@@ -1,5 +1,8 @@
 package com.bside.sidefriends.users.controller;
 
+import com.bside.sidefriends.common.annotation.SideFriendsController;
+import com.bside.sidefriends.common.response.ResponseCode;
+import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.users.service.UserService;
 import com.bside.sidefriends.users.service.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -8,45 +11,57 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
+@SideFriendsController
 @RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/api/v1/users")
-    public ResponseEntity<CreateUserResponseDto> createUser(@Valid @RequestBody CreateUserRequestDto userCreateRequestDto) {
+    // FIXME: 실제 1차 서비스에서는 제공되지 않는 API
+    @PostMapping("/users")
+    public ResponseEntity<ResponseDto<CreateUserResponseDto>> createUser(@Valid @RequestBody CreateUserRequestDto userCreateRequestDto) {
 
-        CreateUserResponseDto userCreateResponseDto = userService.createUser(userCreateRequestDto);
+        CreateUserResponseDto createUserResponseDto = userService.createUser(userCreateRequestDto);
 
-        return ResponseEntity.ok().body(userCreateResponseDto);
+        ResponseDto<CreateUserResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.CREATE_USER_SUCCESS, createUserResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
+
     }
 
-    @GetMapping("/api/v1/users/{userId}")
-    public ResponseEntity<FindUserByUserIdResponseDto> findUserByUserId(@PathVariable("userId") Long userId) {
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<ResponseDto<FindUserByUserIdResponseDto>> findUserByUserId(@PathVariable("userId") Long userId) {
 
         FindUserByUserIdResponseDto findUserByUserIdResponseDto = userService.findUserByUserId(userId);
 
-        return ResponseEntity.ok().body(findUserByUserIdResponseDto);
+        ResponseDto<FindUserByUserIdResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.FIND_USER_SUCCESS, findUserByUserIdResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
     }
 
-    @PutMapping("/api/v1/users/{userId}")
-    public ResponseEntity<ModifyUserResponseDto> modifyUser(@PathVariable("userId") Long userId,
+    @PutMapping("/users/{userId}")
+    public ResponseEntity<ResponseDto<ModifyUserResponseDto>> modifyUser(@PathVariable("userId") Long userId,
                                                             @Valid @RequestBody ModifyUserRequestDto modifyUserRequestDto) {
 
         ModifyUserResponseDto modifyUserResponseDto = userService.modifyUser(userId, modifyUserRequestDto);
 
-        return ResponseEntity.ok().body(modifyUserResponseDto);
+        ResponseDto<ModifyUserResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.MODIFY_USER_SUCCESS, modifyUserResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
     }
 
-    @DeleteMapping("/api/v1/users/{userId}")
-    public ResponseEntity<DeleteUserResponseDto> deleteUser(@PathVariable("userId") Long userId) {
+    @DeleteMapping("/users/{userId}")
+    public ResponseEntity<ResponseDto<DeleteUserResponseDto>> deleteUser(@PathVariable("userId") Long userId) {
 
         DeleteUserResponseDto deleteUserResponseDto = userService.deleteUser(userId);
 
-        return ResponseEntity.ok().body(deleteUserResponseDto);
+        ResponseDto<DeleteUserResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.DELETE_USER_SUCCESS, deleteUserResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
     }
-
-
 
 }

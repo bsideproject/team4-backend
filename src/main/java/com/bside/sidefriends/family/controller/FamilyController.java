@@ -1,71 +1,91 @@
 package com.bside.sidefriends.family.controller;
 
+import com.bside.sidefriends.common.annotation.SideFriendsController;
+import com.bside.sidefriends.common.response.ResponseCode;
+import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.family.service.FamilyService;
 import com.bside.sidefriends.family.service.dto.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-@RestController
+@SideFriendsController
 @RequiredArgsConstructor
 public class FamilyController {
 
     private final FamilyService familyService;
 
-    @PostMapping("/api/v1/family")
-    ResponseEntity<CreateFamilyReponseDto> createFamily(@Valid @RequestBody CreateFamilyRequestDto createFamilyRequestDto) {
+    @PostMapping("/family")
+    ResponseEntity<ResponseDto<CreateFamilyReponseDto>> createFamily(@Valid @RequestBody CreateFamilyRequestDto createFamilyRequestDto) {
 
         CreateFamilyReponseDto createFamilyReponseDto = familyService.createFamily(createFamilyRequestDto);
 
-        return ResponseEntity.ok().body(createFamilyReponseDto);
+        ResponseDto<CreateFamilyReponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.CREATE_FAMILY_SUCCESS, createFamilyReponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
     }
 
-    @GetMapping("/api/v1/family/{familyId}")
-    ResponseEntity<FindFamilyMembersByFamilyIdResponseDto> findFamily(@PathVariable("familyId") Long familyId) {
+    @GetMapping("/family/{familyId}")
+    ResponseEntity<ResponseDto<FindFamilyMembersByFamilyIdResponseDto>> findFamily(@PathVariable("familyId") Long familyId) {
 
         FindFamilyMembersByFamilyIdResponseDto findFamilyMembersByFamilyIdResponseDto
                 = familyService.findFamilyMembersByFamilyId(familyId);
 
-        return ResponseEntity.ok().body(findFamilyMembersByFamilyIdResponseDto);
+        ResponseDto<FindFamilyMembersByFamilyIdResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.FIND_FAMILY_SUCCESS, findFamilyMembersByFamilyIdResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
     }
 
-    @DeleteMapping("/api/v1/family/{familyId}")
-    ResponseEntity<DeleteFamilyResponseDto> deleteFamily(@PathVariable("familyId") Long familyId) {
+    @DeleteMapping("/family/{familyId}")
+    ResponseEntity<ResponseDto<DeleteFamilyResponseDto>> deleteFamily(@PathVariable("familyId") Long familyId) {
 
         DeleteFamilyResponseDto deleteFamilyResponseDto = familyService.deleteFamily(familyId);
 
-        return ResponseEntity.ok().body(deleteFamilyResponseDto);
+        ResponseDto<DeleteFamilyResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.DELETE_FAMILY_SUCCESS, deleteFamilyResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
 
     }
 
-    @PostMapping("/api/v1/family/{familyId}/members")
-    ResponseEntity<AddFamilyMemberResponseDto> addFamilyMember(@PathVariable("familyId") Long familyId,
+    @PostMapping("/family/{familyId}/members")
+    ResponseEntity<ResponseDto<AddFamilyMemberResponseDto>> addFamilyMember(@PathVariable("familyId") Long familyId,
                                                                @Valid @RequestBody AddFamilyMemberRequestDto addFamilyMemberRequestDto) {
 
         AddFamilyMemberResponseDto addFamilyMemberResponseDto
                 = familyService.addFamilyMember(familyId, addFamilyMemberRequestDto);
 
-        return ResponseEntity.ok().body(addFamilyMemberResponseDto);
+        ResponseDto<AddFamilyMemberResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.ADD_FAMILY_MEMBER_SUCCESS, addFamilyMemberResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
     }
 
-    @DeleteMapping("/api/v1/family/{familyId}/members")
-    ResponseEntity<DeleteFamilyMemberResponseDto> deleteFamilyMember(@PathVariable("familyId") Long familyId,
+    @DeleteMapping("/family/{familyId}/members")
+    ResponseEntity<ResponseDto<DeleteFamilyMemberResponseDto>> deleteFamilyMember(@PathVariable("familyId") Long familyId,
                                                                      @Valid @RequestBody DeleteFamilyMemberRequestDto deleteFamilyMemberRequestDto) {
         DeleteFamilyMemberResponseDto deleteFamilyMemberResponseDto
                 = familyService.deleteFamilyMember(familyId, deleteFamilyMemberRequestDto);
 
-        return ResponseEntity.ok().body(deleteFamilyMemberResponseDto);
+        ResponseDto<DeleteFamilyMemberResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.DELETE_FAMILY_MEMBER_SUCCESS, deleteFamilyMemberResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
     }
 
-    @PutMapping("/api/v1/family/{familyId}/manager")
-    ResponseEntity<ChangeFamilyManagerResponseDto> changeFamilyManager(@PathVariable("familyId") Long familyId,
+    @PutMapping("/family/{familyId}/manager")
+    ResponseEntity<ResponseDto<ChangeFamilyManagerResponseDto>> changeFamilyManager(@PathVariable("familyId") Long familyId,
                                                                        @Valid @RequestBody ChangeFamilyManagerRequestDto changeFamilyManagerRequestDto) {
         ChangeFamilyManagerResponseDto changeFamilyManagerResponseDto
                 = familyService.changeFamilyManager(familyId, changeFamilyManagerRequestDto);
 
-        return ResponseEntity.ok().body(changeFamilyManagerResponseDto);
+        ResponseDto<ChangeFamilyManagerResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.MODIFY_FAMILY_MANAGER_SUCCESS, changeFamilyManagerResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
     }
 }

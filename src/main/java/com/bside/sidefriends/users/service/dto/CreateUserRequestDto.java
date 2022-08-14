@@ -18,19 +18,15 @@ public class CreateUserRequestDto {
     String email;
 
     @NotNull
-    String username;
-
-    @NotNull
     String provider;
 
     @NotNull
     String providerId;
 
     @Builder
-    public CreateUserRequestDto(String name, String email, String username, String provider, String providerId) {
+    public CreateUserRequestDto(String name, String email, String provider, String providerId) {
         this.name = name;
         this.email = email;
-        this.username = username;
         this.provider = provider;
         this.providerId = providerId;
     }
