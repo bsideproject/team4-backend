@@ -24,7 +24,7 @@ public class UserController {
         CreateUserResponseDto createUserResponseDto = userService.createUser(userCreateRequestDto);
 
         ResponseDto<CreateUserResponseDto> responseDto = ResponseDto.onSuccessWithData(
-                ResponseCode.CREATE_USER_SUCCESS, createUserResponseDto);
+                ResponseCode.U_CREATE_SUCCESS, createUserResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
 
@@ -36,7 +36,7 @@ public class UserController {
         FindUserByUserIdResponseDto findUserByUserIdResponseDto = userService.findUserByUserId(userId);
 
         ResponseDto<FindUserByUserIdResponseDto> responseDto = ResponseDto.onSuccessWithData(
-                ResponseCode.FIND_USER_SUCCESS, findUserByUserIdResponseDto);
+                ResponseCode.U_FIND_SUCCESS, findUserByUserIdResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -48,7 +48,7 @@ public class UserController {
         ModifyUserResponseDto modifyUserResponseDto = userService.modifyUser(userId, modifyUserRequestDto);
 
         ResponseDto<ModifyUserResponseDto> responseDto = ResponseDto.onSuccessWithData(
-                ResponseCode.MODIFY_USER_SUCCESS, modifyUserResponseDto);
+                ResponseCode.U_MODIFY_SUCCESS, modifyUserResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -59,7 +59,7 @@ public class UserController {
         DeleteUserResponseDto deleteUserResponseDto = userService.deleteUser(userId);
 
         ResponseDto<DeleteUserResponseDto> responseDto = ResponseDto.onSuccessWithData(
-                ResponseCode.DELETE_USER_SUCCESS, deleteUserResponseDto);
+                ResponseCode.U_DELETE_SUCCESS, deleteUserResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
