@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -54,13 +55,16 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     public FindFamilyMembersByFamilyIdResponseDto findFamilyMembersByFamilyId(Long familyId) {
-        // TODO: Dto 안에 리스트?
-        List<User> userList = userRepository.findAllByFamilyFamilyId(familyId);
+
+        Family findFamily = familyRepository.findByFamilyId(familyId)
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 가족 그룹입니다."));
+
+        List<User> userList = findFamily.getActiveMemberList();
 
         List<FindFamilyMembersByFamilyIdResponseDto.FamilyMember> familyMemberList = userList.stream()
-                .filter(user -> !user.isDeleted())
                 .map(user -> new FindFamilyMembersByFamilyIdResponseDto.FamilyMember(
-                        user.getUserId(), user.getName(), user.getRole()))
+                        user.getUserId(), user.getName(), user.getRole()
+                ))
                 .collect(Collectors.toList());
 
         return new FindFamilyMembersByFamilyIdResponseDto(familyMemberList);
