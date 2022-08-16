@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ControllerAdvice
-public class GlobalExceptionHandler {
+public class UserExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ResponseDto<ResponseCode>> handleBusinessException(BusinessException e) {

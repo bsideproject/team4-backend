@@ -1,9 +1,14 @@
 package com.bside.sidefriends.family.service;
 
 import com.bside.sidefriends.family.domain.Family;
+import com.bside.sidefriends.family.error.exception.FamilyAlreadyDeletedException;
+import com.bside.sidefriends.family.error.exception.FamilyLimitExceededException;
+import com.bside.sidefriends.family.error.exception.FamilyManagerRequiredException;
+import com.bside.sidefriends.family.error.exception.FamilyNotFoundException;
 import com.bside.sidefriends.family.repository.FamilyRepository;
 import com.bside.sidefriends.family.service.dto.*;
 import com.bside.sidefriends.users.domain.User;
+import com.bside.sidefriends.users.error.exception.*;
 import com.bside.sidefriends.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,14 +32,14 @@ public class FamilyServiceImpl implements FamilyService {
     public CreateFamilyReponseDto createFamily(CreateFamilyRequestDto createFamilyRequestDto) {
 
         User managerUser = userRepository.findByUserId(createFamilyRequestDto.getGroupManagerId())
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 사용자입니다."));
+                .orElseThrow(UserNotFoundException::new);
 
         if (managerUser.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+            throw new UserAlreadyDeletedException();
         }
 
         if (managerUser.getFamily() != null && managerUser.getFamily().getFamilyId() != null) {
-            throw new IllegalStateException("이미 가족 그룹이 존재하는 사용자입니다.");
+            throw new UserHasFamilyException();
         }
 
         // TODO: 공유 펫 선택
@@ -44,7 +48,7 @@ public class FamilyServiceImpl implements FamilyService {
         Family family = new Family();
         managerUser.changeRole(User.Role.ROLE_MANAGER); // 가족 그룹장 권한 부여
         family.addUser(managerUser);
-        family.setDeleted(false); // TODO: 가족 삭제 여부
+        family.setDeleted(false);
         familyRepository.save(family);
 
         return new CreateFamilyReponseDto(
@@ -57,7 +61,7 @@ public class FamilyServiceImpl implements FamilyService {
     public FindFamilyMembersByFamilyIdResponseDto findFamilyMembersByFamilyId(Long familyId) {
 
         Family findFamily = familyRepository.findByFamilyId(familyId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 가족 그룹입니다."));
+                .orElseThrow(FamilyNotFoundException::new);
 
         List<User> userList = findFamily.getActiveMemberList();
 
@@ -75,25 +79,25 @@ public class FamilyServiceImpl implements FamilyService {
     public AddFamilyMemberResponseDto addFamilyMember(Long familyId, AddFamilyMemberRequestDto addFamilyMemberRequestDto) {
 
         Family findFamily = familyRepository.findByFamilyId(familyId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 가족 그룹입니다."));
+                .orElseThrow(FamilyNotFoundException::new);
 
         if (findFamily.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 가족 그룹입니다.");
+            throw new FamilyAlreadyDeletedException();
         }
 
         if (findFamily.getFamilySize() >= 4) {
-            throw new IllegalStateException("가족 그룹 정원을 초과했습니다.");
+            throw new FamilyLimitExceededException();
         }
 
         User newUser = userRepository.findByUserId(addFamilyMemberRequestDto.getAddMemberId())
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 사용자입니다."));
+                .orElseThrow(UserNotFoundException::new);
 
         if (newUser.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+            throw new UserAlreadyDeletedException();
         }
 
         if (newUser.getFamily() != null && newUser.getFamily().getFamilyId() != null) {
-            throw new IllegalStateException("사용자가 이미 속해 있는 가족 그룹이 있습니다.");
+            throw new UserHasFamilyException();
         }
 
         findFamily.addUser(newUser);
@@ -115,23 +119,23 @@ public class FamilyServiceImpl implements FamilyService {
     public DeleteFamilyMemberResponseDto deleteFamilyMember(Long familyId, DeleteFamilyMemberRequestDto deleteFamilyMemberRequestDto) {
 
         Family findFamily = familyRepository.findByFamilyId(familyId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 가족 그룹입니다."));
+                .orElseThrow(FamilyNotFoundException::new);
 
         if (findFamily.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 가족 그룹입니다.");
+            throw new FamilyAlreadyDeletedException();
         }
 
         User existUser = userRepository.findByUserId(deleteFamilyMemberRequestDto.getDeleteMemberId())
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 사용자입니다."));
+                .orElseThrow(UserNotFoundException::new);
 
         if (existUser.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+            throw new UserAlreadyDeletedException();
         }
 
         if (existUser.getFamily() == null) {
-            throw new IllegalStateException("사용자가 아무 가족 그룹에 속해 있지 않습니다.");
+            throw new UserHasNoFamilyException();
         } else if (existUser.getFamily() != null && !Objects.equals(existUser.getFamily().getFamilyId(), familyId)) {
-            throw new IllegalStateException("사용자가 해당 가족 그룹에 속해 있지 않습니다.");
+            throw new UserHasWrongFamilyException();
         }
 
         findFamily.deleteUser(existUser);
@@ -153,10 +157,10 @@ public class FamilyServiceImpl implements FamilyService {
     public DeleteFamilyResponseDto deleteFamily(Long familyId) {
 
         Family findFamily = familyRepository.findByFamilyId(familyId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 가족 그룹입니다."));
+                .orElseThrow(FamilyNotFoundException::new);
 
         if (findFamily.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 가족 그룹입니다.");
+            throw new FamilyAlreadyDeletedException();
         }
 
         // TODO: 그룹장 권한 확인
@@ -175,50 +179,46 @@ public class FamilyServiceImpl implements FamilyService {
     public ChangeFamilyManagerResponseDto changeFamilyManager(Long familyId, ChangeFamilyManagerRequestDto changeFamilyManagerRequestDto) {
 
         Family findFamily = familyRepository.findByFamilyId(familyId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 가족 그룹입니다."));
+                .orElseThrow(FamilyNotFoundException::new);
 
         if (findFamily.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 가족 그룹입니다.");
+            throw new FamilyAlreadyDeletedException();
         }
 
         User prevManagerUser = userRepository.findByUserId(changeFamilyManagerRequestDto.getPrevManagerId())
-                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(UserNotFoundException::new);
 
         if (prevManagerUser.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+            throw new UserAlreadyDeletedException();
         }
 
         User nextManagerUser = userRepository.findByUserId(changeFamilyManagerRequestDto.getNextManagerId())
-                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+                .orElseThrow(UserNotFoundException::new);
 
         if (nextManagerUser.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+            throw new UserAlreadyDeletedException();
         }
 
         // 권한 변경 관련 예외 처리
 
         if (prevManagerUser.getFamily() == null) {
-            throw new IllegalStateException("가족 그룹에 속해 있지 않은 사용자입니다.");
-        }
-
-        if (prevManagerUser.getFamily() != null && !prevManagerUser.getFamily().getFamilyId().equals(familyId)) {
-            throw new IllegalStateException("사용자가 변경 대상 가족 그룹의 구성원이 아닙니다.");
+            throw new UserHasNoFamilyException();
+        } else if (prevManagerUser.getFamily() != null && !prevManagerUser.getFamily().getFamilyId().equals(familyId)) {
+            throw new UserHasWrongFamilyException();
         }
 
         if (!prevManagerUser.getRole().equals(User.Role.ROLE_MANAGER)) {
-            throw new IllegalStateException("사용자가 가족 그룹의 그룹장이 아닙니다.");
+            throw new FamilyManagerRequiredException();
         }
 
         if (nextManagerUser.getFamily() == null) {
-            throw new IllegalStateException("가족 그룹에 속해 있지 않은 사용자입니다.");
-        }
-
-        if (nextManagerUser.getFamily() != null && !nextManagerUser.getFamily().getFamilyId().equals(familyId)) {
-            throw new IllegalStateException("사용자가 변경 대상 가족 그룹의 구성원이 아닙니다.");
+            throw new UserHasNoFamilyException();
+        } else if (nextManagerUser.getFamily() != null && !nextManagerUser.getFamily().getFamilyId().equals(familyId)) {
+            throw new UserHasWrongFamilyException();
         }
 
         if (nextManagerUser.getRole().equals(User.Role.ROLE_MANAGER)) {
-            throw new IllegalStateException("사용자가 이미 가족 그룹의 그룹장입니다.");
+            throw new UserAlreadyManagerException();
         }
 
         // TODO: 가족 그룹장 권한 확인
