@@ -47,8 +47,6 @@ public enum ResponseCode {
     F_MAX_NUMBER_EXCEEDED("613", "가족 그룹 정원을 초과하였습니다."),
 
     F_ROLE_MANAGER_REQUIRED("620", "가족 그룹장 권한이 있어야 합니다."),
-
-
     ;
 
     private final String code;
