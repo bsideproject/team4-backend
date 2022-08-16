@@ -2,8 +2,10 @@ package com.bside.sidefriends.security;
 
 import com.bside.sidefriends.users.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -27,6 +29,8 @@ public class SecurityConfiguration {
 
     private AuthenticationManager authenticationManager;
 
+    // 가족 그룹장 권한이 필요한 API 엔드포인트
+    private static final String FAMILY_MANAGER_REQUIRED_ENDPOINTS = "/api/v1/family/{\\d+}/**";
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -45,6 +49,9 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                     .antMatchers("/user/**").authenticated()
                     .antMatchers("/manager/**").hasRole("MANAGER")
+                    .antMatchers(HttpMethod.DELETE, FAMILY_MANAGER_REQUIRED_ENDPOINTS).hasRole("MANAGER")
+                    .antMatchers(HttpMethod.POST, FAMILY_MANAGER_REQUIRED_ENDPOINTS).hasRole("MANAGER")
+                    .antMatchers(HttpMethod.PUT, FAMILY_MANAGER_REQUIRED_ENDPOINTS).hasRole("MANAGER")
                 .anyRequest().permitAll()
             .and()
                 .oauth2Login()
