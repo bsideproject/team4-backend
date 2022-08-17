@@ -27,7 +27,10 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
                 .sign(HMAC512(JwtProperties.SECRET.getBytes()));
         System.out.println("OAuth2SuccessHandler token : " + token);
+
+        String jwtToken = JwtProperties.TOKEN_PREFIX +  token;
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX +  token);
-        response.sendRedirect("/");
+        response.sendRedirect("/?token="+jwtToken); // FE로 Redirect할 경로
     }
+
 }
