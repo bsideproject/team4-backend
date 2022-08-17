@@ -7,4 +7,8 @@ public class UserInfoNotChangedException extends BusinessException {
         super(ResponseCode.U_ENTITY_NOT_UPDATED);
     }
 
+    public UserInfoNotChangedException(String message) {
+        super(message, ResponseCode.U_ENTITY_NOT_UPDATED);
+    }
+
 }
