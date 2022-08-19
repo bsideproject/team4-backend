@@ -8,14 +8,16 @@ public enum ResponseCode {
     // 로그인(101-150)
 
     // 회원(151-199)
-    CREATE_USER_SUCCESS("151", "회원 가입에 성공하였습니다."),
-    CREATE_USER_FAIL("152", "회원 가입에 실패하였습니다."),
-    FIND_USER_SUCCESS("153", "회원 조회에 성공하였습니다."),
-    FIND_USER_FAIL("154", "회원 조회에 실패하였습니다"),
-    MODIFY_USER_SUCCESS("155", "회원 정보 수정에 성공하였습니다."),
-    MODIFY_USER_FAIL("156", "회원 정보 수정에 실패하였습니다."),
-    DELETE_USER_SUCCESS("157", "회원 삭제에 성공하였습니다."),
-    DELETE_USER_FAIL("158", "회원 삭제에 실패하였습니다."),
+    U_CREATE_SUCCESS("151", "회원 가입에 성공하였습니다."),
+    U_FIND_SUCCESS("152", "회원 조회에 성공하였습니다."),
+    U_MODIFY_SUCCESS("153", "회원 정보 수정에 성공하였습니다."),
+    U_DELETE_SUCCESS("154", "회원 삭제에 성공하였습니다."),
+    U_INVALID_INPUT("160", "회원 서비스 입력 값이 올바르지 않습니다."),
+    U_ENTITY_NOT_FOUND("161", "회원을 찾을 수 없습니다."),
+    U_ENTITY_DUPLICATED("162", "이미 존재하는 회원입니다."),
+    U_ENTITY_DELETED("163", "이미 삭제된 회원입니다."),
+    U_ENTITY_NOT_UPDATED("164", "수정하려는 회원 정보가 동일합니다."),
+
 
     // 반려동물(201-299)
 
