@@ -1,6 +1,10 @@
 package com.bside.sidefriends.users.service;
 
 import com.bside.sidefriends.users.domain.User;
+import com.bside.sidefriends.users.error.exception.UserAlreadyDeletedException;
+import com.bside.sidefriends.users.error.exception.UserAlreadyExistsException;
+import com.bside.sidefriends.users.error.exception.UserInfoNotChangedException;
+import com.bside.sidefriends.users.error.exception.UserNotFoundException;
 import com.bside.sidefriends.users.repository.UserRepository;
 import com.bside.sidefriends.users.service.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +25,7 @@ public class UserServiceImpl implements UserService {
         if (userRepository.findByProviderAndProviderId(
                 userCreateRequestDto.getProvider(), userCreateRequestDto.getProviderId())
                 .isPresent()) {
-            throw new IllegalStateException("이미 존재하는 사용자입니다.");
+            throw new UserAlreadyExistsException();
         }
 
         User userEntity = User.builder()
@@ -34,25 +38,24 @@ public class UserServiceImpl implements UserService {
                 .isDeleted(false) // 회원 가입 시 회원 삭제 여부 false
                 .build();
 
-        User user = userRepository.save(userEntity);
+        userRepository.save(userEntity);
 
         return new CreateUserResponseDto(
-                user.getUserId(),
-                user.getName(),
-                user.getEmail(),
-                user.isDeleted(),
-                user.getRole()
+                userEntity.getUserId(),
+                userEntity.getName(),
+                userEntity.getEmail(),
+                userEntity.isDeleted(),
+                userEntity.getRole()
         );
     }
 
     @Override
     public FindUserByUserIdResponseDto findUserByUserId(Long userId) {
 
-        User findUser = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+        User findUser = userRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
 
         if (findUser.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+            throw new UserAlreadyDeletedException();
         }
 
         return new FindUserByUserIdResponseDto(
@@ -70,15 +73,15 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public ModifyUserResponseDto modifyUser(Long userId, ModifyUserRequestDto modifyUserRequestDto) {
 
-        User findUser = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+        User findUser = userRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
 
         if (findUser.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+            throw new UserAlreadyDeletedException();
         }
 
         if (modifyUserRequestDto.getName().equals(findUser.getName())) {
-            throw new IllegalStateException("변경하려는 이름이 동일합니다.");
+//            throw new UserInfoNotChangedException(String.format("변경하려는 이름 %s가 기존과 동일합니다", modifyUserRequestDto.getName()));
+            throw new UserInfoNotChangedException();
         }
 
         findUser.modify(modifyUserRequestDto);
