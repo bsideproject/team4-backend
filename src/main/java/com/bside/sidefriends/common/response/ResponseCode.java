@@ -5,6 +5,10 @@ import lombok.Getter;
 @Getter
 public enum ResponseCode {
 
+    // 공통
+    METHOD_NOT_ALLOWED("003", "허용되지 않은 요청 방법입니다."),
+
+
     // 로그인(101-150)
 
     // 회원(151-199)
@@ -12,16 +16,15 @@ public enum ResponseCode {
     U_FIND_SUCCESS("152", "회원 조회에 성공하였습니다."),
     U_MODIFY_SUCCESS("153", "회원 정보 수정에 성공하였습니다."),
     U_DELETE_SUCCESS("154", "회원 삭제에 성공하였습니다."),
+
     U_INVALID_INPUT("160", "회원 서비스 입력 값이 올바르지 않습니다."),
-    U_ENTITY_NOT_FOUND("161", "회원을 찾을 수 없습니다."),
+    U_ENTITY_NOT_FOUND("161", "존재하지 않는 회원입니다."),
     U_ENTITY_DUPLICATED("162", "이미 존재하는 회원입니다."),
     U_ENTITY_DELETED("163", "이미 삭제된 회원입니다."),
     U_ENTITY_NOT_UPDATED("164", "수정하려는 회원 정보가 동일합니다."),
+    U_DELETE_FAIL("165", "회원을 삭제할 수 없습니다."),
 
-    U_ENTITY_WITH_FAMILY("170", "사용자가 이미 가족 그룹에 속해 있습니다."),
-    U_ENTITY_WITH_NO_FAMILY("171", "사용자가 아무 가족 그룹에도 속해 있지 않습니다."),
-    U_ENTITY_WITH_WRONG_FAMILY("172", "사용자가 해당 가족 그룹에 속해 있지 않습니다."),
-    U_ENTITY_WITH_MANAGER_ROLE("173", "사용자가 가족 그룹장 권한을 가지고 있습니다."),
+    U_ENTITY_WITH_MANAGER_ROLE("173", "가족 그룹장 권한을 가지고 있는 회원입니다."),
 
     // 반려동물(201-299)
 
@@ -42,11 +45,18 @@ public enum ResponseCode {
     F_DELETE_MEMBER_SUCCESS("606", "가족 그룹 구성원 삭제에 성공하였습니다."),
 
     F_INVALID_INPUT("610", "가족 서비스 입력 값이 올바르지 않습니다."),
-    F_ENTITY_NOT_FOUND("611", "가족 그룹을 찾을 수 없습니다."),
+    F_ENTITY_NOT_FOUND("611", "존재하지 않는 가족 그룹입니다."),
     F_ENTITY_DELETED("612", "이미 삭제된 가족 그룹입니다."),
     F_MAX_NUMBER_EXCEEDED("613", "가족 그룹 정원을 초과하였습니다."),
+    F_DELETE_NOT_ALLOWED("614", "가족 그룹을 삭제할 수 없습니다."),
+    F_DELETE_MEMBER_NOT_ALLOWED("615", "가족 그룹 구성원을 추방할 수 없습니다."),
+    F_MEMBER_DUPLICATED("616", "가족 그룹에 속해 있는 사용자입니다."),
+    F_MEMBER_WITH_NO_FAMILY("617", "가족 그룹에 속해 있지 않은 사용자입니다."),
+    F_MEMBER_NOT_FOUND("618", "가족 그룹 구성원이 존재하지 않습니다."),
+    F_MANAGER_NOT_FOUND("619", "가족 그룹 그룹장이 존재하지 않습니다."),
 
     F_ROLE_MANAGER_REQUIRED("620", "가족 그룹장 권한이 있어야 합니다."),
+
     ;
 
     private final String code;

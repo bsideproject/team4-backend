@@ -1,8 +1,8 @@
 package com.bside.sidefriends.users.error;
 
+import com.bside.sidefriends.common.exception.BusinessException;
 import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
-import com.bside.sidefriends.users.error.exception.BusinessException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;

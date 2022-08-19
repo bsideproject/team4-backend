@@ -1,10 +1,7 @@
 package com.bside.sidefriends.family.service;
 
 import com.bside.sidefriends.family.domain.Family;
-import com.bside.sidefriends.family.error.exception.FamilyAlreadyDeletedException;
-import com.bside.sidefriends.family.error.exception.FamilyLimitExceededException;
-import com.bside.sidefriends.family.error.exception.FamilyManagerRequiredException;
-import com.bside.sidefriends.family.error.exception.FamilyNotFoundException;
+import com.bside.sidefriends.family.error.exception.*;
 import com.bside.sidefriends.family.repository.FamilyRepository;
 import com.bside.sidefriends.family.service.dto.*;
 import com.bside.sidefriends.users.domain.User;
@@ -15,7 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,19 +24,20 @@ public class FamilyServiceImpl implements FamilyService {
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
 
-
     @Override
     @Transactional(rollbackFor = Exception.class)
     public CreateFamilyReponseDto createFamily(CreateFamilyRequestDto createFamilyRequestDto) {
 
-        User managerUser = userRepository.findByUserId(createFamilyRequestDto.getGroupManagerId())
-                .orElseThrow(UserNotFoundException::new);
+        Long groupManagerId = createFamilyRequestDto.getGroupManagerId();
+
+        User managerUser = userRepository.findByUserId(groupManagerId)
+                .orElseThrow(() -> new FamilyManagerNotFoundException(new UserNotFoundException()));
 
         if (managerUser.isDeleted()) {
-            throw new UserAlreadyDeletedException();
+            throw new FamilyManagerNotFoundException(new UserAlreadyDeletedException());
         }
 
-        if (managerUser.getFamily() != null && managerUser.getFamily().getFamilyId() != null) {
+        if (userHasFamily.test(managerUser)) {
             throw new UserHasFamilyException();
         }
 
@@ -53,22 +52,19 @@ public class FamilyServiceImpl implements FamilyService {
 
         return new CreateFamilyReponseDto(
                 family.getFamilyId(),
-                managerUser.getUserId() // TODO: 엔티티 안에서 연관관계?
+                managerUser.getUserId()
         );
     }
 
     @Override
     public FindFamilyMembersByFamilyIdResponseDto findFamilyMembersByFamilyId(Long familyId) {
 
-        Family findFamily = familyRepository.findByFamilyId(familyId)
-                .orElseThrow(FamilyNotFoundException::new);
+        Family findFamily = familyRepository.findByFamilyId(familyId).orElseThrow(FamilyNotFoundException::new);
 
-        List<User> userList = findFamily.getActiveMemberList();
-
-        List<FindFamilyMembersByFamilyIdResponseDto.FamilyMember> familyMemberList = userList.stream()
+        List<FindFamilyMembersByFamilyIdResponseDto.FamilyMember> familyMemberList =
+                findFamily.getMemberList().stream()
                 .map(user -> new FindFamilyMembersByFamilyIdResponseDto.FamilyMember(
-                        user.getUserId(), user.getName(), user.getRole()
-                ))
+                        user.getUserId(), user.getName(), user.getRole()))
                 .collect(Collectors.toList());
 
         return new FindFamilyMembersByFamilyIdResponseDto(familyMemberList);
@@ -78,8 +74,7 @@ public class FamilyServiceImpl implements FamilyService {
     @Transactional(rollbackFor = Exception.class)
     public AddFamilyMemberResponseDto addFamilyMember(Long familyId, AddFamilyMemberRequestDto addFamilyMemberRequestDto) {
 
-        Family findFamily = familyRepository.findByFamilyId(familyId)
-                .orElseThrow(FamilyNotFoundException::new);
+        Family findFamily = familyRepository.findByFamilyId(familyId).orElseThrow(FamilyNotFoundException::new);
 
         if (findFamily.isDeleted()) {
             throw new FamilyAlreadyDeletedException();
@@ -90,20 +85,20 @@ public class FamilyServiceImpl implements FamilyService {
         }
 
         User newUser = userRepository.findByUserId(addFamilyMemberRequestDto.getAddMemberId())
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> new FamilyMemberNotFoundException(new UserNotFoundException()));
 
         if (newUser.isDeleted()) {
-            throw new UserAlreadyDeletedException();
+            throw new FamilyMemberNotFoundException(new UserAlreadyDeletedException());
         }
 
-        if (newUser.getFamily() != null && newUser.getFamily().getFamilyId() != null) {
+        if (userHasFamily.test(newUser)) {
             throw new UserHasFamilyException();
         }
 
         findFamily.addUser(newUser);
         familyRepository.save(findFamily);
 
-        List<AddFamilyMemberResponseDto.FamilyMember> familyMemberList = findFamily.getActiveMemberList().stream()
+        List<AddFamilyMemberResponseDto.FamilyMember> familyMemberList = findFamily.getMemberList().stream()
                 .map(user -> new AddFamilyMemberResponseDto.FamilyMember(
                         user.getUserId(), user.getName(), user.getRole()))
                 .collect(Collectors.toList());
@@ -118,30 +113,29 @@ public class FamilyServiceImpl implements FamilyService {
     @Transactional(rollbackFor = Exception.class)
     public DeleteFamilyMemberResponseDto deleteFamilyMember(Long familyId, DeleteFamilyMemberRequestDto deleteFamilyMemberRequestDto) {
 
-        Family findFamily = familyRepository.findByFamilyId(familyId)
-                .orElseThrow(FamilyNotFoundException::new);
+        Family findFamily = familyRepository.findByFamilyId(familyId).orElseThrow(FamilyNotFoundException::new);
 
         if (findFamily.isDeleted()) {
             throw new FamilyAlreadyDeletedException();
         }
 
+        // TODO: 그룹장 권한 확인
+
         User existUser = userRepository.findByUserId(deleteFamilyMemberRequestDto.getDeleteMemberId())
-                .orElseThrow(UserNotFoundException::new);
+                .orElseThrow(() -> new FamilyMemberNotFoundException(new UserNotFoundException()));
 
         if (existUser.isDeleted()) {
-            throw new UserAlreadyDeletedException();
+            throw new FamilyMemberNotFoundException(new UserAlreadyDeletedException());
         }
 
-        if (existUser.getFamily() == null) {
-            throw new UserHasNoFamilyException();
-        } else if (existUser.getFamily() != null && !Objects.equals(existUser.getFamily().getFamilyId(), familyId)) {
-            throw new UserHasWrongFamilyException();
+        if (!userInFamily.test(existUser, familyId)) {
+            throw new FamilyMemberDeleteFailException("사용자가 해당 가족 그룹에 속해 있지 않습니다.");
         }
 
         findFamily.deleteUser(existUser);
         familyRepository.save(findFamily);
 
-        List<DeleteFamilyMemberResponseDto.FamilyMember> familyMemberList = findFamily.getActiveMemberList().stream()
+        List<DeleteFamilyMemberResponseDto.FamilyMember> familyMemberList = findFamily.getMemberList().stream()
                 .map(user -> new DeleteFamilyMemberResponseDto.FamilyMember(
                         user.getUserId(), user.getName(), user.getRole()))
                 .collect(Collectors.toList());
@@ -156,14 +150,13 @@ public class FamilyServiceImpl implements FamilyService {
     @Transactional(rollbackFor = Exception.class)
     public DeleteFamilyResponseDto deleteFamily(Long familyId) {
 
-        Family findFamily = familyRepository.findByFamilyId(familyId)
-                .orElseThrow(FamilyNotFoundException::new);
-
-        if (findFamily.isDeleted()) {
-            throw new FamilyAlreadyDeletedException();
-        }
+        Family findFamily = familyRepository.findByFamilyId(familyId).orElseThrow(FamilyNotFoundException::new);
 
         // TODO: 그룹장 권한 확인
+        if (findFamily.getFamilySize() > 1) {
+            throw new FamilyDeleteFailException("가족 그룹 구성원이 2명 이상입니다.");
+        }
+
         findFamily.delete();
         findFamily.getUsers().forEach(User::leaveFamily);
         familyRepository.save(findFamily);
@@ -178,8 +171,7 @@ public class FamilyServiceImpl implements FamilyService {
     @Transactional(rollbackFor = Exception.class)
     public ChangeFamilyManagerResponseDto changeFamilyManager(Long familyId, ChangeFamilyManagerRequestDto changeFamilyManagerRequestDto) {
 
-        Family findFamily = familyRepository.findByFamilyId(familyId)
-                .orElseThrow(FamilyNotFoundException::new);
+        Family findFamily = familyRepository.findByFamilyId(familyId).orElseThrow(FamilyNotFoundException::new);
 
         if (findFamily.isDeleted()) {
             throw new FamilyAlreadyDeletedException();
@@ -199,38 +191,32 @@ public class FamilyServiceImpl implements FamilyService {
             throw new UserAlreadyDeletedException();
         }
 
-        // 권한 변경 관련 예외 처리
-
-        if (prevManagerUser.getFamily() == null) {
-            throw new UserHasNoFamilyException();
-        } else if (prevManagerUser.getFamily() != null && !prevManagerUser.getFamily().getFamilyId().equals(familyId)) {
-            throw new UserHasWrongFamilyException();
+        if (!userInFamily.test(prevManagerUser, familyId)) {
+            throw new UserHasFamilyException("기존 그룹장이 해당 가족 그룹에 속해 있지 않습니다.");
         }
 
+        if (!userInFamily.test(nextManagerUser, familyId)) {
+            throw new UserHasFamilyException("그룹장으로 위임하려는 사용자가 해당 가족 그룹에 속해 있지 않습니다.");
+        }
+
+        // TODO: 가족 그룹장 권한 확인 굳이 여기서 해야 할까?
         if (!prevManagerUser.getRole().equals(User.Role.ROLE_MANAGER)) {
-            throw new FamilyManagerRequiredException();
+            throw new FamilyManagerRequiredException("기존 그룹장이 그룹장 권한을 가지고 있지 않습니다.");
         }
 
-        if (nextManagerUser.getFamily() == null) {
-            throw new UserHasNoFamilyException();
-        } else if (nextManagerUser.getFamily() != null && !nextManagerUser.getFamily().getFamilyId().equals(familyId)) {
-            throw new UserHasWrongFamilyException();
-        }
-
+        // TODO: 애초에 위에서 걸러지지 않을까?
         if (nextManagerUser.getRole().equals(User.Role.ROLE_MANAGER)) {
-            throw new UserAlreadyManagerException();
+            throw new FamilyManagerRequiredException(new UserAlreadyManagerException("그룹장으로 위임하려는 사용자가 이미 그룹장 권한을 가지고 있습니다."));
         }
 
-        // TODO: 가족 그룹장 권한 확인
         prevManagerUser.changeRole(User.Role.ROLE_USER);
         nextManagerUser.changeRole(User.Role.ROLE_MANAGER);
         userRepository.save(prevManagerUser);
         userRepository.save(nextManagerUser);
 
-        List<ChangeFamilyManagerResponseDto.FamilyMember> familyMemberList = findFamily.getActiveMemberList().stream()
+        List<ChangeFamilyManagerResponseDto.FamilyMember> familyMemberList = findFamily.getMemberList().stream()
                 .map(user -> new ChangeFamilyManagerResponseDto.FamilyMember(
-                        user.getUserId(), user.getName(), user.getRole()
-                ))
+                        user.getUserId(), user.getName(), user.getRole()))
                 .collect(Collectors.toList());
 
         return new ChangeFamilyManagerResponseDto(
@@ -239,4 +225,13 @@ public class FamilyServiceImpl implements FamilyService {
                 familyMemberList
         );
     }
+
+    // 가족 그룹에 속한 사용자인지 확인
+    private static final Predicate<User> userHasFamily =
+            user -> user.getFamily() != null && user.getFamily().getFamilyId() != null;
+
+    // 해당 가족 그룹에 속한 사용자인지 확인
+    private static final BiPredicate<User, Long> userInFamily =
+            (user, familyId) -> user.getFamily() != null && user.getFamily().getFamilyId().equals(familyId);
+
 }

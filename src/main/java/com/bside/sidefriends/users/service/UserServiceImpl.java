@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -19,9 +21,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public CreateUserResponseDto createUser(CreateUserRequestDto userCreateRequestDto) throws IllegalStateException{
 
-        if (userRepository.findByProviderAndProviderId(
-                userCreateRequestDto.getProvider(), userCreateRequestDto.getProviderId())
-                .isPresent()) {
+        Optional<User> findUser = userRepository.findByProviderAndProviderId(
+                userCreateRequestDto.getProvider(), userCreateRequestDto.getProviderId());
+
+        if (findUser.isPresent() && !findUser.get().isDeleted()) {
             throw new UserAlreadyExistsException();
         }
 
@@ -77,7 +80,8 @@ public class UserServiceImpl implements UserService {
         }
 
         if (modifyUserRequestDto.getName().equals(findUser.getName())) {
-            throw new UserInfoNotChangedException(String.format("변경하려는 이름 %s가 기존 이름 %s와 동일합니다.", modifyUserRequestDto.getName(), findUser.getName()));
+            throw new UserInfoNotChangedException(
+                    String.format("변경하려는 이름 %s가 기존 이름 %s와 동일합니다.", modifyUserRequestDto.getName(), findUser.getName()));
         }
 
         findUser.modify(modifyUserRequestDto);
@@ -94,15 +98,14 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public DeleteUserResponseDto deleteUser(Long userId) {
 
-        User findUser = userRepository.findByUserId(userId)
-                .orElseThrow(UserNotFoundException::new);
+        User findUser = userRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
 
         if (findUser.isDeleted()) {
             throw new UserAlreadyDeletedException();
         }
 
         if (findUser.getRole().equals(User.Role.ROLE_MANAGER)) {
-            throw new UserAlreadyManagerException("가족 그룹장인 회원은 회원 탈퇴를 할 수 없습니다.");
+            throw new UserDeleteFailException(new UserAlreadyManagerException());
         }
 
         findUser.delete();

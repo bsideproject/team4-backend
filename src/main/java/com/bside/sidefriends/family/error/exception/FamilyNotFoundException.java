@@ -1,5 +1,6 @@
 package com.bside.sidefriends.family.error.exception;
 
+import com.bside.sidefriends.common.exception.BusinessException;
 import com.bside.sidefriends.common.response.ResponseCode;
 
 public class FamilyNotFoundException extends BusinessException {
