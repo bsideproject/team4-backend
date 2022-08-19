@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class testController {
 
 
-    @GetMapping({ "", "/" })
-    public String index() {
-        return "메인 페이지입니다.";
-    }
+//    @GetMapping({ "", "/" })
+//    public String index() {
+//        return "메인 페이지입니다.";
+//    }
 
     @GetMapping("/login")
     public String login() {

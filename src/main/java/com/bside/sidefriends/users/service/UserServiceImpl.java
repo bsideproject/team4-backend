@@ -40,7 +40,8 @@ public class UserServiceImpl implements UserService {
                 user.getUserId(),
                 user.getName(),
                 user.getEmail(),
-                user.isDeleted()
+                user.isDeleted(),
+                user.getRole()
         );
     }
 

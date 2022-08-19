@@ -21,6 +21,18 @@ public enum ResponseCode {
 
     // 퀵 기록(301-399)
 
+    CREATE_QUICK_SUCCESS("301", "퀵 기록 생성에 성공하였습니다."),
+    CREATE_QUICK_FAIL("302", "퀵 기록 생성에 실패하였습니다."),
+    FIND_QUICK_SUCCESS("303", "퀵 기록 조회에 성공하였습니다."),
+    FIND_QUICK_FAIL("304", "퀵 기록 조회에 실패하였습니다."),
+    MODIFY_QUICK_SUCCESS("305", "퀵 기록 수정에 성공하였습니다."),
+    MODIFY_QUICK_FAIL("306", "퀵 기록 수정에 실패하였습니다."),
+    MODIFY_QUICK_ORDER_SUCCESS("307", "퀵 기록 순서 변경에 성공하였습니다."),
+    MODIFY_QUICK_ORDER_FAIL("308", "퀵 기록 순서 변경에 실패하였습니다."),
+    MODIFY_QUICK_COUNT_SUCCESS("309", "퀵 기록 실행 횟수 증가에 성공하였습니다."),
+    MODIFY_QUICK_COUNT_FAIL("310", "퀵 기록 실행 횟수 증가에 실패하였습니다."),
+
+
     // 체크리스트(401-450)
 
     // 할 일, 스케쥴(451-499)
