@@ -36,13 +36,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String header = request.getHeader(JwtProperties.HEADER_STRING);
         System.out.println("JwtAuthorizationFilter start : " + header);
 
+        // Bearer%20 처리
+        if (header.startsWith("Bearer%20")) {
+            header = header.replace("Bearer%20", JwtProperties.TOKEN_PREFIX);
+        }
+
         // If header does not contain BEARER or is null delegate to Spring impl and exit
         if (header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) {
             chain.doFilter(request, response);
             return;
         }
 
-        String token = request.getHeader(JwtProperties.HEADER_STRING).replace(JwtProperties.TOKEN_PREFIX,"");
+        String token = header.replace(JwtProperties.TOKEN_PREFIX,"");
         String userName = JWT.require(HMAC512(JwtProperties.SECRET.getBytes()))
                 .build().verify(token).getSubject(); //TODO : 유효하지 않은 Token이 들어오면 SignatureVerificationException이 발생한다
         // TODO-jh : 유효기간이 만료한 Token이 들어오면 com.auth0.jwt.exceptions.TokenExpiredException: The Token has expired on 2022-08-08T11:13:57Z 발생
