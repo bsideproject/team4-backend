@@ -32,12 +32,27 @@ public class UserImage {
     @Column(nullable = false)
     private String imageUrl;
 
+    /**
+     * TODO: 이미지 id 구현 방안
+     * - 이미지 id 반환
+     * - 이미지 경로 + 이미지 id로 받아 오기(로컬 서버)
+     * - 이미지 id로 이미지 받아 오기(오브젝트 스토리지)
+     * - 이미지 경로 자체를 저장하기(오브젝트 스토리지)
+     */
+    @Column(nullable = false)
+    private String imageId; // 이미지 식별자에 저장될 이미지 경로
+
+    private String imageName; // 클라이언트 파일 시스템에 저장된 이미지 이름
+
     @Builder
-    public UserImage(Long userImageId, User user, LocalDateTime createdAt, LocalDateTime updatedAt, String imageUrl) {
+    public UserImage(Long userImageId, User user, LocalDateTime createdAt, LocalDateTime updatedAt,
+                     String imageUrl, String imageId, String imageName) {
         this.userImageId = userImageId;
         this.user = user;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.imageUrl = imageUrl;
+        this.imageId = imageId;
+        this.imageName = imageName;
     }
 }
