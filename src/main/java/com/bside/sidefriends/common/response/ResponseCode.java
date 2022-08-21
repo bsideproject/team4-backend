@@ -5,6 +5,9 @@ import lombok.Getter;
 @Getter
 public enum ResponseCode {
 
+    // 공통(00-99)
+    INVALID_INPUT("001", "입력 값이 올바르지 않습니다."),
+
     // 로그인(101-150)
 
     // 회원(151-199)
