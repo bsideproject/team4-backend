@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 public class BusinessException extends RuntimeException {
 
-    private final ResponseCode responseCode;
+    private ResponseCode responseCode;
     private final List<BusinessException> nestedExceptions = new ArrayList<>();
 
     public BusinessException(ResponseCode responseCode) {
@@ -29,4 +29,3 @@ public class BusinessException extends RuntimeException {
     }
 
 }
-

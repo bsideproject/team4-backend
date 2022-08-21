@@ -5,6 +5,9 @@ import lombok.Getter;
 @Getter
 public enum ResponseCode {
 
+    // 공통(00-99)
+    INVALID_INPUT("001", "입력 값이 올바르지 않습니다."),
+
     // 공통
     METHOD_NOT_ALLOWED("003", "허용되지 않은 요청 방법입니다."),
 
@@ -22,13 +25,23 @@ public enum ResponseCode {
     U_ENTITY_DUPLICATED("162", "이미 존재하는 회원입니다."),
     U_ENTITY_DELETED("163", "이미 삭제된 회원입니다."),
     U_ENTITY_NOT_UPDATED("164", "수정하려는 회원 정보가 동일합니다."),
-    U_DELETE_FAIL("165", "회원을 삭제할 수 없습니다."),
 
-    U_ENTITY_WITH_MANAGER_ROLE("173", "가족 그룹장 권한을 가지고 있는 회원입니다."),
 
     // 반려동물(201-299)
 
     // 퀵 기록(301-399)
+
+    CREATE_QUICK_SUCCESS("301", "퀵 기록 생성에 성공하였습니다."),
+    CREATE_QUICK_FAIL("302", "퀵 기록 생성에 실패하였습니다."),
+    FIND_QUICK_SUCCESS("303", "퀵 기록 조회에 성공하였습니다."),
+    FIND_QUICK_FAIL("304", "퀵 기록 조회에 실패하였습니다."),
+    MODIFY_QUICK_SUCCESS("305", "퀵 기록 수정에 성공하였습니다."),
+    MODIFY_QUICK_FAIL("306", "퀵 기록 수정에 실패하였습니다."),
+    MODIFY_QUICK_ORDER_SUCCESS("307", "퀵 기록 순서 변경에 성공하였습니다."),
+    MODIFY_QUICK_ORDER_FAIL("308", "퀵 기록 순서 변경에 실패하였습니다."),
+    MODIFY_QUICK_COUNT_SUCCESS("309", "퀵 기록 실행 횟수 증가에 성공하였습니다."),
+    MODIFY_QUICK_COUNT_FAIL("310", "퀵 기록 실행 횟수 증가에 실패하였습니다."),
+
 
     // 체크리스트(401-450)
 
@@ -55,7 +68,6 @@ public enum ResponseCode {
     F_MEMBER_NOT_FOUND("618", "가족 그룹 구성원이 존재하지 않습니다."),
     F_MANAGER_NOT_FOUND("619", "가족 그룹 그룹장이 존재하지 않습니다."),
 
-    F_ROLE_MANAGER_REQUIRED("620", "가족 그룹장 권한이 있어야 합니다."),
 
     ;
 
