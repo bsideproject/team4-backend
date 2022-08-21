@@ -3,6 +3,7 @@ package com.bside.sidefriends.family.error;
 import com.bside.sidefriends.common.exception.BusinessException;
 import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
+import com.bside.sidefriends.family.controller.FamilyController;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import org.springframework.http.ResponseEntity;
@@ -19,22 +20,13 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@ControllerAdvice
+@ControllerAdvice(basePackageClasses = FamilyController.class)
 public class FamilyExceptionHandler {
 
     // TODO: Map 사용하는 에러 처리 방식 좋은 방법인지 고민해 볼 것
     // TODO: 에러 핸들러 common 패키지로 올리는 방안?
     // TODO: ResponseDto의 반복적 선언 및 할당의 변경 방안?
     // TODO: unbound parameter
-
-    private String getErrorMessage(ResponseCode errorCode, BusinessException e) {
-        if (e.getMessage().equals(errorCode.getMessage())) {
-            return errorCode.getMessage();
-        } else {
-            return e.getMessage();
-        }
-    }
-
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ResponseDto<?>> handleBusinessException(BusinessException e) {
 
@@ -121,6 +113,14 @@ public class FamilyExceptionHandler {
         ResponseDto<Map<String, String>> responseDto = ResponseDto.onFailWithData(ResponseCode.F_INVALID_INPUT, parameterErrors);
 
         return ResponseEntity.ok().body(responseDto);
+    }
+
+    private String getErrorMessage(ResponseCode errorCode, BusinessException e) {
+        if (e.getMessage().equals(errorCode.getMessage())) {
+            return errorCode.getMessage();
+        } else {
+            return e.getMessage();
+        }
     }
 
     @Getter
