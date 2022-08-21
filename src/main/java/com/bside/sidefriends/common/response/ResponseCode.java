@@ -23,7 +23,9 @@ public enum ResponseCode {
     U_ENTITY_DUPLICATED("162", "이미 존재하는 회원입니다."),
     U_ENTITY_DELETED("163", "이미 삭제된 회원입니다."),
     U_ENTITY_NOT_UPDATED("164", "수정하려는 회원 정보가 동일합니다."),
+    U_DELETE_FAIL("165", "회원을 삭제할 수 없습니다."),
 
+    U_ENTITY_WITH_MANAGER_ROLE("173", "가족 그룹장 권한을 가지고 있는 회원입니다."),
 
     // 반려동물(201-299)
 
