@@ -5,10 +5,8 @@ import lombok.Getter;
 @Getter
 public enum ResponseCode {
 
-    // 공통(00-99)
+    // 공통(000-099)
     INVALID_INPUT("001", "입력 값이 올바르지 않습니다."),
-
-    // 공통
     METHOD_NOT_ALLOWED("003", "허용되지 않은 요청 방법입니다."),
 
 
