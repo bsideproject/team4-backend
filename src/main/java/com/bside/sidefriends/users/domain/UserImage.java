@@ -3,6 +3,7 @@ package com.bside.sidefriends.users.domain;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -30,6 +31,7 @@ public class UserImage {
     private LocalDateTime updatedAt;
 
     @Column(nullable = false)
+    @Setter
     private String imageUrl;
 
     /**
@@ -40,8 +42,11 @@ public class UserImage {
      * - 이미지 경로 자체를 저장하기(오브젝트 스토리지)
      */
     @Column(nullable = false)
+    @Setter
     private String imageId; // 이미지 식별자에 저장될 이미지 경로
 
+    @Column(nullable = false)
+    @Setter
     private String imageName; // 클라이언트 파일 시스템에 저장된 이미지 이름
 
     @Builder

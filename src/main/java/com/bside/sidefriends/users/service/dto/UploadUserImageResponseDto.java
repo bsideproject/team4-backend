@@ -8,6 +8,6 @@ import lombok.Getter;
 public class UploadUserImageResponseDto {
 
     Long userId;
-    String userImageId;
+    String imageId;
 
 }

@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +29,7 @@ public class UserImageServiceImpl implements UserImageService {
     private final ImageHandler imageHandler;
 
 
+    // TODO: 이미지 업로드 로직 리팩토링
     @Override
     @Transactional
     public UploadUserImageResponseDto uploadUserImage(Long userId, MultipartFile file) {
@@ -40,25 +42,41 @@ public class UserImageServiceImpl implements UserImageService {
             throw new IllegalStateException("이미지를 업로드할 회원이 이미 삭제된 회원입니다.");
         }
 
+        Optional<UserImage> findUserImage = userImageRepository.findByUser(findUser);
+        UserImage userImageEntity;
+
+        // 이미지 저장
         String imageName = file.getOriginalFilename();
-        String imageId;
+        String imagePath;
 
-        try {
-            imageId = imageHandler.saveImage(file);
-        } catch (IOException e) {
-            throw new IllegalStateException("회원 이미지 저장 중 오류가 발생했습니다.");
+        if (findUserImage.isPresent()) {
+            userImageEntity = findUserImage.get();
+
+            try {
+                imagePath = imageHandler.saveImage(file);
+            } catch (IOException e) {
+                throw new IllegalStateException("회원 이미지 저장 중 오류가 발생했습니다.");
+            }
+
+            // 변경 감지 업데이트
+            userImageEntity.setImageName(imageName);
+            userImageEntity.setImageId(imagePath); // TODO: 이미지 id는 일단 path로 저장한 상태
+            userImageEntity.setImageUrl("http://localhost:8080"); // TODO: 이미지 url 삭제?
+        } else {
+
+            try {
+                imagePath = imageHandler.saveImage(file);
+            } catch (IOException e) {
+                throw new IllegalStateException("회원 이미지 저장 중 오류가 발생했습니다.");
+            }
+
+            userImageEntity = UserImage.builder()
+                    .user(findUser)
+                    .imageName(imageName)
+                    .imageId(imagePath) // TODO: 이미지 id 일단 path로 저장한 상태
+                    .imageUrl("http://localhost:8080/") // TODO: 삭제 필요
+                    .build();
         }
-
-
-        System.out.println("이미지 저장 완료");
-        System.out.println("uuid: " + imageId);
-
-        UserImage userImageEntity = UserImage.builder()
-                .user(findUser)
-                .imageName(imageName)
-                .imageId(imageId)
-                .imageUrl("http://localhost:8080/") // TODO: 삭제 필요
-                .build();
 
         userImageRepository.save(userImageEntity);
 
