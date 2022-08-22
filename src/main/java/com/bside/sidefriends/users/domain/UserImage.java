@@ -40,10 +40,11 @@ public class UserImage {
      * - 이미지 경로 + 이미지 id로 받아 오기(로컬 서버)
      * - 이미지 id로 이미지 받아 오기(오브젝트 스토리지)
      * - 이미지 경로 자체를 저장하기(오브젝트 스토리지)
+     * 이미지 id: 이미지 서버 내에 이미지 오브젝트 스토리지 저장 경로가 노출되지 않도록 하기 위함
      */
-    @Column(nullable = false)
-    @Setter
-    private String imageId; // 이미지 식별자에 저장될 이미지 경로
+//    @Column(nullable = false)
+//    @Setter
+//    private String imageId;
 
     @Column(nullable = false)
     @Setter
@@ -51,13 +52,12 @@ public class UserImage {
 
     @Builder
     public UserImage(Long userImageId, User user, LocalDateTime createdAt, LocalDateTime updatedAt,
-                     String imageUrl, String imageId, String imageName) {
+                     String imageUrl, String imageName) {
         this.userImageId = userImageId;
         this.user = user;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.imageUrl = imageUrl;
-        this.imageId = imageId;
         this.imageName = imageName;
     }
 }

@@ -28,6 +28,8 @@ public enum ResponseCode {
     U_ENTITY_WITH_MANAGER_ROLE("173", "가족 그룹장 권한을 가지고 있는 회원입니다."),
 
     U_IMAGE_UPLOAD_SUCCESS("180", "회원 이미지 업로드에 성공했습니다."),
+    U_IMAGE_DOWNLOAD_SUCCESS("181", "회원 이미지 조회에 성공했습니다."),
+    U_IMAGE_DELETE_SUCCESS("182", "회원 이미지 삭제에 성공했습니다."),
 
     // 반려동물(201-299)
 

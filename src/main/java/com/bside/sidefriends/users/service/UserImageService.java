@@ -1,7 +1,6 @@
 package com.bside.sidefriends.users.service;
 
 import com.bside.sidefriends.users.domain.UserImage;
-import com.bside.sidefriends.users.service.dto.DeleteUserImageResponseDto;
 import com.bside.sidefriends.users.service.dto.GetUserImageResponseDto;
 import com.bside.sidefriends.users.service.dto.UploadUserImageResponseDto;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,11 +30,11 @@ public interface UserImageService {
      */
     GetUserImageResponseDto getUserImage(Long userId);
 
-    /**
-     * 유저 이미지 삭제
-     * @param userId
-     * @return
-     */
-    DeleteUserImageResponseDto deleteUserImage(Long userId);
+//    /**
+//     * 유저 이미지 삭제: 필요할 때 구현 예정
+//     * @param userId
+//     * @return
+//     */
+//    DeleteUserImageResponseDto deleteUserImage(Long userId);
 
 }

@@ -48,7 +48,7 @@ spring:
 
 image:
   server:
-    path: /src/main/resources/static/userImages
+    path: /src/main/resources/images
 
 
   

@@ -8,5 +8,5 @@ public interface ImageHandler {
 
     String saveImage(MultipartFile multipartFile) throws IOException;
 
-    boolean deleteImage(Long imageId);
+    boolean deleteImage(String imagePath);
 }
