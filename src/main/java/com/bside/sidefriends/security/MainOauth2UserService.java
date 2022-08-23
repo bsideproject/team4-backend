@@ -63,13 +63,13 @@ public class MainOauth2UserService extends DefaultOAuth2UserService {
             user = userRepository.findById(userResponseDto.getId()).get();
 
             // 신규 회원가입 - 프로필 정보 저장
-            if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
-                UserImage userImage = UserImage.builder()
-                        .user(user)
-                        .imageUrl(oAuth2UserInfo.getImageUrl())
-                        .build();
-                userImageService.createUserImage(userImage);
-            }
+//            if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
+//                UserImage userImage = UserImage.builder()
+//                        .user(user)
+//                        .imageUrl(oAuth2UserInfo.getImageUrl())
+//                        .build();
+//                userImageService.createUserImage(userImage);
+//            }
 
         }
 
