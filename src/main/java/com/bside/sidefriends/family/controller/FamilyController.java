@@ -23,7 +23,7 @@ public class FamilyController {
         CreateFamilyReponseDto createFamilyReponseDto = familyService.createFamily(createFamilyRequestDto);
 
         ResponseDto<CreateFamilyReponseDto> responseDto = ResponseDto.onSuccessWithData(
-                ResponseCode.CREATE_FAMILY_SUCCESS, createFamilyReponseDto);
+                ResponseCode.F_CREATE_SUCCESS, createFamilyReponseDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -35,7 +35,7 @@ public class FamilyController {
                 = familyService.findFamilyMembersByFamilyId(familyId);
 
         ResponseDto<FindFamilyMembersByFamilyIdResponseDto> responseDto = ResponseDto.onSuccessWithData(
-                ResponseCode.FIND_FAMILY_SUCCESS, findFamilyMembersByFamilyIdResponseDto);
+                ResponseCode.F_FIND_SUCCESS, findFamilyMembersByFamilyIdResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -46,7 +46,7 @@ public class FamilyController {
         DeleteFamilyResponseDto deleteFamilyResponseDto = familyService.deleteFamily(familyId);
 
         ResponseDto<DeleteFamilyResponseDto> responseDto = ResponseDto.onSuccessWithData(
-                ResponseCode.DELETE_FAMILY_SUCCESS, deleteFamilyResponseDto);
+                ResponseCode.F_DELETE_SUCCESS, deleteFamilyResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
 
@@ -60,7 +60,7 @@ public class FamilyController {
                 = familyService.addFamilyMember(familyId, addFamilyMemberRequestDto);
 
         ResponseDto<AddFamilyMemberResponseDto> responseDto = ResponseDto.onSuccessWithData(
-                ResponseCode.ADD_FAMILY_MEMBER_SUCCESS, addFamilyMemberResponseDto);
+                ResponseCode.F_ADD_MEMBER_SUCCESS, addFamilyMemberResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -72,7 +72,7 @@ public class FamilyController {
                 = familyService.deleteFamilyMember(familyId, deleteFamilyMemberRequestDto);
 
         ResponseDto<DeleteFamilyMemberResponseDto> responseDto = ResponseDto.onSuccessWithData(
-                ResponseCode.DELETE_FAMILY_MEMBER_SUCCESS, deleteFamilyMemberResponseDto);
+                ResponseCode.F_DELETE_MEMBER_SUCCESS, deleteFamilyMemberResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -84,7 +84,7 @@ public class FamilyController {
                 = familyService.changeFamilyManager(familyId, changeFamilyManagerRequestDto);
 
         ResponseDto<ChangeFamilyManagerResponseDto> responseDto = ResponseDto.onSuccessWithData(
-                ResponseCode.MODIFY_FAMILY_MANAGER_SUCCESS, changeFamilyManagerResponseDto);
+                ResponseCode.F_MODIFY_MANAGER_SUCCESS, changeFamilyManagerResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
     }

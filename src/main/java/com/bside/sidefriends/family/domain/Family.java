@@ -40,7 +40,7 @@ public class Family {
                 .count();
     }
 
-    public List<User> getActiveMemberList() {
+    public List<User> getMemberList() {
         return this.users.stream()
                 .filter(user -> !user.isDeleted())
                 .collect(Collectors.toList());

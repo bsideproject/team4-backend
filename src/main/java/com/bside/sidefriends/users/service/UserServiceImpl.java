@@ -1,15 +1,14 @@
 package com.bside.sidefriends.users.service;
 
 import com.bside.sidefriends.users.domain.User;
-import com.bside.sidefriends.users.error.exception.UserAlreadyDeletedException;
-import com.bside.sidefriends.users.error.exception.UserAlreadyExistsException;
-import com.bside.sidefriends.users.error.exception.UserInfoNotChangedException;
-import com.bside.sidefriends.users.error.exception.UserNotFoundException;
+import com.bside.sidefriends.users.error.exception.*;
 import com.bside.sidefriends.users.repository.UserRepository;
 import com.bside.sidefriends.users.service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -22,9 +21,10 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public CreateUserResponseDto createUser(CreateUserRequestDto userCreateRequestDto) throws IllegalStateException{
 
-        if (userRepository.findByProviderAndProviderId(
-                userCreateRequestDto.getProvider(), userCreateRequestDto.getProviderId())
-                .isPresent()) {
+        Optional<User> findUser = userRepository.findByProviderAndProviderId(
+                userCreateRequestDto.getProvider(), userCreateRequestDto.getProviderId());
+
+        if (findUser.isPresent() && !findUser.get().isDeleted()) {
             throw new UserAlreadyExistsException();
         }
 
@@ -80,8 +80,8 @@ public class UserServiceImpl implements UserService {
         }
 
         if (modifyUserRequestDto.getName().equals(findUser.getName())) {
-//            throw new UserInfoNotChangedException(String.format("변경하려는 이름 %s가 기존과 동일합니다", modifyUserRequestDto.getName()));
-            throw new UserInfoNotChangedException();
+            throw new UserInfoNotChangedException(
+                    String.format("변경하려는 이름 %s가 기존 이름 %s와 동일합니다.", modifyUserRequestDto.getName(), findUser.getName()));
         }
 
         findUser.modify(modifyUserRequestDto);
@@ -98,15 +98,14 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public DeleteUserResponseDto deleteUser(Long userId) {
 
-        User findUser = userRepository.findByUserId(userId)
-                .orElseThrow(() -> new IllegalStateException("사용자를 찾을 수 없습니다."));
+        User findUser = userRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
 
         if (findUser.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 사용자입니다.");
+            throw new UserAlreadyDeletedException();
         }
 
         if (findUser.getRole().equals(User.Role.ROLE_MANAGER)) {
-            throw new IllegalStateException("가족 그룹장은 탈퇴할 수 없습니다.");
+            throw new UserDeleteFailException(new UserAlreadyManagerException());
         }
 
         findUser.delete();

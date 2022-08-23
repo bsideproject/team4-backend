@@ -64,4 +64,9 @@ public class UserController {
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @GetMapping("/users/{userId}/{tempId}")
+    public String test(@PathVariable("userId") Long userId, @PathVariable("tempId") Long tempId) {
+        return "test";
+    }
+
 }

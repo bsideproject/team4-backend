@@ -1,7 +1,8 @@
 server:
   port: 8080
-  
+
 spring:
+
   datasource:
     url: jdbc:h2:tcp://localhost/~/sidefriends
     username: eraser
@@ -44,6 +45,10 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
+
+image:
+  server:
+    path: /src/main/resources/images
 
 
   
