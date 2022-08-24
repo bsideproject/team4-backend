@@ -26,10 +26,10 @@ public class UserImageServiceImpl implements UserImageService {
     private final ImageHandler imageHandler;
 
     // TODO: 이미지 서버 경로 설정 변경
-    @Value("${image.local.base-uri}")
+    @Value("${image.server.base-uri}")
     private String imageServerBaseUri;
 
-    @Value("${image.local.download-path}")
+    @Value("${image.server.download-path}")
     private String imageServerDownloadPath;
 
     // TODO: 이미지 업로드 로직 리팩토링
