@@ -6,7 +6,7 @@ import java.io.IOException;
 
 public interface ImageHandler {
 
-    String saveImage(MultipartFile multipartFile) throws Exception;
+    String saveImage(MultipartFile multipartFile) throws IOException;
 
-    boolean deleteImage(String imagePath) throws Exception;
+    boolean deleteImage(String imagePath) throws IOException;
 }
