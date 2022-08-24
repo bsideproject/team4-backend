@@ -152,6 +152,10 @@ public class FamilyServiceImpl implements FamilyService {
 
         Family findFamily = familyRepository.findByFamilyId(familyId).orElseThrow(FamilyNotFoundException::new);
 
+        if (findFamily.isDeleted()) {
+            throw new FamilyAlreadyDeletedException();
+        }
+
         // TODO: 그룹장 권한 확인
         if (findFamily.getFamilySize() > 1) {
             throw new FamilyDeleteFailException("가족 그룹 구성원이 2명 이상입니다.");
