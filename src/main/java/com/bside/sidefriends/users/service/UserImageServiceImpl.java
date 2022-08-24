@@ -94,7 +94,7 @@ public class UserImageServiceImpl implements UserImageService {
         UserImage findUserImage = userImageRepository.findByUser(findUser)
                 .orElseThrow(() -> new IllegalStateException("회원 이미지가 존재하지 않습니다."));
 
-        return new GetUserImageResponseDto("/images/" + findUserImage.getImageUrl());
+        return new GetUserImageResponseDto("http://localhost:8888/images/" + findUserImage.getImageUrl());
     }
 
     // TODO: 삭제 필요
