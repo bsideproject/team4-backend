@@ -14,7 +14,7 @@ public class SideFriendsConfiguration {
     @Bean
     public ImageHandler userImageHandler() {
 //        return new LocalImageHandler();
-        return new NginxImageHandler();
+        return new NginxImageHandler(restTemplate());
     }
 
     @Bean

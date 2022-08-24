@@ -2,6 +2,7 @@ package com.bside.sidefriends.users.service.util;
 
 import com.bside.sidefriends.common.util.ImageHandler;
 import com.bside.sidefriends.users.service.dto.NginxImageResponseDto;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -11,9 +12,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Objects;
 
+@RequiredArgsConstructor
 public class NginxImageHandler implements ImageHandler {
 
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
     private static final String NGINX_STORAGE_SERVER_URL = "http://localhost:8888";
 
     @Override
