@@ -106,18 +106,4 @@ public class UserImageServiceImpl implements UserImageService {
 
         return new GetUserImageResponseDto(findUserImage.getImageUrl());
     }
-
-    // TODO: 삭제 필요
-    @Override
-    @Transactional
-    public boolean createUserImage(UserImage userImageEntity) {
-
-        UserImage userImage = userImageRepository.save(userImageEntity);
-
-        if (userImage.getUserImageId() != null) {
-            return true;
-        }
-        return false;
-    }
-
 }
