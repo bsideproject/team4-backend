@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 public class LocalImageHandler implements ImageHandler {
@@ -46,8 +48,11 @@ public class LocalImageHandler implements ImageHandler {
     }
 
     @Override
-    public boolean deleteImage(String imagePath) {
-        return false;
+    public boolean deleteImage(String imagePath) throws IOException {
+
+        Files.delete(Path.of(imagePath));
+
+        return true;
     }
 
 }
