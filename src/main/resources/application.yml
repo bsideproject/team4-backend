@@ -19,6 +19,7 @@ spring:
 
   security:
     oauth2:
+      redirect_url: http://localhost:5000/login/oauth2
       client:
         registration:
           google:
