@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.UUID;
 
 public class LocalImageHandler implements ImageHandler {
@@ -13,7 +15,8 @@ public class LocalImageHandler implements ImageHandler {
     // TODO: path 정규화(파일 시스템에 따라 경로 다를 수 있음)
     private final String serverPath = System.getProperty("user.dir");
 
-    @Value("${image.server.path}")
+    // TODO: 이미지 서버 설정 주입 방법 변경
+    @Value("${image.local.upload-path}")
     private String imageFolder;
 
     @Override
@@ -46,8 +49,11 @@ public class LocalImageHandler implements ImageHandler {
     }
 
     @Override
-    public boolean deleteImage(String imagePath) {
-        return false;
+    public boolean deleteImage(String imagePath) throws IOException {
+
+        Files.delete(Path.of(imagePath));
+
+        return true;
     }
 
 }
