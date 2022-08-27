@@ -48,8 +48,36 @@ public enum ResponseCode {
 
 
     // 체크리스트(401-450)
+    CHECKLIST_FIND_ALL_SUCCESS("401","할일 전체 조회에 성공하였습니다."),
+    CHECKLIST_FIND_ALL_FAIL("402","할일 전체 조회에 실패하였습니다."),
+    CHECKLIST_CREATE_SUCCESS("403","할일 생성에 성공하였습니다."),
+    CHECKLIST_CREATE_FAIL("404","할일 생성에 실패하였습니다."),
+    CHECKLIST_FIND_SUCCESS("405","할일 조회에 성공하였습니다."),
+    CHECKLIST_FIND_FAIL("406","할일 조회에 실패하였습니다."),
+    CHECKLIST_MODIFY_SUCCESS("407","할일 변경에 성공하였습니다."),
+    CHECKLIST_MODIFY_FAIL("408","할일 변경에 실패하였습니다."),
+    CHECKLIST_DELETE_SUCCESS("409","할일 삭제에 성공하였습니다."),
+    CHECKLIST_DELETE_FAIL("410","할일 삭제에 실패하였습니다."),
+    CHECKLIST_CHECKED_SUCCESS("409","할일 수행여부 변경에 성공하였습니다."),
+    CHECKLIST_CHECKED_FAIL("410","할일 수행여부 변경에 실패하였습니다."),
+    CHECKLIST_INVALID_INPUT("411","할일 서비스 입력 값이 올바르지 않습니다."),
+    CHECKLIST_NOT_FOUND("412","존재하지 않는 할일입니다."),
 
     // 할 일, 스케쥴(451-499)
+    SCHEDULE_FIND_ALL_SUCCESS("451","일정 전체 조회에 성공하였습니다."),
+    SCHEDULE_FIND_ALL_FAIL("452","일정 전체 조회에 실패하였습니다."),
+    SCHEDULE_CREATE_SUCCESS("453","일정 생성에 성공하였습니다."),
+    SCHEDULE_CREATE_FAIL("454","일정 생성에 실패하였습니다."),
+    SCHEDULE_FIND_SUCCESS("455","일정 조회에 성공하였습니다."),
+    SCHEDULE_FIND_FAIL("456","일정 조회에 실패하였습니다."),
+    SCHEDULE_MODIFY_SUCCESS("457","일정 변경에 성공하였습니다."),
+    SCHEDULE_MODIFY_FAIL("458","일정 변경에 실패하였습니다."),
+    SCHEDULE_DELETE_SUCCESS("459","일정 삭제에 성공하였습니다."),
+    SCHEDULE_DELETE_FAIL("460","일정 삭제에 실패하였습니다."),
+    SCHEDULE_INVALID_INPUT("461","일정 서비스 입력 값이 올바르지 않습니다."),
+    SCHEDULE_NOT_FOUND("462","존재하지 않는 일정입니다."),
+    SCHEDULE_META_NOT_FOUND("463","존재하지 않는 반복 일정 정보입니다."),
+
 
     // 양육일지(501-599)
 
