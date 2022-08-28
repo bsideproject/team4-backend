@@ -16,9 +16,9 @@ spring:
       hibernate:
         show_sql: true
         format_sql: true
-
   security:
     oauth2:
+      redirect_url: http://localhost:5000/login/oauth2
       client:
         registration:
           google:
@@ -48,10 +48,13 @@ spring:
 
 image:
   server:
-    path: /src/main/resources/images
-
-
-  
+    base-uri: http://localhost:8888
+    upload-path: /images/upload
+    download-path: /images
+  local:
+    base-uri: http://localhost:8080
+    upload-path: /src/main/resources/images
+    download-path: /images
 #spring:
 #  datasource:
 #    driver-class-name: com.mysql.cj.jdbc.Driver

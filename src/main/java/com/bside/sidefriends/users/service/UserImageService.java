@@ -6,13 +6,7 @@ import com.bside.sidefriends.users.service.dto.UploadUserImageResponseDto;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface UserImageService {
-
-    /**
-     * 회원가입 시, 프로필 정보 저장
-     * TODO: 삭제 필요
-     */
-    boolean createUserImage(UserImage userImage);
-
+    
     /**
      * 유저 이미지 업로드
      * - 유저 이미지 최초 저장

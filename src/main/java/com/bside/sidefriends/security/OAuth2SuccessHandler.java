@@ -2,6 +2,7 @@ package com.bside.sidefriends.security;
 
 
 import com.auth0.jwt.JWT;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,10 @@ import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
 @Component
 public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
+
+    @Value("${spring.security.oauth2.redirect_url}")
+    private String redirectUrl;
+
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         System.out.println("OAuth2SuccessHandler start!");
@@ -30,7 +35,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
 
         String jwtToken = JwtProperties.TOKEN_PREFIX +  token;
         response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX +  token);
-        response.sendRedirect("/?token="+jwtToken); // FE로 Redirect할 경로
+        response.sendRedirect(redirectUrl + "?token="+jwtToken); // FE로 Redirect 할 경로
     }
 
 }
