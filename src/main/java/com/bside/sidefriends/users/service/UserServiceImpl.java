@@ -64,8 +64,8 @@ public class UserServiceImpl implements UserService {
                 findUser.getEmail(),
                 findUser.getMainPetId(),
                 findUser.getRole(),
-                findUser.isDeleted(),
-                findUser.getFamily() == null ? null : findUser.getFamily().getFamilyId()
+                findUser.getFamily() == null ? null : findUser.getFamily().getFamilyId(),
+                findUser.getUserImage() == null ? null : findUser.getUserImage().getImageUrl()
         );
     }
 

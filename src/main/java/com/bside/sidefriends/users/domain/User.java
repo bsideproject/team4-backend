@@ -34,6 +34,7 @@ public class User {
     private String email;
 
     // 회원별 대표펫 id
+    // TODO: pet 교체. IR.
     private String mainPetId;
 
     // 회원 권한
@@ -64,9 +65,14 @@ public class User {
     @Column(nullable = false)
     private boolean isDeleted;
 
+    // 사용자 가족
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "family_id")
     private Family family;
+
+    // 사용자 이미지
+    @OneToOne(mappedBy = "user")
+    private UserImage userImage;
 
     @Builder
     public User(String name, String email, String mainPetId, String username, Role role, String provider, String providerId,
