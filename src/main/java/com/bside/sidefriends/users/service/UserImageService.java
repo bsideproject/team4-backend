@@ -15,14 +15,14 @@ public interface UserImageService {
      * @return
      */
     // TODO: request dto 없이 바로 파일을 넘겨도 괜찮은가
-    UploadUserImageResponseDto uploadUserImage(Long userId, MultipartFile file);
+    UploadUserImageResponseDto uploadUserImage(String username, MultipartFile file);
 
     /**
      * 유저 이미지 반환
      * @param userId
      * @return
      */
-    GetUserImageResponseDto getUserImage(Long userId);
+    GetUserImageResponseDto getUserImage(String username);
 
 //    /**
 //     * 유저 이미지 삭제: 필요할 때 구현 예정

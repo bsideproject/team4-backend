@@ -49,15 +49,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public FindUserByUserIdResponseDto findUserByUserId(Long userId) {
+    public FindUserResponseDto findUser(String username) {
 
-        User findUser = userRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
+        User findUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
         if (findUser.isDeleted()) {
             throw new UserAlreadyDeletedException();
         }
 
-        return new FindUserByUserIdResponseDto(
+        return new FindUserResponseDto(
                 findUser.getUserId(),
                 findUser.getName(),
                 findUser.getEmail(),
@@ -70,9 +70,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ModifyUserResponseDto modifyUser(Long userId, ModifyUserRequestDto modifyUserRequestDto) {
+    public ModifyUserResponseDto modifyUser(String username, ModifyUserRequestDto modifyUserRequestDto) {
 
-        User findUser = userRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
+        User findUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
         if (findUser.isDeleted()) {
             throw new UserAlreadyDeletedException();
@@ -96,9 +96,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public DeleteUserResponseDto deleteUser(Long userId) {
+    public DeleteUserResponseDto deleteUser(String username) {
 
-        User findUser = userRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
+        User findUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
         if (findUser.isDeleted()) {
             throw new UserAlreadyDeletedException();

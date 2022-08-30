@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 
 @AllArgsConstructor
 @Getter
-public class FindUserByUserIdResponseDto {
+public class FindUserResponseDto {
 
     @NotNull
     private Long id;

@@ -10,6 +10,7 @@ import java.util.List;
 public class AddFamilyMemberResponseDto {
 
     private Long familyId;
+    private int familySize;
 
     @Getter
     private List<FamilyMember> familyMemberList;

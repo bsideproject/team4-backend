@@ -5,6 +5,7 @@ import com.bside.sidefriends.common.annotation.ValidImage;
 import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.security.auth.LoginUser;
+import com.bside.sidefriends.security.auth.LoginUsername;
 import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.service.UserImageService;
 import com.bside.sidefriends.users.service.dto.GetUserImageResponseDto;
@@ -25,12 +26,10 @@ public class UserImageController {
     private final UserImageService userImageService;
 
     @PostMapping("/users/image")
-    public ResponseEntity<ResponseDto<UploadUserImageResponseDto>> uploadUserImage(@LoginUser User user,
+    public ResponseEntity<ResponseDto<UploadUserImageResponseDto>> uploadUserImage(@LoginUsername String username,
                                                                                   @ValidImage @RequestPart("file") MultipartFile file) {
 
-        Long userId = user.getUserId();
-
-        UploadUserImageResponseDto uploadUserImageResponseDto = userImageService.uploadUserImage(userId, file);
+        UploadUserImageResponseDto uploadUserImageResponseDto = userImageService.uploadUserImage(username, file);
         ResponseDto<UploadUserImageResponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.U_IMAGE_UPLOAD_SUCCESS, uploadUserImageResponseDto);
 
@@ -39,11 +38,9 @@ public class UserImageController {
 
     // FIXME: 이미지만 조회하는 API 필요할지 고민
     @GetMapping("/users/image")
-    public ResponseEntity<ResponseDto<GetUserImageResponseDto>> getUserImage(@LoginUser User user) {
+    public ResponseEntity<ResponseDto<GetUserImageResponseDto>> getUserImage(@LoginUsername String username) {
 
-        Long userId = user.getUserId();
-
-        GetUserImageResponseDto getUserImageResponseDto = userImageService.getUserImage(userId);
+        GetUserImageResponseDto getUserImageResponseDto = userImageService.getUserImage(username);
         ResponseDto<GetUserImageResponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.U_IMAGE_DOWNLOAD_SUCCESS, getUserImageResponseDto);
 

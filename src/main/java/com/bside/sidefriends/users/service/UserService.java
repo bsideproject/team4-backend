@@ -13,26 +13,26 @@ public interface UserService {
     CreateUserResponseDto createUser(CreateUserRequestDto userCreateRequestDto);
 
     /**
-     * 회원 id로 회원 조회
-     * @param userId 조회할 회원 id
-     * @return {@link FindUserByUserIdResponseDto} 조회할 회원 정보 응답 DTO
+     * 회원 조회
+     * @param username 조회할 회원 username
+     * @return {@link FindUserResponseDto} 조회할 회원 정보 응답 DTO
      */
-    FindUserByUserIdResponseDto findUserByUserId(Long userId);
+    FindUserResponseDto findUser(String username);
 
     /**
      * 회원 정보 수정
-     * @param userId 정보를 수정할 회원 id
+     * @param username 정보를 수정할 회원 username
      * @param modifyUserRequestDto {@link ModifyUserRequestDto} 회원 정보 수정 요청 Dto
      * @return {@link ModifyUserResponseDto} 회원 정보 수정 응답 DTO
      */
-    ModifyUserResponseDto modifyUser(Long userId, ModifyUserRequestDto modifyUserRequestDto);
+    ModifyUserResponseDto modifyUser(String username, ModifyUserRequestDto modifyUserRequestDto);
 
     /**
      * 회원 정보 삭제
-     * @param userId 삭제할 회원 id
+     * @param username 삭제할 회원 username
      * @return {@link DeleteUserResponseDto} 회원 정보 삭제 응답 DTO
      */
-    DeleteUserResponseDto deleteUser(Long userId);
+    DeleteUserResponseDto deleteUser(String username);
 
 
 }

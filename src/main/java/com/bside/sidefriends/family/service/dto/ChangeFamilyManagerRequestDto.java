@@ -8,8 +8,5 @@ import javax.validation.constraints.NotNull;
 public class ChangeFamilyManagerRequestDto {
 
     @NotNull
-    private Long prevManagerId;
-
-    @NotNull
     private Long nextManagerId;
 }

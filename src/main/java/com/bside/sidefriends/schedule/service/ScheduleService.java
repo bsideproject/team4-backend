@@ -2,9 +2,6 @@ package com.bside.sidefriends.schedule.service;
 
 import com.bside.sidefriends.schedule.service.dto.*;
 import com.bside.sidefriends.users.domain.User;
-import com.bside.sidefriends.users.service.dto.FindUserByUserIdResponseDto;
-import com.bside.sidefriends.users.service.dto.ModifyUserRequestDto;
-import com.bside.sidefriends.users.service.dto.ModifyUserResponseDto;
 
 import java.time.LocalDate;
 

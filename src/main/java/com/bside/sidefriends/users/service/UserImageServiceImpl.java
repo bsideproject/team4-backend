@@ -35,9 +35,9 @@ public class UserImageServiceImpl implements UserImageService {
     // TODO: 이미지 업로드 로직 리팩토링
     @Override
     @Transactional
-    public UploadUserImageResponseDto uploadUserImage(Long userId, MultipartFile file) {
+    public UploadUserImageResponseDto uploadUserImage(String username, MultipartFile file) {
 
-        User findUser = userRepository.findByUserId(userId).orElseThrow(
+        User findUser = userRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalStateException("이미지를 업로드할 회원이 존재하지 않습니다.")
         );
 
@@ -91,9 +91,9 @@ public class UserImageServiceImpl implements UserImageService {
     }
 
     @Override
-    public GetUserImageResponseDto getUserImage(Long userId) {
+    public GetUserImageResponseDto getUserImage(String username) {
 
-        User findUser = userRepository.findByUserId(userId).orElseThrow(
+        User findUser = userRepository.findByUsername(username).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 회원입니다.")
         );
 

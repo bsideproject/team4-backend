@@ -4,11 +4,14 @@ import com.bside.sidefriends.common.annotation.SideFriendsController;
 import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.security.auth.LoginUser;
+import com.bside.sidefriends.security.auth.LoginUsername;
+import com.bside.sidefriends.security.mainOAuth2User;
 import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.service.UserService;
 import com.bside.sidefriends.users.service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,26 +36,21 @@ public class UserController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<ResponseDto<FindUserByUserIdResponseDto>> findUserByUserId(@LoginUser User user) {
+    public ResponseEntity<ResponseDto<FindUserResponseDto>> findUser(@LoginUser String username) {
 
-        Long userId = user.getUserId();
+        FindUserResponseDto findUserByUserIdResponseDto = userService.findUser(username);
 
-        FindUserByUserIdResponseDto findUserByUserIdResponseDto = userService.findUserByUserId(userId);
-
-        ResponseDto<FindUserByUserIdResponseDto> responseDto = ResponseDto.onSuccessWithData(
+        ResponseDto<FindUserResponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.U_FIND_SUCCESS, findUserByUserIdResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
 
     @PutMapping("/users")
-    public ResponseEntity<ResponseDto<ModifyUserResponseDto>> modifyUser(@LoginUser User user,
+    public ResponseEntity<ResponseDto<ModifyUserResponseDto>> modifyUser(@LoginUsername String username,
                                                             @Valid @RequestBody ModifyUserRequestDto modifyUserRequestDto) {
 
-
-        Long userId = user.getUserId();
-
-        ModifyUserResponseDto modifyUserResponseDto = userService.modifyUser(userId, modifyUserRequestDto);
+        ModifyUserResponseDto modifyUserResponseDto = userService.modifyUser(username, modifyUserRequestDto);
 
         ResponseDto<ModifyUserResponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.U_MODIFY_SUCCESS, modifyUserResponseDto);
@@ -61,11 +59,9 @@ public class UserController {
     }
 
     @DeleteMapping("/users")
-    public ResponseEntity<ResponseDto<DeleteUserResponseDto>> deleteUser(@LoginUser User user) {
+    public ResponseEntity<ResponseDto<DeleteUserResponseDto>> deleteUser(@LoginUsername String username) {
 
-        Long userId = user.getUserId();
-
-        DeleteUserResponseDto deleteUserResponseDto = userService.deleteUser(userId);
+        DeleteUserResponseDto deleteUserResponseDto = userService.deleteUser(username);
 
         ResponseDto<DeleteUserResponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.U_DELETE_SUCCESS, deleteUserResponseDto);

@@ -13,6 +13,9 @@ public class ChangeFamilyManagerResponseDto {
 
     private Long familyManagerId;
 
+    private int familySize;
+
+    @Getter
     private List<FamilyMember> familyMemberList;
 
 }
