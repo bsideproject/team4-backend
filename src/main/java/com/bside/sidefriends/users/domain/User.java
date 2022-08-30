@@ -99,6 +99,7 @@ public class User {
         this.setFamily(null);
     }
 
+    // 사용자 정보 수정
     public void modify(ModifyUserRequestDto modifyUserRequestDto) {
         this.name = modifyUserRequestDto.getName();
     }
@@ -109,8 +110,20 @@ public class User {
         this.leaveFamily();
     }
 
+    // 사용자 역할 변경
     public void changeRole(Role role) {
         this.role = role;
+    }
+
+    // 사용자 가족 정보 반환
+
+    // 사용자 이미지 반환
+    public String getImageUrl() {
+        if (this.userImage == null) {
+            return null;
+        } else {
+            return userImage.getImageUrl();
+        }
     }
 
 
