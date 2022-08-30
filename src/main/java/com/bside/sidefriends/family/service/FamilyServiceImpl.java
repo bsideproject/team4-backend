@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.function.BiPredicate;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -61,11 +62,9 @@ public class FamilyServiceImpl implements FamilyService {
 
         Family findFamily = familyRepository.findByFamilyId(familyId).orElseThrow(FamilyNotFoundException::new);
 
-        List<FindFamilyMembersByFamilyIdResponseDto.FamilyMember> familyMemberList =
-                findFamily.getMemberList().stream()
-                .map(user -> new FindFamilyMembersByFamilyIdResponseDto.FamilyMember(
-                        user.getUserId(), user.getName(), user.getRole()))
-                .collect(Collectors.toList());
+        List<FamilyMember> familyMemberList = findFamily.getMemberList().stream()
+                        .map(getFamilyMemberInfo)
+                        .collect(Collectors.toList());
 
         return new FindFamilyMembersByFamilyIdResponseDto(familyMemberList);
     }
@@ -98,9 +97,8 @@ public class FamilyServiceImpl implements FamilyService {
         findFamily.addUser(newUser);
         familyRepository.save(findFamily);
 
-        List<AddFamilyMemberResponseDto.FamilyMember> familyMemberList = findFamily.getMemberList().stream()
-                .map(user -> new AddFamilyMemberResponseDto.FamilyMember(
-                        user.getUserId(), user.getName(), user.getRole()))
+        List<FamilyMember> familyMemberList = findFamily.getMemberList().stream()
+                .map(getFamilyMemberInfo)
                 .collect(Collectors.toList());
 
         return new AddFamilyMemberResponseDto(
@@ -135,9 +133,8 @@ public class FamilyServiceImpl implements FamilyService {
         findFamily.deleteUser(existUser);
         familyRepository.save(findFamily);
 
-        List<DeleteFamilyMemberResponseDto.FamilyMember> familyMemberList = findFamily.getMemberList().stream()
-                .map(user -> new DeleteFamilyMemberResponseDto.FamilyMember(
-                        user.getUserId(), user.getName(), user.getRole()))
+        List<FamilyMember> familyMemberList = findFamily.getMemberList().stream()
+                .map(getFamilyMemberInfo)
                 .collect(Collectors.toList());
 
         return new DeleteFamilyMemberResponseDto(
@@ -218,9 +215,8 @@ public class FamilyServiceImpl implements FamilyService {
         userRepository.save(prevManagerUser);
         userRepository.save(nextManagerUser);
 
-        List<ChangeFamilyManagerResponseDto.FamilyMember> familyMemberList = findFamily.getMemberList().stream()
-                .map(user -> new ChangeFamilyManagerResponseDto.FamilyMember(
-                        user.getUserId(), user.getName(), user.getRole()))
+        List<FamilyMember> familyMemberList = findFamily.getMemberList().stream()
+                .map(getFamilyMemberInfo)
                 .collect(Collectors.toList());
 
         return new ChangeFamilyManagerResponseDto(
@@ -237,5 +233,9 @@ public class FamilyServiceImpl implements FamilyService {
     // 해당 가족 그룹에 속한 사용자인지 확인
     private static final BiPredicate<User, Long> userInFamily =
             (user, familyId) -> user.getFamily() != null && user.getFamily().getFamilyId().equals(familyId);
+
+    // 가족 그룹 구성원 정보 변환
+    private Function<User, FamilyMember> getFamilyMemberInfo =
+            user -> new FamilyMember(user.getUserId(), user.getName(), user.getRole(), user.getImageUrl());
 
 }

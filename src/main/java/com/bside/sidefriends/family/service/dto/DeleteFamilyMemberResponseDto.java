@@ -13,14 +13,6 @@ public class DeleteFamilyMemberResponseDto {
     private Long familyId;
 
     @Getter
-    private List<FamilyMember> familyMembersList;
-
-    @Getter
-    @AllArgsConstructor
-    public static class FamilyMember {
-        private Long userId;
-        private String name;
-        private User.Role role;
-    }
+    private List<FamilyMember> familyMemberList;
 
 }
