@@ -116,13 +116,20 @@ public class User {
     }
 
     // 사용자 가족 정보 반환
+    public Long getFamilyId() {
+        if (this.family == null) {
+            return null;
+        } else {
+            return this.getFamily().getFamilyId();
+        }
+    }
 
     // 사용자 이미지 반환
     public String getImageUrl() {
         if (this.userImage == null) {
             return null;
         } else {
-            return userImage.getImageUrl();
+            return this.userImage.getImageUrl();
         }
     }
 
