@@ -5,6 +5,8 @@ import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.family.service.FamilyService;
 import com.bside.sidefriends.family.service.dto.*;
+import com.bside.sidefriends.security.auth.LoginUser;
+import com.bside.sidefriends.users.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +30,11 @@ public class FamilyController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @GetMapping("/family/{familyId}")
-    ResponseEntity<ResponseDto<FindFamilyMembersByFamilyIdResponseDto>> findFamily(@PathVariable("familyId") Long familyId) {
+    @GetMapping("/family")
+    ResponseEntity<ResponseDto<FindFamilyMembersByFamilyIdResponseDto>> findFamily(@LoginUser User user) {
+
+        // TOOD: 예외 처리 변경
+        Long familyId = user.getFamilyId();
 
         FindFamilyMembersByFamilyIdResponseDto findFamilyMembersByFamilyIdResponseDto
                 = familyService.findFamilyMembersByFamilyId(familyId);
@@ -40,8 +45,11 @@ public class FamilyController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @DeleteMapping("/family/{familyId}")
-    ResponseEntity<ResponseDto<DeleteFamilyResponseDto>> deleteFamily(@PathVariable("familyId") Long familyId) {
+    @DeleteMapping("/family")
+    ResponseEntity<ResponseDto<DeleteFamilyResponseDto>> deleteFamily(@LoginUser User user) {
+
+        // TODO: 예외 처리 변경(가족 그룹 존재 여부, 가족 그룹장 여부)
+        Long familyId = user.getFamilyId();
 
         DeleteFamilyResponseDto deleteFamilyResponseDto = familyService.deleteFamily(familyId);
 
@@ -52,9 +60,12 @@ public class FamilyController {
 
     }
 
-    @PostMapping("/family/{familyId}/members")
-    ResponseEntity<ResponseDto<AddFamilyMemberResponseDto>> addFamilyMember(@PathVariable("familyId") Long familyId,
+    @PostMapping("/family/members")
+    ResponseEntity<ResponseDto<AddFamilyMemberResponseDto>> addFamilyMember(@LoginUser User user,
                                                                @Valid @RequestBody AddFamilyMemberRequestDto addFamilyMemberRequestDto) {
+
+        // TODO: 예외 처리 변경
+        Long familyId = user.getFamilyId();
 
         AddFamilyMemberResponseDto addFamilyMemberResponseDto
                 = familyService.addFamilyMember(familyId, addFamilyMemberRequestDto);
@@ -65,9 +76,13 @@ public class FamilyController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @DeleteMapping("/family/{familyId}/members")
-    ResponseEntity<ResponseDto<DeleteFamilyMemberResponseDto>> deleteFamilyMember(@PathVariable("familyId") Long familyId,
+    @DeleteMapping("/family/members")
+    ResponseEntity<ResponseDto<DeleteFamilyMemberResponseDto>> deleteFamilyMember(@LoginUser User user,
                                                                      @Valid @RequestBody DeleteFamilyMemberRequestDto deleteFamilyMemberRequestDto) {
+
+        // TODO: 예외 처리 변경(가족 그룹 존재 여부, 가족 그룹장 여부)
+        Long familyId = user.getFamilyId();
+
         DeleteFamilyMemberResponseDto deleteFamilyMemberResponseDto
                 = familyService.deleteFamilyMember(familyId, deleteFamilyMemberRequestDto);
 
@@ -77,9 +92,13 @@ public class FamilyController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @PutMapping("/family/{familyId}/manager")
-    ResponseEntity<ResponseDto<ChangeFamilyManagerResponseDto>> changeFamilyManager(@PathVariable("familyId") Long familyId,
+    @PutMapping("/family/manager")
+    ResponseEntity<ResponseDto<ChangeFamilyManagerResponseDto>> changeFamilyManager(@LoginUser User user,
                                                                        @Valid @RequestBody ChangeFamilyManagerRequestDto changeFamilyManagerRequestDto) {
+
+        // TODO: 예외 처리 변경(가족 그룹 존재 여부, 가족 그룹장 여부)
+        Long familyId = user.getFamilyId();
+
         ChangeFamilyManagerResponseDto changeFamilyManagerResponseDto
                 = familyService.changeFamilyManager(familyId, changeFamilyManagerRequestDto);
 

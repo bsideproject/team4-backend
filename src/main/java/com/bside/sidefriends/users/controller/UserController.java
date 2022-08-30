@@ -3,6 +3,8 @@ package com.bside.sidefriends.users.controller;
 import com.bside.sidefriends.common.annotation.SideFriendsController;
 import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
+import com.bside.sidefriends.security.auth.LoginUser;
+import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.service.UserService;
 import com.bside.sidefriends.users.service.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -30,8 +32,10 @@ public class UserController {
 
     }
 
-    @GetMapping("/users/{userId}")
-    public ResponseEntity<ResponseDto<FindUserByUserIdResponseDto>> findUserByUserId(@PathVariable("userId") Long userId) {
+    @GetMapping("/users")
+    public ResponseEntity<ResponseDto<FindUserByUserIdResponseDto>> findUserByUserId(@LoginUser User user) {
+
+        Long userId = user.getUserId();
 
         FindUserByUserIdResponseDto findUserByUserIdResponseDto = userService.findUserByUserId(userId);
 
@@ -41,9 +45,12 @@ public class UserController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @PutMapping("/users/{userId}")
-    public ResponseEntity<ResponseDto<ModifyUserResponseDto>> modifyUser(@PathVariable("userId") Long userId,
+    @PutMapping("/users")
+    public ResponseEntity<ResponseDto<ModifyUserResponseDto>> modifyUser(@LoginUser User user,
                                                             @Valid @RequestBody ModifyUserRequestDto modifyUserRequestDto) {
+
+
+        Long userId = user.getUserId();
 
         ModifyUserResponseDto modifyUserResponseDto = userService.modifyUser(userId, modifyUserRequestDto);
 
@@ -53,8 +60,10 @@ public class UserController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @DeleteMapping("/users/{userId}")
-    public ResponseEntity<ResponseDto<DeleteUserResponseDto>> deleteUser(@PathVariable("userId") Long userId) {
+    @DeleteMapping("/users")
+    public ResponseEntity<ResponseDto<DeleteUserResponseDto>> deleteUser(@LoginUser User user) {
+
+        Long userId = user.getUserId();
 
         DeleteUserResponseDto deleteUserResponseDto = userService.deleteUser(userId);
 
@@ -62,11 +71,6 @@ public class UserController {
                 ResponseCode.U_DELETE_SUCCESS, deleteUserResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
-    }
-
-    @GetMapping("/users/{userId}/{tempId}")
-    public String test(@PathVariable("userId") Long userId, @PathVariable("tempId") Long tempId) {
-        return "test";
     }
 
 }
