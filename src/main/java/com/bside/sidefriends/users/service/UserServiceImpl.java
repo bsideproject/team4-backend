@@ -44,7 +44,6 @@ public class UserServiceImpl implements UserService {
                 userEntity.getUserId(),
                 userEntity.getName(),
                 userEntity.getEmail(),
-                userEntity.isDeleted(),
                 userEntity.getRole()
         );
     }
@@ -65,7 +64,7 @@ public class UserServiceImpl implements UserService {
                 findUser.getMainPetId(),
                 findUser.getRole(),
                 findUser.getFamily() == null ? null : findUser.getFamily().getFamilyId(),
-                findUser.getUserImage() == null ? null : findUser.getUserImage().getImageUrl()
+                findUser.getImageUrl()
         );
     }
 
@@ -90,7 +89,8 @@ public class UserServiceImpl implements UserService {
         return new ModifyUserResponseDto(
                 findUser.getUserId(),
                 findUser.getName(),
-                findUser.getEmail()
+                findUser.getEmail(),
+                findUser.getImageUrl()
         );
     }
 
