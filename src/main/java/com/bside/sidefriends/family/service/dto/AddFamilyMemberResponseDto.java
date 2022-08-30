@@ -1,6 +1,5 @@
 package com.bside.sidefriends.family.service.dto;
 
-import com.bside.sidefriends.users.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,13 +12,6 @@ public class AddFamilyMemberResponseDto {
     private Long familyId;
 
     @Getter
-    private List<FamilyMember> familyMembersList;
+    private List<FamilyMember> familyMemberList;
 
-    @Getter
-    @AllArgsConstructor
-    public static class FamilyMember {
-        private Long userId;
-        private String name;
-        private User.Role role;
-    }
 }

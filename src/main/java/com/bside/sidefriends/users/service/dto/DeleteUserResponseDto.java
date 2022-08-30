@@ -9,4 +9,5 @@ public class DeleteUserResponseDto {
 
     private Long id;
     private boolean isDeleted;
+
 }

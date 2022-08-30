@@ -9,5 +9,5 @@ import org.hibernate.validator.constraints.URL;
 public class GetUserImageResponseDto {
 
     @URL
-    String imageUrl;
+    String userImageUrl;
 }
