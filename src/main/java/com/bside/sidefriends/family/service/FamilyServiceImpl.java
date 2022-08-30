@@ -236,6 +236,6 @@ public class FamilyServiceImpl implements FamilyService {
 
     // 가족 그룹 구성원 정보 변환
     private Function<User, FamilyMember> getFamilyMemberInfo =
-            user -> new FamilyMember(user.getUserId(), user.getName(), user.getRole(), user.getImageUrl());
+            user -> new FamilyMember(user.getUserId(), user.getName(), user.getRole(), user.getImageUrlInfo());
 
 }

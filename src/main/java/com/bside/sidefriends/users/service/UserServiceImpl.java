@@ -24,6 +24,12 @@ public class UserServiceImpl implements UserService {
         Optional<User> findUser = userRepository.findByProviderAndProviderId(
                 userCreateRequestDto.getProvider(), userCreateRequestDto.getProviderId());
 
+        if (findUser.isPresent()) {
+            if (findUser.get().isDeleted()) {
+
+            }
+        }
+
         if (findUser.isPresent() && !findUser.get().isDeleted()) {
             throw new UserAlreadyExistsException();
         }
@@ -63,8 +69,8 @@ public class UserServiceImpl implements UserService {
                 findUser.getEmail(),
                 findUser.getMainPetId(),
                 findUser.getRole(),
-                findUser.getFamilyId(),
-                findUser.getImageUrl()
+                findUser.getFamilyIdInfo(),
+                findUser.getImageUrlInfo()
         );
     }
 
@@ -90,7 +96,7 @@ public class UserServiceImpl implements UserService {
                 findUser.getUserId(),
                 findUser.getName(),
                 findUser.getEmail(),
-                findUser.getImageUrl()
+                findUser.getImageUrlInfo()
         );
     }
 
