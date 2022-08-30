@@ -96,6 +96,7 @@ public class User {
 
     // 가족 그룹 해제
     public void leaveFamily() {
+        this.role = Role.ROLE_USER;
         this.setFamily(null);
     }
 
@@ -110,6 +111,12 @@ public class User {
         this.leaveFamily();
     }
 
+    // 사용자 계정 복원
+    public void restore() {
+        this.isDeleted = false;
+        this.role = Role.ROLE_USER;
+    }
+
     // 사용자 역할 변경
     public void changeRole(Role role) {
         this.role = role;
@@ -120,7 +127,7 @@ public class User {
         if (this.family == null) {
             return null;
         } else {
-            return this.getFamily().getFamilyId();
+            return this.family.getFamilyId();
         }
     }
 

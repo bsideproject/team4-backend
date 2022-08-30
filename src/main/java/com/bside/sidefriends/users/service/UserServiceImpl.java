@@ -24,12 +24,6 @@ public class UserServiceImpl implements UserService {
         Optional<User> findUser = userRepository.findByProviderAndProviderId(
                 userCreateRequestDto.getProvider(), userCreateRequestDto.getProviderId());
 
-        if (findUser.isPresent()) {
-            if (findUser.get().isDeleted()) {
-
-            }
-        }
-
         if (findUser.isPresent() && !findUser.get().isDeleted()) {
             throw new UserAlreadyExistsException();
         }
