@@ -17,19 +17,6 @@ public class UserController {
 
     private final UserService userService;
 
-    // FIXME: 실제 1차 서비스에서는 제공되지 않는 API
-    @PostMapping("/users")
-    public ResponseEntity<ResponseDto<CreateUserResponseDto>> createUser(@Valid @RequestBody CreateUserRequestDto userCreateRequestDto) {
-
-        CreateUserResponseDto createUserResponseDto = userService.createUser(userCreateRequestDto);
-
-        ResponseDto<CreateUserResponseDto> responseDto = ResponseDto.onSuccessWithData(
-                ResponseCode.U_CREATE_SUCCESS, createUserResponseDto);
-
-        return ResponseEntity.ok().body(responseDto);
-
-    }
-
     @GetMapping("/users/{userId}")
     public ResponseEntity<ResponseDto<FindUserByUserIdResponseDto>> findUserByUserId(@PathVariable("userId") Long userId) {
 
