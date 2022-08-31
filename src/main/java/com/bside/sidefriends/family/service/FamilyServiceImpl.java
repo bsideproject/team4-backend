@@ -31,7 +31,7 @@ public class FamilyServiceImpl implements FamilyService {
 
         Long groupManagerId = createFamilyRequestDto.getGroupManagerId();
 
-        User managerUser = userRepository.findByUseridAndIsDeletedFalse(groupManagerId)
+        User managerUser = userRepository.findByUserIdAndIsDeletedFalse(groupManagerId)
                 .orElseThrow(() -> new FamilyManagerNotFoundException(new UserNotFoundException()));
 
         if (userHasFamily.test(managerUser)) {
@@ -79,7 +79,7 @@ public class FamilyServiceImpl implements FamilyService {
             throw new FamilyLimitExceededException();
         }
 
-        User newUser = userRepository.findByUseridAndIsDeletedFalse(addFamilyMemberRequestDto.getAddMemberId())
+        User newUser = userRepository.findByUserIdAndIsDeletedFalse(addFamilyMemberRequestDto.getAddMemberId())
                 .orElseThrow(() -> new FamilyMemberNotFoundException(new UserNotFoundException()));
 
         if (newUser.isDeleted()) {
@@ -115,7 +115,7 @@ public class FamilyServiceImpl implements FamilyService {
 
         // TODO: 그룹장 권한 확인
 
-        User existUser = userRepository.findByUseridAndIsDeletedFalse(deleteFamilyMemberRequestDto.getDeleteMemberId())
+        User existUser = userRepository.findByUserIdAndIsDeletedFalse(deleteFamilyMemberRequestDto.getDeleteMemberId())
                 .orElseThrow(() -> new FamilyMemberNotFoundException(new UserNotFoundException()));
 
         if (existUser.isDeleted()) {
@@ -174,10 +174,10 @@ public class FamilyServiceImpl implements FamilyService {
             throw new FamilyAlreadyDeletedException();
         }
 
-        User prevManagerUser = userRepository.findByUseridAndIsDeletedFalse(changeFamilyManagerRequestDto.getPrevManagerId())
+        User prevManagerUser = userRepository.findByUserIdAndIsDeletedFalse(changeFamilyManagerRequestDto.getPrevManagerId())
                 .orElseThrow(UserNotFoundException::new);
 
-        User nextManagerUser = userRepository.findByUseridAndIsDeletedFalse(changeFamilyManagerRequestDto.getNextManagerId())
+        User nextManagerUser = userRepository.findByUserIdAndIsDeletedFalse(changeFamilyManagerRequestDto.getNextManagerId())
                 .orElseThrow(UserNotFoundException::new);
 
         if (!userInFamily.test(prevManagerUser, familyId)) {

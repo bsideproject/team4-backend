@@ -37,7 +37,7 @@ public class UserImageServiceImpl implements UserImageService {
     @Transactional
     public UploadUserImageResponseDto uploadUserImage(Long userId, MultipartFile file) {
 
-        User findUser = userRepository.findByUseridAndIsDeletedFalse(userId).orElseThrow(
+        User findUser = userRepository.findByUserIdAndIsDeletedFalse(userId).orElseThrow(
                 () -> new IllegalStateException("이미지를 업로드할 회원이 존재하지 않습니다.")
         );
 
@@ -89,7 +89,7 @@ public class UserImageServiceImpl implements UserImageService {
     @Override
     public GetUserImageResponseDto getUserImage(Long userId) {
 
-        User findUser = userRepository.findByUseridAndIsDeletedFalse(userId).orElseThrow(
+        User findUser = userRepository.findByUserIdAndIsDeletedFalse(userId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 회원입니다.")
         );
 
