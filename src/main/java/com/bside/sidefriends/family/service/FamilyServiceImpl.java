@@ -56,7 +56,7 @@ public class FamilyServiceImpl implements FamilyService {
     @Override
     public FindFamilyMembersByFamilyIdResponseDto findFamilyMembersByFamilyId(Long familyId) {
 
-        Family findFamily = familyRepository.findByFamilyId(familyId).orElseThrow(FamilyNotFoundException::new);
+        Family findFamily = familyRepository.findByFamilyIdAndIsDeletedFalse(familyId).orElseThrow(FamilyNotFoundException::new);
 
         List<FamilyMember> familyMemberList = findFamily.getMemberList().stream()
                         .map(getFamilyMemberInfo)
@@ -69,11 +69,7 @@ public class FamilyServiceImpl implements FamilyService {
     @Transactional(rollbackFor = Exception.class)
     public AddFamilyMemberResponseDto addFamilyMember(Long familyId, AddFamilyMemberRequestDto addFamilyMemberRequestDto) {
 
-        Family findFamily = familyRepository.findByFamilyId(familyId).orElseThrow(FamilyNotFoundException::new);
-
-        if (findFamily.isDeleted()) {
-            throw new FamilyAlreadyDeletedException();
-        }
+        Family findFamily = familyRepository.findByFamilyIdAndIsDeletedFalse(familyId).orElseThrow(FamilyNotFoundException::new);
 
         if (findFamily.getFamilySize() >= 4) {
             throw new FamilyLimitExceededException();
@@ -107,11 +103,7 @@ public class FamilyServiceImpl implements FamilyService {
     @Transactional(rollbackFor = Exception.class)
     public DeleteFamilyMemberResponseDto deleteFamilyMember(Long familyId, DeleteFamilyMemberRequestDto deleteFamilyMemberRequestDto) {
 
-        Family findFamily = familyRepository.findByFamilyId(familyId).orElseThrow(FamilyNotFoundException::new);
-
-        if (findFamily.isDeleted()) {
-            throw new FamilyAlreadyDeletedException();
-        }
+        Family findFamily = familyRepository.findByFamilyIdAndIsDeletedFalse(familyId).orElseThrow(FamilyNotFoundException::new);
 
         // TODO: 그룹장 권한 확인
 
@@ -143,11 +135,7 @@ public class FamilyServiceImpl implements FamilyService {
     @Transactional(rollbackFor = Exception.class)
     public DeleteFamilyResponseDto deleteFamily(Long familyId) {
 
-        Family findFamily = familyRepository.findByFamilyId(familyId).orElseThrow(FamilyNotFoundException::new);
-
-        if (findFamily.isDeleted()) {
-            throw new FamilyAlreadyDeletedException();
-        }
+        Family findFamily = familyRepository.findByFamilyIdAndIsDeletedFalse(familyId).orElseThrow(FamilyNotFoundException::new);
 
         // TODO: 그룹장 권한 확인
         if (findFamily.getFamilySize() > 1) {
@@ -168,11 +156,7 @@ public class FamilyServiceImpl implements FamilyService {
     @Transactional(rollbackFor = Exception.class)
     public ChangeFamilyManagerResponseDto changeFamilyManager(Long familyId, ChangeFamilyManagerRequestDto changeFamilyManagerRequestDto) {
 
-        Family findFamily = familyRepository.findByFamilyId(familyId).orElseThrow(FamilyNotFoundException::new);
-
-        if (findFamily.isDeleted()) {
-            throw new FamilyAlreadyDeletedException();
-        }
+        Family findFamily = familyRepository.findByFamilyIdAndIsDeletedFalse(familyId).orElseThrow(FamilyNotFoundException::new);
 
         User prevManagerUser = userRepository.findByUserIdAndIsDeletedFalse(changeFamilyManagerRequestDto.getPrevManagerId())
                 .orElseThrow(UserNotFoundException::new);
