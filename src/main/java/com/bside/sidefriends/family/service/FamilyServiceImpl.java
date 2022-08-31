@@ -31,12 +31,8 @@ public class FamilyServiceImpl implements FamilyService {
 
         Long groupManagerId = createFamilyRequestDto.getGroupManagerId();
 
-        User managerUser = userRepository.findByUserId(groupManagerId)
+        User managerUser = userRepository.findByUseridAndIsDeletedFalse(groupManagerId)
                 .orElseThrow(() -> new FamilyManagerNotFoundException(new UserNotFoundException()));
-
-        if (managerUser.isDeleted()) {
-            throw new FamilyManagerNotFoundException(new UserAlreadyDeletedException());
-        }
 
         if (userHasFamily.test(managerUser)) {
             throw new UserHasFamilyException();
@@ -83,11 +79,11 @@ public class FamilyServiceImpl implements FamilyService {
             throw new FamilyLimitExceededException();
         }
 
-        User newUser = userRepository.findByUserId(addFamilyMemberRequestDto.getAddMemberId())
+        User newUser = userRepository.findByUseridAndIsDeletedFalse(addFamilyMemberRequestDto.getAddMemberId())
                 .orElseThrow(() -> new FamilyMemberNotFoundException(new UserNotFoundException()));
 
         if (newUser.isDeleted()) {
-            throw new FamilyMemberNotFoundException(new UserAlreadyDeletedException());
+            throw new FamilyMemberNotFoundException(new UserNotFoundException());
         }
 
         if (userHasFamily.test(newUser)) {
@@ -119,11 +115,11 @@ public class FamilyServiceImpl implements FamilyService {
 
         // TODO: 그룹장 권한 확인
 
-        User existUser = userRepository.findByUserId(deleteFamilyMemberRequestDto.getDeleteMemberId())
+        User existUser = userRepository.findByUseridAndIsDeletedFalse(deleteFamilyMemberRequestDto.getDeleteMemberId())
                 .orElseThrow(() -> new FamilyMemberNotFoundException(new UserNotFoundException()));
 
         if (existUser.isDeleted()) {
-            throw new FamilyMemberNotFoundException(new UserAlreadyDeletedException());
+            throw new FamilyMemberNotFoundException(new UserNotFoundException());
         }
 
         if (!userInFamily.test(existUser, familyId)) {
@@ -178,19 +174,11 @@ public class FamilyServiceImpl implements FamilyService {
             throw new FamilyAlreadyDeletedException();
         }
 
-        User prevManagerUser = userRepository.findByUserId(changeFamilyManagerRequestDto.getPrevManagerId())
+        User prevManagerUser = userRepository.findByUseridAndIsDeletedFalse(changeFamilyManagerRequestDto.getPrevManagerId())
                 .orElseThrow(UserNotFoundException::new);
 
-        if (prevManagerUser.isDeleted()) {
-            throw new UserAlreadyDeletedException();
-        }
-
-        User nextManagerUser = userRepository.findByUserId(changeFamilyManagerRequestDto.getNextManagerId())
+        User nextManagerUser = userRepository.findByUseridAndIsDeletedFalse(changeFamilyManagerRequestDto.getNextManagerId())
                 .orElseThrow(UserNotFoundException::new);
-
-        if (nextManagerUser.isDeleted()) {
-            throw new UserAlreadyDeletedException();
-        }
 
         if (!userInFamily.test(prevManagerUser, familyId)) {
             throw new UserHasFamilyException("기존 그룹장이 해당 가족 그룹에 속해 있지 않습니다.");
