@@ -2,9 +2,10 @@ package com.bside.sidefriends.users.repository;
 
 import com.bside.sidefriends.users.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -16,6 +17,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByProviderAndProviderId(String provider, String providerId);
 
-    List<User> findAllByFamilyFamilyId(Long familyId);
+    @Query("SELECT u from User u"
+            + " WHERE u.username = :username"
+            + " AND u.isDeleted = false")
+    Optional<User> findByUsernameAndIsDeletedFalse(@Param("username") String username);
+
+    @Query("SELECT u from User u"
+            + " WHERE u.userId = :userId"
+            + " AND u.isDeleted = false")
+    Optional<User> findByUseridAndIsDeletedFalse(@Param("userId") Long userId);
 
 }
