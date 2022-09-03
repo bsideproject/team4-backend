@@ -44,7 +44,6 @@ public class Quick {
     private int order;
 
     // 퀵기록 유효 시작 시간
-    @Column(updatable = false)
     private LocalDateTime startedAt;
 
     // 퀵기록 유효 종료 시간

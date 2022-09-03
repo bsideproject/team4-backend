@@ -36,6 +36,7 @@ public interface ScheduleService {
     /**
      * 스케줄 정보 수정
      * @param scheduleId 수정할 스케줄 id
+     * @param date 수정할 날짜
      * @param modifyType 수정 타입
      * @param modifyScheduleRequestDto {@link ModifyScheduleRequestDto} 스케줄 정보 수정 요청 Dto
      * @return {@link ModifyScheduleResponseDto} 스케줄 정보 수정 응답 DTO
@@ -51,6 +52,7 @@ public interface ScheduleService {
     /**
      * 스케줄 정보 삭제
      * @param scheduleId 삭제할 스케줄 id
+     * @param date 삭제할 날짜
      * @param deleteType 삭제 타입
      * @return {@link DeleteScheduleResponseDto} 스케줄 정보 삭제 응답 DTO
      */

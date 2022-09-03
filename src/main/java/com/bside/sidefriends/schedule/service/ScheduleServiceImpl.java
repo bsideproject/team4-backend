@@ -325,6 +325,10 @@ public class ScheduleServiceImpl implements ScheduleService {
                 findSchedule.changeEndDate(date.minusDays(1));
                 scheduleRepository.save(findSchedule);
 
+                // 기존 ScheduleMeta 의 EndDate 변경
+                findScheduleMeta.changeEndedAt(date.minusDays(1));
+                scheduleMetaRepository.save(findScheduleMeta);
+
                 // 신규 Schedule 생성
                 Schedule scheduleEntity = Schedule.builder()
                         .originScheduleId(findSchedule.getScheduleId())
@@ -421,12 +425,31 @@ public class ScheduleServiceImpl implements ScheduleService {
 
                 scheduleMetaRepository.save(scheduleMeta);
             } else if (deleteType.equals("afterThis")) {
+                // # 1. Change End Date
                 findSchedule.changeEndDate(date.minusDays(1));
-
+                scheduleMeta.changeEndedAt(date.minusDays(1));
                 scheduleRepository.save(findSchedule);
+                scheduleMetaRepository.save(scheduleMeta);
 
-                // 전체 삭제하돼, 원본 데이터만 삭제하면 안된다
-                scheduleRepository.deleteAllByOriginScheduleIdAndScheduleIdNot(scheduleId, scheduleId);
+                // Before : Delete all
+                // scheduleRepository.deleteAllByOriginScheduleIdAndScheduleIdNot(scheduleId, scheduleId);
+                // After : Delete only 'after date' with originScheduleId
+                scheduleRepository.findAllByOriginScheduleId(scheduleId).stream()
+                        .forEach(schedule -> {
+                            if (schedule.getScheduleId().equals(scheduleId)) {
+                                return;
+                            } else {
+                                if (schedule.getStartDate().isAfter(date.minusDays(1))) {
+                                    // Delete # 1. Delete Schedule
+                                    scheduleRepository.delete(schedule);
+
+                                    // Delete # 2. Delete on Exception Date
+                                    scheduleMeta.deleteDateOnExceptionDateList(schedule.getStartDate());
+                                }
+                            }
+                        });
+                scheduleMetaRepository.save(scheduleMeta);
+
             } else if (deleteType.equals("all")) {
                 scheduleMetaRepository.deleteBySchedule(findSchedule);
                 scheduleRepository.deleteAllByOriginScheduleId(scheduleId);
