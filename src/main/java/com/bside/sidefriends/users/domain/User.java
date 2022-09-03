@@ -1,6 +1,7 @@
 package com.bside.sidefriends.users.domain;
 
 import com.bside.sidefriends.family.domain.Family;
+import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.users.service.dto.ModifyUserRequestDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +13,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -33,8 +36,11 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    // 회원별 대표펫 id
-    // TODO: pet 교체. IR.
+    // 회원별 펫
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Pet> pets = new ArrayList<>();
+
+    // TODO: 대표펫 id 삭제
     private String mainPetId;
 
     // 회원 권한

@@ -1,5 +1,6 @@
 package com.bside.sidefriends.pet.domain;
 
+import com.bside.sidefriends.users.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -19,6 +20,9 @@ public class Pet {
     private Long id;
 
     // 사용자
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     // 공유 타입
     @Enumerated(EnumType.STRING)
