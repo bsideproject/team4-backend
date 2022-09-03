@@ -1,5 +1,6 @@
 package com.bside.sidefriends.pet.domain;
 
+import com.bside.sidefriends.family.domain.Family;
 import com.bside.sidefriends.users.domain.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,10 +20,23 @@ public class Pet {
     @Column(name = "pet_id")
     private Long id;
 
+    /**
+     * NOTE: 반려동물 및 타 엔티티와의 관계 설정
+     * - 공유 펫의 경우 가족과 가족(1):펫(n) 관계
+     * - 개인 펫의 경우 사용자와 사용자(1):펫(n) 관계
+     * - 추후 로직 구현에 문제 있을 시, 사용자와 펫 간 릴레이션 엔티티로 풀어낼 수도 있음
+     * IR
+     */
+
     // 사용자
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    // 가족
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "family_id")
+    private Family family;
 
     // 공유 타입
     @Enumerated(EnumType.STRING)
