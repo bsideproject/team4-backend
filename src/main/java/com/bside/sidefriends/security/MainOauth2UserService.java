@@ -5,6 +5,7 @@ import com.bside.sidefriends.security.provider.KakaoUserInfo;
 import com.bside.sidefriends.security.provider.OAuth2UserInfo;
 import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.domain.UserImage;
+import com.bside.sidefriends.users.error.exception.UserAlreadyExistsException;
 import com.bside.sidefriends.users.repository.UserRepository;
 import com.bside.sidefriends.users.service.UserImageService;
 import com.bside.sidefriends.users.service.UserService;
@@ -49,6 +50,11 @@ public class MainOauth2UserService extends DefaultOAuth2UserService {
         User user;
         if (userOptional.isPresent()) {
             user = userOptional.get();
+
+            if (user.isDeleted()) { // 사용자 정보가 존재하나, 삭제되어 유효하지 않은 경우
+                user.restore();
+            }
+
             user.setEmail(oAuth2UserInfo.getEmail());
             userRepository.save(user);
         } else {
@@ -63,13 +69,13 @@ public class MainOauth2UserService extends DefaultOAuth2UserService {
             user = userRepository.findById(userResponseDto.getId()).get();
 
             // 신규 회원가입 - 프로필 정보 저장
-            if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
-                UserImage userImage = UserImage.builder()
-                        .user(user)
-                        .imageUrl(oAuth2UserInfo.getImageUrl())
-                        .build();
-                userImageService.createUserImage(userImage);
-            }
+//            if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {
+//                UserImage userImage = UserImage.builder()
+//                        .user(user)
+//                        .imageUrl(oAuth2UserInfo.getImageUrl())
+//                        .build();
+//                userImageService.createUserImage(userImage);
+//            }
 
         }
 

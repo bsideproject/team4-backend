@@ -3,6 +3,7 @@ package com.bside.sidefriends.users.service.dto;
 import com.bside.sidefriends.users.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.hibernate.validator.constraints.URL;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -24,8 +25,9 @@ public class FindUserByUserIdResponseDto {
 
     private User.Role role;
 
-    boolean isDeleted;
-
     private Long familyId;
+
+    @URL
+    private String userImageUrl;
 
 }

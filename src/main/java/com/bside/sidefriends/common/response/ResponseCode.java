@@ -32,6 +32,12 @@ public enum ResponseCode {
     U_IMAGE_DELETE_SUCCESS("182", "회원 이미지 삭제에 성공했습니다."),
 
     // 반려동물(201-299)
+    P_CREATE_SUCCESS("201", "펫 생성에 성공하였습니다."),
+    P_FIND_SUCCESS("202", "펫 조회에 성공하였습니다."),
+    P_MODIFY_SUCCESS("203", "펫 정보 수정에 성공하였습니다."),
+    P_DEACTIVATE_SUCCESS("204", "펫 기록 중지에 성공하였습니다."),
+    P_ACTIVATE_SUCCESS("205", "펫 기록 활성화에 성공하였습니다."),
+    P_DELETE_SUCCESS("206", "펫 삭제에 성공하였습니다."),
 
     // 퀵 기록(301-399)
 

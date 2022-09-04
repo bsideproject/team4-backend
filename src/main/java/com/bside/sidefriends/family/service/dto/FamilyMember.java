@@ -4,15 +4,13 @@ import com.bside.sidefriends.users.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.List;
-
 @Getter
 @AllArgsConstructor
-public class DeleteFamilyMemberResponseDto {
+public class FamilyMember {
 
-    private Long familyId;
-
-    @Getter
-    private List<FamilyMember> familyMemberList;
+    private Long userId;
+    private String name;
+    private User.Role role;
+    private String userImageUrl;
 
 }

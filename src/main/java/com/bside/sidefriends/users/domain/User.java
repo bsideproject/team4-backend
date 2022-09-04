@@ -1,6 +1,7 @@
 package com.bside.sidefriends.users.domain;
 
 import com.bside.sidefriends.family.domain.Family;
+import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.users.service.dto.ModifyUserRequestDto;
 import lombok.Builder;
 import lombok.Getter;
@@ -12,6 +13,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Entity
@@ -33,7 +36,11 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    // 회원별 대표펫 id
+    // 회원별 펫
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Pet> pets = new ArrayList<>();
+
+    // TODO: 대표펫 id 삭제
     private String mainPetId;
 
     // 회원 권한
@@ -61,12 +68,17 @@ public class User {
     private LocalDateTime updatedAt;
 
     // 사용자 계정 삭제 여부
-    @Column(nullable = false)
+    @Column(name="is_deleted", nullable = false)
     private boolean isDeleted;
 
+    // 사용자 가족
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "family_id")
     private Family family;
+
+    // 사용자 이미지
+    @OneToOne(mappedBy = "user")
+    private UserImage userImage;
 
     @Builder
     public User(String name, String email, String mainPetId, String username, Role role, String provider, String providerId,
@@ -90,9 +102,11 @@ public class User {
 
     // 가족 그룹 해제
     public void leaveFamily() {
+        this.role = Role.ROLE_USER;
         this.setFamily(null);
     }
 
+    // 사용자 정보 수정
     public void modify(ModifyUserRequestDto modifyUserRequestDto) {
         this.name = modifyUserRequestDto.getName();
     }
@@ -103,8 +117,33 @@ public class User {
         this.leaveFamily();
     }
 
+    // 사용자 계정 복원
+    public void restore() {
+        this.isDeleted = false;
+        this.role = Role.ROLE_USER;
+    }
+
+    // 사용자 역할 변경
     public void changeRole(Role role) {
         this.role = role;
+    }
+
+    // 사용자 가족 정보 반환
+    public Long getFamilyIdInfo() {
+        if (this.family == null) {
+            return null;
+        } else {
+            return this.family.getFamilyId();
+        }
+    }
+
+    // 사용자 이미지 반환
+    public String getImageUrlInfo() {
+        if (this.userImage == null) {
+            return null;
+        } else {
+            return this.userImage.getImageUrl();
+        }
     }
 
 

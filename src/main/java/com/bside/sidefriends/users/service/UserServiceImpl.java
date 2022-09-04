@@ -24,39 +24,53 @@ public class UserServiceImpl implements UserService {
         Optional<User> findUser = userRepository.findByProviderAndProviderId(
                 userCreateRequestDto.getProvider(), userCreateRequestDto.getProviderId());
 
-        if (findUser.isPresent() && !findUser.get().isDeleted()) {
-            throw new UserAlreadyExistsException();
+        User userEntity;
+
+        if (findUser.isPresent()) {
+            // FIXME: 실제 1차 서비스 단계에서는 타지 않을 로직이지만, 시큐리티 회원가입 로직 테스트와 동기화를 위해 작성. IR.
+            userEntity = findUser.get();
+
+            if (userEntity.isDeleted()) {
+                userEntity.restore();
+                userEntity.setEmail(userCreateRequestDto.getEmail());
+                userRepository.save(userEntity);
+                return new CreateUserResponseDto(
+                        userEntity.getUserId(),
+                        userEntity.getName(),
+                        userEntity.getEmail(),
+                        userEntity.getRole()
+                );
+            } else {
+                throw new UserAlreadyExistsException();
+            }
+        } else {
+            // 신규 회원 가입
+            userEntity = User.builder()
+                    .name(userCreateRequestDto.getName())
+                    .email(userCreateRequestDto.getEmail())
+                    .role(User.Role.ROLE_USER) // 회원 가입 시 회원 권한 기본값 ROLE_USER
+                    .provider(userCreateRequestDto.getProvider())
+                    .providerId(userCreateRequestDto.getProviderId())
+                    .username(userCreateRequestDto.getProvider() + "_" + userCreateRequestDto.getProviderId())
+                    .isDeleted(false) // 회원 가입 시 회원 삭제 여부 false
+                    .build();
+
+            userRepository.save(userEntity);
+
+            return new CreateUserResponseDto(
+                    userEntity.getUserId(),
+                    userEntity.getName(),
+                    userEntity.getEmail(),
+                    userEntity.getRole()
+            );
+
         }
-
-        User userEntity = User.builder()
-                .name(userCreateRequestDto.getName())
-                .email(userCreateRequestDto.getEmail())
-                .role(User.Role.ROLE_USER) // 회원 가입 시 회원 권한 기본값 ROLE_USER
-                .provider(userCreateRequestDto.getProvider())
-                .providerId(userCreateRequestDto.getProviderId())
-                .username(userCreateRequestDto.getProvider() + "_" + userCreateRequestDto.getProviderId())
-                .isDeleted(false) // 회원 가입 시 회원 삭제 여부 false
-                .build();
-
-        userRepository.save(userEntity);
-
-        return new CreateUserResponseDto(
-                userEntity.getUserId(),
-                userEntity.getName(),
-                userEntity.getEmail(),
-                userEntity.isDeleted(),
-                userEntity.getRole()
-        );
     }
 
     @Override
     public FindUserByUserIdResponseDto findUserByUserId(Long userId) {
 
-        User findUser = userRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
-
-        if (findUser.isDeleted()) {
-            throw new UserAlreadyDeletedException();
-        }
+        User findUser = userRepository.findByUserIdAndIsDeletedFalse(userId).orElseThrow(UserNotFoundException::new);
 
         return new FindUserByUserIdResponseDto(
                 findUser.getUserId(),
@@ -64,8 +78,8 @@ public class UserServiceImpl implements UserService {
                 findUser.getEmail(),
                 findUser.getMainPetId(),
                 findUser.getRole(),
-                findUser.isDeleted(),
-                findUser.getFamily() == null ? null : findUser.getFamily().getFamilyId()
+                findUser.getFamilyIdInfo(),
+                findUser.getImageUrlInfo()
         );
     }
 
@@ -73,11 +87,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public ModifyUserResponseDto modifyUser(Long userId, ModifyUserRequestDto modifyUserRequestDto) {
 
-        User findUser = userRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
-
-        if (findUser.isDeleted()) {
-            throw new UserAlreadyDeletedException();
-        }
+        User findUser = userRepository.findByUserIdAndIsDeletedFalse(userId).orElseThrow(UserNotFoundException::new);
 
         if (modifyUserRequestDto.getName().equals(findUser.getName())) {
             throw new UserInfoNotChangedException(
@@ -90,7 +100,8 @@ public class UserServiceImpl implements UserService {
         return new ModifyUserResponseDto(
                 findUser.getUserId(),
                 findUser.getName(),
-                findUser.getEmail()
+                findUser.getEmail(),
+                findUser.getImageUrlInfo()
         );
     }
 
@@ -98,11 +109,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(rollbackFor = Exception.class)
     public DeleteUserResponseDto deleteUser(Long userId) {
 
-        User findUser = userRepository.findByUserId(userId).orElseThrow(UserNotFoundException::new);
-
-        if (findUser.isDeleted()) {
-            throw new UserAlreadyDeletedException();
-        }
+        User findUser = userRepository.findByUserIdAndIsDeletedFalse(userId).orElseThrow(UserNotFoundException::new);
 
         if (findUser.getRole().equals(User.Role.ROLE_MANAGER)) {
             throw new UserDeleteFailException(new UserAlreadyManagerException());

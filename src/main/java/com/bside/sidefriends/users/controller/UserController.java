@@ -17,19 +17,6 @@ public class UserController {
 
     private final UserService userService;
 
-    // FIXME: 실제 1차 서비스에서는 제공되지 않는 API
-    @PostMapping("/users")
-    public ResponseEntity<ResponseDto<CreateUserResponseDto>> createUser(@Valid @RequestBody CreateUserRequestDto userCreateRequestDto) {
-
-        CreateUserResponseDto createUserResponseDto = userService.createUser(userCreateRequestDto);
-
-        ResponseDto<CreateUserResponseDto> responseDto = ResponseDto.onSuccessWithData(
-                ResponseCode.U_CREATE_SUCCESS, createUserResponseDto);
-
-        return ResponseEntity.ok().body(responseDto);
-
-    }
-
     @GetMapping("/users/{userId}")
     public ResponseEntity<ResponseDto<FindUserByUserIdResponseDto>> findUserByUserId(@PathVariable("userId") Long userId) {
 
@@ -64,9 +51,13 @@ public class UserController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @GetMapping("/users/{userId}/{tempId}")
-    public String test(@PathVariable("userId") Long userId, @PathVariable("tempId") Long tempId) {
-        return "test";
+    // FIXME: 1차 서비스에서 제공되지 않는 API. 시큐리티 회원가입 로직 작동 확인 완료 후 삭제 필요. IR.
+    @PostMapping("/api/v1/users")
+    public ResponseEntity<CreateUserResponseDto> createUser(@Valid @RequestBody CreateUserRequestDto userCreateRequestDto) {
+
+        CreateUserResponseDto userCreateResponseDto = userService.createUser(userCreateRequestDto);
+
+        return ResponseEntity.ok().body(userCreateResponseDto);
     }
 
 }
