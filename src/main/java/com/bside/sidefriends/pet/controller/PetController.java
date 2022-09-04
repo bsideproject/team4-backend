@@ -5,8 +5,10 @@ import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.pet.service.PetService;
 import com.bside.sidefriends.pet.service.dto.*;
+import com.bside.sidefriends.security.mainOAuth2User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,7 +22,12 @@ public class PetController {
 
     @PostMapping("/pets")
     public ResponseEntity<ResponseDto<CreatePetResponseDto>> createPet(@Valid @RequestBody CreatePetRequestDto createPetRequestDto) {
-        CreatePetResponseDto createPetResponseDto = petService.createPet(createPetRequestDto);
+
+        // TODO: username 관련 변경 필요
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((mainOAuth2User) principal).getUsername();
+
+        CreatePetResponseDto createPetResponseDto = petService.createPet(username, createPetRequestDto);
 
         ResponseDto<CreatePetResponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.P_CREATE_SUCCESS, createPetResponseDto);

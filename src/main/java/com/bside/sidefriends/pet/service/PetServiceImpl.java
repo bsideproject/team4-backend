@@ -1,10 +1,14 @@
 package com.bside.sidefriends.pet.service;
 
+import com.bside.sidefriends.family.repository.FamilyRepository;
 import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.pet.domain.PetGender;
 import com.bside.sidefriends.pet.domain.PetShareScope;
 import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.pet.service.dto.*;
+import com.bside.sidefriends.users.domain.User;
+import com.bside.sidefriends.users.error.exception.UserNotFoundException;
+import com.bside.sidefriends.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
@@ -17,11 +21,19 @@ public class PetServiceImpl implements PetService {
 
     private final PetRepository petRepository;
 
+    // TODO: UserRepository, FamilyRepository 구현 변경 반영 필요
+    private final UserRepository userRepository;
+    private final FamilyRepository familyRepository;
+
+
     @Override
-    public CreatePetResponseDto createPet(CreatePetRequestDto createPetRequestDto) {
+    public CreatePetResponseDto createPet(String username, CreatePetRequestDto createPetRequestDto) {
+
+        User findUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 
         // TODO: 펫 중복 체크 필요성 검토
 
+        // 펫 도메인 객체 생성
         Pet petEntity = Pet.builder()
                 .name(createPetRequestDto.getName())
                 .gender(createPetRequestDto.getGender())
@@ -35,7 +47,13 @@ public class PetServiceImpl implements PetService {
                 .isDeleted(false) // 펫 생성 시 삭제 여부 기본값 false
                 .build();
 
+        // 펫 저장
         petRepository.save(petEntity);
+
+        // 사용자 펫 추가
+        findUser.addPet(petEntity);
+        userRepository.save(findUser);
+
 
         return CreatePetResponseDto.builder()
                 .petId(petEntity.getPetId())
@@ -46,6 +64,8 @@ public class PetServiceImpl implements PetService {
                 .birthday(petEntity.getBirthday())
                 .age(petEntity.getAge())
                 .animalRegistrationNumber(petEntity.getAnimalRegistrationNumber())
+//                .userId(findUser.getUserId()) // 변경한 코드
+                .user(findUser) // 적용한 코드
                 .build();
     }
 

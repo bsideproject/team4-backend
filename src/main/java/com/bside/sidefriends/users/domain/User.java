@@ -3,6 +3,7 @@ package com.bside.sidefriends.users.domain;
 import com.bside.sidefriends.family.domain.Family;
 import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.users.service.dto.ModifyUserRequestDto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,10 +36,6 @@ public class User {
     @Setter
     @Column(nullable = false)
     private String email;
-
-    // 회원별 펫
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Pet> pets = new ArrayList<>();
 
     // TODO: 대표펫 id 삭제
     private String mainPetId;
@@ -79,6 +76,12 @@ public class User {
     // 사용자 이미지
     @OneToOne(mappedBy = "user")
     private UserImage userImage;
+
+    // 사용자 펫
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @JsonManagedReference
+    private List<Pet> pets = new ArrayList<>();
+
 
     @Builder
     public User(String name, String email, String mainPetId, String username, Role role, String provider, String providerId,
@@ -146,6 +149,11 @@ public class User {
         }
     }
 
+    // 사용자 펫 등록
+    public void addPet(Pet pet) {
+        pets.add(pet);
+        pet.setUser(this);
+    }
 
     public enum Role {
         /**
