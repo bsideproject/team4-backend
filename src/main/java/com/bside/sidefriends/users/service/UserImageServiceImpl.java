@@ -37,13 +37,9 @@ public class UserImageServiceImpl implements UserImageService {
     @Transactional
     public UploadUserImageResponseDto uploadUserImage(Long userId, MultipartFile file) {
 
-        User findUser = userRepository.findByUserId(userId).orElseThrow(
+        User findUser = userRepository.findByUserIdAndIsDeletedFalse(userId).orElseThrow(
                 () -> new IllegalStateException("이미지를 업로드할 회원이 존재하지 않습니다.")
         );
-
-        if (findUser.isDeleted()) {
-            throw new IllegalStateException("이미지를 업로드할 회원이 이미 삭제된 회원입니다.");
-        }
 
         Optional<UserImage> findUserImage = userImageRepository.findByUser(findUser);
         UserImage userImageEntity;
@@ -93,13 +89,9 @@ public class UserImageServiceImpl implements UserImageService {
     @Override
     public GetUserImageResponseDto getUserImage(Long userId) {
 
-        User findUser = userRepository.findByUserId(userId).orElseThrow(
+        User findUser = userRepository.findByUserIdAndIsDeletedFalse(userId).orElseThrow(
                 () -> new IllegalStateException("존재하지 않는 회원입니다.")
         );
-
-        if (findUser.isDeleted()) {
-            throw new IllegalStateException("이미 삭제된 회원입니다.");
-        }
 
         UserImage findUserImage = userImageRepository.findByUser(findUser)
                 .orElseThrow(() -> new IllegalStateException("회원 이미지가 존재하지 않습니다."));

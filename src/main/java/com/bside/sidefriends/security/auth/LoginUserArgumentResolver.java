@@ -35,6 +35,8 @@ public class LoginUserArgumentResolver implements HandlerMethodArgumentResolver 
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         mainOAuth2User userDetails = (mainOAuth2User)principal;
         String username = userDetails.getUsername();
+
+        // FIXME: soft delete 레코드 메서드 구현 여부 변경에 따라, 서비스 시 회원 조회 맥락 고려 후 필요시 아래 메서드 변경 필요. IR.
         User user = userRepository.findByUsername(username).get();
         return user;
     }
