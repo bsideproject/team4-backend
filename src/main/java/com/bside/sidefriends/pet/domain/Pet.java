@@ -1,9 +1,9 @@
 package com.bside.sidefriends.pet.domain;
 
 import com.bside.sidefriends.family.domain.Family;
+import com.bside.sidefriends.pet.service.dto.ModifyPetRequestDto;
 import com.bside.sidefriends.users.domain.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -12,13 +12,15 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
+@Builder
 public class Pet {
 
     // 반려동물 id
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pet_id")
-    private Long id;
+    private Long petId;
 
     /**
      * NOTE: 반려동물 및 타 엔티티와의 관계 설정
@@ -39,31 +41,39 @@ public class Pet {
     private Family family;
 
     // 공유 타입
+    // TODO: 공유 타입 속성 필요성 검토
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PetShareScope shareScope;
 
     // 이름
     @Column(nullable = false)
+    @Setter
     private String name;
 
     // 품종
+    @Setter
     private String breed;
 
     // 성별
     @Enumerated(EnumType.STRING)
+    @Setter
     private PetGender gender;
 
     // 생일
+    @Setter
     private String birthday;
 
     // 입양일
+    @Setter
     private String adoptionDate;
 
     // 나이
+    @Setter
     private Long age;
 
     // 동물등록번호
+    @Setter
     private String animalRegistrationNumber;
 
     // 기록 중지 여부
@@ -84,6 +94,8 @@ public class Pet {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    // TODO: 펫 이미지
+
     // 질환
     // TODO: 질환 enum 관리 여부
 
@@ -93,5 +105,18 @@ public class Pet {
     // 혈액형
     // TODO: 혈액형 기록 필요 여부 및 기록 시 enum 관리 여부
 
+    // 펫 기록 활성화
+    public void activate() {
+        this.isDeactivated = false;
+    }
+    // 펫 기록 비활성화
+    public void deactivate() {
+        this.isDeactivated = true;
+    }
+
+    // 펫 삭제
+    public void delete() {
+        this.isDeleted = true;
+    }
 
 }
