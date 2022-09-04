@@ -27,7 +27,7 @@ public class PetController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         String username = ((mainOAuth2User) principal).getUsername();
 
-        CreatePetResponseDto createPetResponseDto = petService.createPet(username, createPetRequestDto);
+        CreatePetResponseDto createPetResponseDto = petService.createUserPet(username, createPetRequestDto);
 
         ResponseDto<CreatePetResponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.P_CREATE_SUCCESS, createPetResponseDto);

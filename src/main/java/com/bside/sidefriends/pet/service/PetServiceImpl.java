@@ -27,7 +27,7 @@ public class PetServiceImpl implements PetService {
 
 
     @Override
-    public CreatePetResponseDto createPet(String username, CreatePetRequestDto createPetRequestDto) {
+    public CreatePetResponseDto createUserPet(String username, CreatePetRequestDto createPetRequestDto) {
 
         User findUser = userRepository.findByUsername(username).orElseThrow(UserNotFoundException::new);
 

@@ -6,12 +6,13 @@ import com.bside.sidefriends.pet.service.dto.ActivatePetResponseDto;
 public interface PetService {
 
     /**
-     * 펫 정보 생성(최초 등록)
+     * 사용자 펫 정보 생성(최초 등록)
      * @param username 펫을 등록할 회원 id
      * @param createPetRequestDto {@link CreatePetRequestDto} 펫 정보 생성 요청 DTO
      * @return {@link CreatePetResponseDto} 생성된 펫 정보 응답 DTO
      */
-    CreatePetResponseDto createPet(String username, CreatePetRequestDto createPetRequestDto);
+    CreatePetResponseDto createUserPet(String username, CreatePetRequestDto createPetRequestDto);
+
 
     /**
      * 펫 상세 정보 조회
