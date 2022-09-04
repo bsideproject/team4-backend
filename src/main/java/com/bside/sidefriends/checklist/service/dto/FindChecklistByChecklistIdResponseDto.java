@@ -1,28 +1,23 @@
-package com.bside.sidefriends.schedule.service.dto;
+package com.bside.sidefriends.checklist.service.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @Getter
 @AllArgsConstructor
-public class FindScheduleByScheduleIdResponseDto {
+public class FindChecklistByChecklistIdResponseDto {
 
-    private Long scheduleId;
+    private Long checklistId;
     private String title;
     private String explanation;
-    private LocalDate startDate;
-    private LocalTime startTime;
-    private LocalDate endDate;
-    private LocalTime endTime;
-    private boolean isAllDay;
+    private LocalDate date;
+    private boolean isDone;
     private boolean isRepeated;
 
-    public boolean getIsAllDay() {
-        return isAllDay;
+    public boolean getIsDone() {
+        return isDone;
     }
     public boolean getIsRepeated() {
         return isRepeated;
@@ -31,7 +26,6 @@ public class FindScheduleByScheduleIdResponseDto {
     private RepeatDetail repeatDetail;
 
     @Getter
-    @NoArgsConstructor
     @AllArgsConstructor
     public static class RepeatDetail {
 

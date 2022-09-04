@@ -1,6 +1,6 @@
-package com.bside.sidefriends.schedule.domain;
+package com.bside.sidefriends.checklist.domain;
 
-import com.bside.sidefriends.schedule.service.dto.ModifyScheduleRequestDto;
+import com.bside.sidefriends.checklist.service.dto.ModifyChecklistRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,16 +15,16 @@ import java.util.stream.Collectors;
 @Entity
 @Getter
 @NoArgsConstructor
-public class ScheduleMeta {
+public class ChecklistMeta {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long scheduleMetaId;
+    private Long checklistMetaId;
 
-    // Schedule 과의 양방향 관계성 (1대1)
+    // Checklist 와의 양방향 관계성 (1대1)
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "scheduleId")
-    private Schedule schedule;
+    @JoinColumn(name = "checklistId")
+    private Checklist checklist;
 
     // 반복 주기 (daily, weekly, monthly, yearly)
     private String eventPeriod;
@@ -54,8 +54,8 @@ public class ScheduleMeta {
     private String eventDeleteDate;
 
     @Builder
-    public ScheduleMeta(Schedule schedule, String eventPeriod, String eventDate, String eventMonth, String eventDay, String eventWeek, LocalDate startedAt, LocalDate endedAt, String eventExceptionDate, String eventDeleteDate) {
-        this.schedule = schedule;
+    public ChecklistMeta(Checklist checklist, String eventPeriod, String eventDate, String eventMonth, String eventDay, String eventWeek, LocalDate startedAt, LocalDate endedAt, String eventExceptionDate, String eventDeleteDate) {
+        this.checklist = checklist;
         this.eventPeriod = eventPeriod;
         this.eventDate = eventDate;
         this.eventMonth = eventMonth;
@@ -68,7 +68,7 @@ public class ScheduleMeta {
     }
 
     public void changeEndedAt(LocalDate date) {
-        this.endedAt = date;
+        endedAt = date;
     }
 
     public void addEventExceptionDate(LocalDate date) {
@@ -79,6 +79,7 @@ public class ScheduleMeta {
             eventExceptionDate += "," + date_string;
         }
     }
+
     public void addEventDeleteDate(LocalDate date) {
         String date_string = date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
         if (eventDeleteDate == null) {
@@ -88,7 +89,7 @@ public class ScheduleMeta {
         }
     }
 
-    public void modify(ModifyScheduleRequestDto.RepeatDetail repeatDetail) {
+    public void modify(ModifyChecklistRequestDto.RepeatDetail repeatDetail) {
         this.eventPeriod = repeatDetail.getEventPeriod();
         this.eventDate = repeatDetail.getEventDate();
         this.eventMonth = repeatDetail.getEventMonth();
@@ -114,7 +115,5 @@ public class ScheduleMeta {
         this.eventExceptionDate = exceptionDateList.size() == 0 ? null : String.join(",", exceptionDateList);
     }
 
-    public void changeExceptionDateList(List<String> exceptionDateList) {
-        this.eventExceptionDate = String.join(",", exceptionDateList);
-    }
 }
+

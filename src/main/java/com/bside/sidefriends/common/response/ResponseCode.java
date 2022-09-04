@@ -68,6 +68,7 @@ public enum ResponseCode {
     CHECKLIST_CHECKED_FAIL("410","할일 수행여부 변경에 실패하였습니다."),
     CHECKLIST_INVALID_INPUT("411","할일 서비스 입력 값이 올바르지 않습니다."),
     CHECKLIST_NOT_FOUND("412","존재하지 않는 할일입니다."),
+    CHECKLIST_META_NOT_FOUND("412","존재하지 않는 반복 할일 정보입니다."),
 
     // 할 일, 스케쥴(451-499)
     SCHEDULE_FIND_ALL_SUCCESS("451","일정 전체 조회에 성공하였습니다."),
