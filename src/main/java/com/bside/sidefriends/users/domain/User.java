@@ -12,7 +12,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 @Entity
 @NoArgsConstructor
@@ -62,7 +61,7 @@ public class User {
     private LocalDateTime updatedAt;
 
     // 사용자 계정 삭제 여부
-    @Column(nullable = false)
+    @Column(name="is_deleted", nullable = false)
     private boolean isDeleted;
 
     // 사용자 가족

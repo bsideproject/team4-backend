@@ -53,6 +53,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         Authentication authentication;
         if (userName != null) {
+
+            // FIXME: soft delete 레코드 메서드 구현 여부 변경에 따라, 서비스 시 회원 조회 맥락 고려 후 필요시 아래 메서드 변경 필요. IR.
             User user = userRepository.findByUsername(userName).orElseThrow(); //TODO : findByUsername한 값이 없을 때 처리할 Exception 구현해야 한다
             mainOAuth2User oAuth2User = new mainOAuth2User(user);
 
