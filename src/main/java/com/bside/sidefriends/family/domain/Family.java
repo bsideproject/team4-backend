@@ -1,5 +1,6 @@
 package com.bside.sidefriends.family.domain;
 
+import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.users.domain.User;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,6 +24,9 @@ public class Family {
 
     @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
     private List<User> users = new ArrayList<>();
+
+    @OneToMany(mappedBy = "family", fetch = FetchType.LAZY)
+    private List<Pet> pets = new ArrayList<>();
 
     // 가족 그룹 삭제
     public void delete() {
