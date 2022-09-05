@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 public class FindUserByUserIdResponseDto {
 
     @NotNull
-    private Long id;
+    private Long userId;
 
     @NotNull
     private String name;
@@ -21,6 +21,7 @@ public class FindUserByUserIdResponseDto {
     @Email
     private String email;
 
+    // FIXME: Long 타입 변경 필요. IR.
     private String mainPetId;
 
     private User.Role role;

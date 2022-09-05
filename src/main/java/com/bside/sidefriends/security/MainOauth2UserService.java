@@ -66,7 +66,7 @@ public class MainOauth2UserService extends DefaultOAuth2UserService {
                     .providerId(oAuth2UserInfo.getProviderId())
                     .build();
             CreateUserResponseDto userResponseDto = userService.createUser(userCreateRequestDto);
-            user = userRepository.findById(userResponseDto.getId()).get();
+            user = userRepository.findById(userResponseDto.getUserId()).get();
 
             // 신규 회원가입 - 프로필 정보 저장
 //            if (userRequest.getClientRegistration().getRegistrationId().equals("google")) {

@@ -7,7 +7,8 @@ import lombok.Getter;
 @Getter
 public class DeleteUserResponseDto {
 
-    private Long id;
+    private Long userId;
+
     private boolean isDeleted;
 
 }

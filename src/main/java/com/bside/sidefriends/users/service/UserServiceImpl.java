@@ -19,10 +19,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public CreateUserResponseDto createUser(CreateUserRequestDto userCreateRequestDto) throws IllegalStateException{
+    public CreateUserResponseDto createUser(CreateUserRequestDto createUserRequestDto){
 
         Optional<User> findUser = userRepository.findByProviderAndProviderId(
-                userCreateRequestDto.getProvider(), userCreateRequestDto.getProviderId());
+                createUserRequestDto.getProvider(), createUserRequestDto.getProviderId());
 
         User userEntity;
 
@@ -32,13 +32,15 @@ public class UserServiceImpl implements UserService {
 
             if (userEntity.isDeleted()) {
                 userEntity.restore();
-                userEntity.setEmail(userCreateRequestDto.getEmail());
+                userEntity.setEmail(createUserRequestDto.getEmail());
                 userRepository.save(userEntity);
                 return new CreateUserResponseDto(
                         userEntity.getUserId(),
                         userEntity.getName(),
                         userEntity.getEmail(),
-                        userEntity.getRole()
+                        userEntity.getRole(),
+                        userEntity.getMainPetId(),
+                        userEntity.getImageUrlInfo()
                 );
             } else {
                 throw new UserAlreadyExistsException();
@@ -46,12 +48,12 @@ public class UserServiceImpl implements UserService {
         } else {
             // 신규 회원 가입
             userEntity = User.builder()
-                    .name(userCreateRequestDto.getName())
-                    .email(userCreateRequestDto.getEmail())
+                    .name(createUserRequestDto.getName())
+                    .email(createUserRequestDto.getEmail())
                     .role(User.Role.ROLE_USER) // 회원 가입 시 회원 권한 기본값 ROLE_USER
-                    .provider(userCreateRequestDto.getProvider())
-                    .providerId(userCreateRequestDto.getProviderId())
-                    .username(userCreateRequestDto.getProvider() + "_" + userCreateRequestDto.getProviderId())
+                    .provider(createUserRequestDto.getProvider())
+                    .providerId(createUserRequestDto.getProviderId())
+                    .username(createUserRequestDto.getProvider() + "_" + createUserRequestDto.getProviderId())
                     .isDeleted(false) // 회원 가입 시 회원 삭제 여부 false
                     .build();
 
@@ -61,7 +63,9 @@ public class UserServiceImpl implements UserService {
                     userEntity.getUserId(),
                     userEntity.getName(),
                     userEntity.getEmail(),
-                    userEntity.getRole()
+                    userEntity.getRole(),
+                    userEntity.getMainPetId(),
+                    userEntity.getImageUrlInfo()
             );
 
         }
@@ -100,6 +104,8 @@ public class UserServiceImpl implements UserService {
         return new ModifyUserResponseDto(
                 findUser.getUserId(),
                 findUser.getName(),
+                findUser.getMainPetId(),
+                findUser.getRole(),
                 findUser.getEmail(),
                 findUser.getImageUrlInfo()
         );
