@@ -22,12 +22,18 @@ import java.time.LocalDate;
 
 @SideFriendsController
 @RequiredArgsConstructor
+@ApiResponses({
+        @ApiResponse(code=001, message = "입력 값이 올바르지 않습니다."),
+        @ApiResponse(code=003, message = "허용되지 않은 요청 방법입니다."),
+        @ApiResponse(code=311, message = "퀵 기록 서비스 입력 값이 올바르지 않습니다."),
+        @ApiResponse(code=312, message = "존재하지 않는 퀵 기록입니다.")
+})
 public class QuickController {
     
     private final QuickService quickService;
 
     @ApiResponses({
-            @ApiResponse(code=301, message = "퀵 기록 생성에 성공하였습니다."),
+            @ApiResponse(code=301, message = "퀵 기록 생성에 성공하였습니다. (200)"),
             @ApiResponse(code=302, message = "퀵 기록 생성에 실패하였습니다.")
     })
     @GetMapping("/quick")
@@ -42,7 +48,7 @@ public class QuickController {
     }
 
     @ApiResponses({
-            @ApiResponse(code=303, message = "퀵 기록 조회에 성공하였습니다."),
+            @ApiResponse(code=303, message = "퀵 기록 조회에 성공하였습니다. (200)"),
             @ApiResponse(code=304, message = "퀵 기록 조회에 실패하였습니다.")
     })
     @GetMapping("/quick/{date}")
@@ -60,7 +66,7 @@ public class QuickController {
     }
 
     @ApiResponses({
-            @ApiResponse(code=305, message = "퀵 기록 수정에 성공하였습니다."),
+            @ApiResponse(code=305, message = "퀵 기록 수정에 성공하였습니다. (200)"),
             @ApiResponse(code=306, message = "퀵 기록 수정에 실패하였습니다.")
     })
     @PutMapping("/quick/{quickId}")
@@ -77,7 +83,7 @@ public class QuickController {
     }
 
     @ApiResponses({
-            @ApiResponse(code=307, message = "퀵 기록 순서 변경에 성공하였습니다."),
+            @ApiResponse(code=307, message = "퀵 기록 순서 변경에 성공하였습니다. (200)"),
             @ApiResponse(code=308, message = "퀵 기록 순서 변경에 실패하였습니다.")
     })
     @PutMapping("/quick/order")
@@ -94,7 +100,7 @@ public class QuickController {
     }
 
     @ApiResponses({
-            @ApiResponse(code=309, message = "퀵 기록 실행 횟수 증가에 성공하였습니다."),
+            @ApiResponse(code=309, message = "퀵 기록 실행 횟수 증가에 성공하였습니다. (200)"),
             @ApiResponse(code=310, message = "퀵 기록 실행 횟수 증가에 실패하였습니다.")
     })
     @PutMapping("/quick/count/{quickId}")

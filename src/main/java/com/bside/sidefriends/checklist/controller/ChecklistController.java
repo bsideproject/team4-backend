@@ -19,12 +19,19 @@ import java.time.LocalDate;
 
 @SideFriendsController
 @RequiredArgsConstructor
+@ApiResponses({
+        @ApiResponse(code=001, message = "입력 값이 올바르지 않습니다."),
+        @ApiResponse(code=003, message = "허용되지 않은 요청 방법입니다."),
+        @ApiResponse(code=413, message = "할일 서비스 입력 값이 올바르지 않습니다."),
+        @ApiResponse(code=414, message = "존재하지 않는 할일입니다."),
+        @ApiResponse(code=415, message = "존재하지 않는 반복 할일 정보입니다.")
+})
 public class ChecklistController {
 
     private final ChecklistService checklistService;
 
     @ApiResponses({
-            @ApiResponse(code=401, message = "할일 전체 조회에 성공하였습니다."),
+            @ApiResponse(code=401, message = "할일 전체 조회에 성공하였습니다. (200)"),
             @ApiResponse(code=402, message = "할일 전체 조회에 실패하였습니다.")
     })
     @GetMapping("/checklist/list/{date}")
@@ -42,7 +49,7 @@ public class ChecklistController {
     }
 
     @ApiResponses({
-            @ApiResponse(code=403, message = "할일 생성에 성공하였습니다."),
+            @ApiResponse(code=403, message = "할일 생성에 성공하였습니다. (200)"),
             @ApiResponse(code=404, message = "할일 생성에 실패하였습니다.")
     })
     @PostMapping("/checklist")
@@ -60,7 +67,7 @@ public class ChecklistController {
     }
 
     @ApiResponses({
-            @ApiResponse(code=405, message = "할일 조회에 성공하였습니다."),
+            @ApiResponse(code=405, message = "할일 조회에 성공하였습니다. (200)"),
             @ApiResponse(code=406, message = "할일 조회에 실패하였습니다.")
     })
     @GetMapping("/checklist/{checklistId}")
@@ -77,7 +84,7 @@ public class ChecklistController {
     }
 
     @ApiResponses({
-            @ApiResponse(code=407, message = "할일 변경에 성공하였습니다."),
+            @ApiResponse(code=407, message = "할일 변경에 성공하였습니다. (200)"),
             @ApiResponse(code=408, message = "할일 변경에 실패하였습니다.")
     })
     @PutMapping("/checklist/{checklistId}/date/{date}/modifyType/{modifyType}")
@@ -96,7 +103,7 @@ public class ChecklistController {
 
 
     @ApiResponses({
-            @ApiResponse(code=409, message = "할일 삭제에 성공하였습니다."),
+            @ApiResponse(code=409, message = "할일 삭제에 성공하였습니다. (200)"),
             @ApiResponse(code=410, message = "할일 삭제에 실패하였습니다.")
     })
     @DeleteMapping("/checklist/{checklistId}/date/{date}/deleteType/{deleteType}")
@@ -114,7 +121,7 @@ public class ChecklistController {
     }
 
     @ApiResponses({
-            @ApiResponse(code=411, message = "할일 수행여부 변경에 성공하였습니다."),
+            @ApiResponse(code=411, message = "할일 수행여부 변경에 성공하였습니다. (200)"),
             @ApiResponse(code=412, message = "할일 수행여부 변경에 실패하였습니다.")
     })
     @PutMapping("/checklist/{checklistId}/checked/date/{date}")
