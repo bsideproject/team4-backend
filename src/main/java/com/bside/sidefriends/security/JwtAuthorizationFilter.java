@@ -1,13 +1,17 @@
 package com.bside.sidefriends.security;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.bside.sidefriends.common.response.ResponseCode;
+import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -16,8 +20,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
@@ -47,9 +49,23 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             header = header.replace("Bearer%20", JwtProperties.TOKEN_PREFIX);
         }
         String token = header.replace(JwtProperties.TOKEN_PREFIX,"");
-        String userName = JWT.require(HMAC512(JwtProperties.SECRET.getBytes()))
-                .build().verify(token).getSubject(); //TODO : 유효하지 않은 Token이 들어오면 SignatureVerificationException이 발생한다
-        // TODO-jh : 유효기간이 만료한 Token이 들어오면 com.auth0.jwt.exceptions.TokenExpiredException: The Token has expired on 2022-08-08T11:13:57Z 발생
+
+        String userName = "";
+        try {
+            userName = JWT.require(HMAC512(JwtProperties.SECRET.getBytes()))
+                .build().verify(token).getSubject();
+        } catch (TokenExpiredException e) {
+            ResponseDto<?> responseDto = ResponseDto.onFailWithoutData(ResponseCode.AUTH_TOKEN_EXPIRED);
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json; charset=utf8");
+            response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
+            return;
+        } catch (JWTVerificationException e) {
+            ResponseDto<?> responseDto = ResponseDto.onFailWithoutData(ResponseCode.AUTH_VERIFICATION_FAIL);
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json; charset=utf8");
+            response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
+        }
 
         Authentication authentication;
         if (userName != null) {
