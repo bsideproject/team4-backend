@@ -119,7 +119,7 @@ public class FamilyServiceImpl implements FamilyService {
     }
 
     @Override
-    public FindFamilyMembersByFamilyIdResponseDto findFamilyMembersByFamilyId(Long familyId) {
+    public FindFamilyMembersResponseDto findFamilyMembers(Long familyId) {
 
         Family findFamily = familyRepository.findByFamilyIdAndIsDeletedFalse(familyId).orElseThrow(FamilyNotFoundException::new);
 
@@ -127,7 +127,10 @@ public class FamilyServiceImpl implements FamilyService {
                         .map(getFamilyMemberInfo)
                         .collect(Collectors.toList());
 
-        return new FindFamilyMembersByFamilyIdResponseDto(familyMemberList);
+        return new FindFamilyMembersResponseDto(
+                findFamily.getFamilySize(),
+                familyMemberList
+        );
     }
 
     @Override
@@ -156,6 +159,7 @@ public class FamilyServiceImpl implements FamilyService {
 
         return new DeleteFamilyMemberResponseDto(
                 findFamily.getFamilyId(),
+                findFamily.getFamilySize(),
                 familyMemberList
         );
     }

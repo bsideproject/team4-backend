@@ -10,9 +10,7 @@ import java.util.List;
 public class ChangeFamilyManagerResponseDto {
 
     private Long familyId;
-
     private Long familyManagerId;
-
     private List<FamilyMember> familyMemberList;
 
 }

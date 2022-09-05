@@ -62,12 +62,11 @@ public class FamilyController {
     }
 
     @GetMapping("/family/{familyId}")
-    ResponseEntity<ResponseDto<FindFamilyMembersByFamilyIdResponseDto>> findFamily(@PathVariable("familyId") Long familyId) {
+    ResponseEntity<ResponseDto<FindFamilyMembersResponseDto>> findFamily(@PathVariable("familyId") Long familyId) {
 
-        FindFamilyMembersByFamilyIdResponseDto findFamilyMembersByFamilyIdResponseDto
-                = familyService.findFamilyMembersByFamilyId(familyId);
+        FindFamilyMembersResponseDto findFamilyMembersByFamilyIdResponseDto = familyService.findFamilyMembers(familyId);
 
-        ResponseDto<FindFamilyMembersByFamilyIdResponseDto> responseDto = ResponseDto.onSuccessWithData(
+        ResponseDto<FindFamilyMembersResponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.F_FIND_SUCCESS, findFamilyMembersByFamilyIdResponseDto);
 
         return ResponseEntity.ok().body(responseDto);

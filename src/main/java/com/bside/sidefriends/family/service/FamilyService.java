@@ -1,7 +1,7 @@
 package com.bside.sidefriends.family.service;
 
 import com.bside.sidefriends.family.service.dto.*;
-import com.bside.sidefriends.family.service.dto.FindFamilyMembersByFamilyIdResponseDto;
+import com.bside.sidefriends.family.service.dto.FindFamilyMembersResponseDto;
 
 public interface FamilyService {
 
@@ -31,11 +31,11 @@ public interface FamilyService {
     DeleteFamilyResponseDto deleteFamily(Long familyId);
 
     /**
-     * 가족 그룹 구성원 목록 조회
+     * 가족 그룹 id로 가족 그룹 구성원 목록 조회
      * @param familyId 조회할 가족 그룹 id
-     * @return {@link FindFamilyMembersByFamilyIdResponseDto} 가족 그룹 조회 응답 DTO
+     * @return {@link FindFamilyMembersResponseDto} 가족 그룹 조회 응답 DTO
      */
-    FindFamilyMembersByFamilyIdResponseDto findFamilyMembersByFamilyId(Long familyId);
+    FindFamilyMembersResponseDto findFamilyMembers(Long familyId);
 
     /**
      * 가족 그룹 구성원 삭제

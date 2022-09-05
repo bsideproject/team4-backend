@@ -6,9 +6,9 @@ import lombok.Getter;
 import java.util.List;
 
 @AllArgsConstructor
-public class FindFamilyMembersByFamilyIdResponseDto {
+public class FindFamilyMembersResponseDto {
 
-    @Getter
+    private long familySize;
     private List<FamilyMember> familyMemberList;
 
 }
