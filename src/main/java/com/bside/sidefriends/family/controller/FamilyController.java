@@ -5,8 +5,10 @@ import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.family.service.FamilyService;
 import com.bside.sidefriends.family.service.dto.*;
+import com.bside.sidefriends.security.mainOAuth2User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -20,7 +22,15 @@ public class FamilyController {
     @PostMapping("/family")
     ResponseEntity<ResponseDto<CreateFamilyReponseDto>> createFamily(@Valid @RequestBody CreateFamilyRequestDto createFamilyRequestDto) {
 
-        CreateFamilyReponseDto createFamilyReponseDto = familyService.createFamily(createFamilyRequestDto);
+        /**
+         * NOTE: 가족 생성 요청 시 그룹장과 그룹원 식별 방법
+         * - 그룹원이 그룹장으로부터 받은 초대 링크를 클릭할 때 타게 되는 POST 요청 API
+         * - 그룹장: 회원 id로 식별. 요청 body 데이터에 보냄
+         * - 그룹원: authorization 헤더로 식별
+         * IR
+         */
+        String groupMemberUsername = getAuthenticatedUsername();
+        CreateFamilyReponseDto createFamilyReponseDto = familyService.createFamily(groupMemberUsername, createFamilyRequestDto);
 
         ResponseDto<CreateFamilyReponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.F_CREATE_SUCCESS, createFamilyReponseDto);
@@ -87,5 +97,10 @@ public class FamilyController {
                 ResponseCode.F_MODIFY_MANAGER_SUCCESS, changeFamilyManagerResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
+    }
+
+    private String getAuthenticatedUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ((mainOAuth2User) principal).getUsername();
     }
 }

@@ -7,10 +7,11 @@ public interface FamilyService {
 
     /**
      * 가족 그룹 생성
+     * @param memberUsername 가족 그룹의 구성원으로 추가할 사용자 username
      * @param createFamilyRequestDto {@link CreateFamilyRequestDto} 가족 그룹 생성 요청 DTO
      * @return {@link CreateFamilyReponseDto} 가족 그룹 생성 응답 DTO
      */
-    CreateFamilyReponseDto createFamily(CreateFamilyRequestDto createFamilyRequestDto);
+    CreateFamilyReponseDto createFamily(String memberUsername, CreateFamilyRequestDto createFamilyRequestDto);
 
     /**
      * 가족 그룹 삭제

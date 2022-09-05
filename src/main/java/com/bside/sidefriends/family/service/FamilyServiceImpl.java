@@ -27,10 +27,12 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public CreateFamilyReponseDto createFamily(CreateFamilyRequestDto createFamilyRequestDto) {
+    public CreateFamilyReponseDto createFamily(String memberUsername, CreateFamilyRequestDto createFamilyRequestDto) {
+
+        User memberUser = userRepository.findByUsernameAndIsDeletedFalse(memberUsername)
+                .orElseThrow(() -> new FamilyMemberNotFoundException(new UserNotFoundException()));
 
         Long groupManagerId = createFamilyRequestDto.getGroupManagerId();
-
         User managerUser = userRepository.findByUserIdAndIsDeletedFalse(groupManagerId)
                 .orElseThrow(() -> new FamilyManagerNotFoundException(new UserNotFoundException()));
 
@@ -38,18 +40,31 @@ public class FamilyServiceImpl implements FamilyService {
             throw new UserHasFamilyException();
         }
 
-        // TODO: 공유 펫 선택
-
         // 가족 생성
         Family family = new Family();
-        managerUser.changeRole(User.Role.ROLE_MANAGER); // 가족 그룹장 권한 부여
+
+        // 가족 그룹장 추가
+        managerUser.changeRole(User.Role.ROLE_MANAGER);
         family.addUser(managerUser);
+
+        // 가족 구성원 추가
+        family.addUser(memberUser);
         family.setDeleted(false);
         familyRepository.save(family);
 
+        // 사용자 정보 변경
+        userRepository.save(managerUser);
+        userRepository.save(memberUser);
+
+        // 생성된 가족 구성원 리스트
+        List<FamilyMember> familyMemberList = family.getMemberList().stream()
+                .map(getFamilyMemberInfo)
+                .collect(Collectors.toList());
+
         return new CreateFamilyReponseDto(
                 family.getFamilyId(),
-                managerUser.getUserId()
+                managerUser.getUserId(),
+                familyMemberList
         );
     }
 
