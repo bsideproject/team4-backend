@@ -7,11 +7,20 @@ public interface FamilyService {
 
     /**
      * 가족 그룹 생성
-     * @param memberUsername 가족 그룹의 구성원으로 추가할 사용자 username
+     * @param memberUsername 가족 그룹을 생성한 뒤, 해당 그룹의 구성원으로 추가할 사용자 username
      * @param createFamilyRequestDto {@link CreateFamilyRequestDto} 가족 그룹 생성 요청 DTO
-     * @return {@link CreateFamilyReponseDto} 가족 그룹 생성 응답 DTO
+     * @return {@link CreateFamilyResponseDto} 가족 그룹 생성 응답 DTO
      */
-    CreateFamilyReponseDto createFamily(String memberUsername, CreateFamilyRequestDto createFamilyRequestDto);
+    CreateFamilyResponseDto createFamily(String memberUsername, CreateFamilyRequestDto createFamilyRequestDto);
+
+    /**
+     * 가족 그룹 구성원 추가
+     * @param memberUsername 가족 그룹의 구성원으로 추가할 사용자 username
+     * @param addFamilyMemberRequestDto {@link AddFamilyMemberResponseDto} 가족 그룹 구성원 추가 요청 DTO
+     * @return {@link AddFamilyMemberResponseDto} 가족 그룹 구성원 추가 응답 DTO
+     */
+    AddFamilyMemberResponseDto addFamilyMember(String memberUsername, AddFamilyMemberRequestDto addFamilyMemberRequestDto);
+
 
     /**
      * 가족 그룹 삭제
@@ -27,15 +36,6 @@ public interface FamilyService {
      * @return {@link FindFamilyMembersByFamilyIdResponseDto} 가족 그룹 조회 응답 DTO
      */
     FindFamilyMembersByFamilyIdResponseDto findFamilyMembersByFamilyId(Long familyId);
-
-    /**
-     * 가족 그룹 구성원 추가
-     * TODO: 그룹장이 아닌 경우 추가 불가
-     * @param familyId 구성원을 추가할 가족 그룹 id
-     * @param addFamilyMemberRequestDto {@link AddFamilyMemberResponseDto} 가족 그룹 구성원 추가 요청 DTO
-     * @return {@link AddFamilyMemberResponseDto} 가족 그룹 구성원 추가 응답 DTO
-     */
-    AddFamilyMemberResponseDto addFamilyMember(Long familyId, AddFamilyMemberRequestDto addFamilyMemberRequestDto);
 
     /**
      * 가족 그룹 구성원 삭제

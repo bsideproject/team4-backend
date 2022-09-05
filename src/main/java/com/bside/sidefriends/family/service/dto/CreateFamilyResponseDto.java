@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @AllArgsConstructor
-public class CreateFamilyReponseDto {
+public class CreateFamilyResponseDto {
 
     private Long familyId;
     private Long familyManagerId;

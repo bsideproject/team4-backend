@@ -107,7 +107,7 @@ public enum ResponseCode {
     F_MEMBER_NOT_FOUND("618", "가족 그룹 구성원이 존재하지 않습니다."),
     F_MANAGER_NOT_FOUND("619", "가족 그룹 그룹장이 존재하지 않습니다."),
 
-    F_ROLE_MANAGER_REQUIRED("620", "가족 그룹장 권한이 있어야 합니다."),
+    F_ROLE_MANAGER_REQUIRED("620", "가족 그룹장이 있어야 합니다."),
 
 
     ;
