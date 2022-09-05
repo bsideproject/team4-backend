@@ -3,14 +3,11 @@ package com.bside.sidefriends.pet.service.dto;
 import com.bside.sidefriends.pet.domain.PetGender;
 import com.bside.sidefriends.pet.domain.PetShareScope;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-@Builder
-public class FindPetResponseDto {
-
+public class PetInfo {
     private Long petId;
     private String name;
     private PetShareScope shareScope;
@@ -22,6 +19,4 @@ public class FindPetResponseDto {
     private Long age;
     private String adoptionDate;
     private String animalRegistrationNumber;
-
-    // TODO: 펫 이미지
 }

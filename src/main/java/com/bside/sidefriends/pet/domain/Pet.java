@@ -1,9 +1,7 @@
 package com.bside.sidefriends.pet.domain;
 
 import com.bside.sidefriends.family.domain.Family;
-import com.bside.sidefriends.pet.service.dto.ModifyPetRequestDto;
 import com.bside.sidefriends.users.domain.User;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -34,7 +32,6 @@ public class Pet {
     // 사용자
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    @JsonBackReference
     private User user;
 
     // 가족
@@ -121,9 +118,24 @@ public class Pet {
         this.isDeleted = true;
     }
 
-    // 사용자에게 펫 설정
+    // 사용자 펫 설정
     public void setUser(User user) {
         this.user = user;
+    }
+
+    // 가족 펫 설정
+    public void setFamily(Family family) {
+        this.family = family;
+        this.shareScope = PetShareScope.FAMILY;
+    }
+
+    // 가족 정보 반환
+    public Long getFamilyIdInfo() {
+        if (this.family == null) {
+            return null;
+        } else {
+            return this.family.getFamilyId();
+        }
     }
 
 }

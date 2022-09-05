@@ -3,6 +3,8 @@ package com.bside.sidefriends.pet.service;
 import com.bside.sidefriends.pet.service.dto.*;
 import com.bside.sidefriends.pet.service.dto.ActivatePetResponseDto;
 
+import java.util.List;
+
 public interface PetService {
 
     /**
@@ -55,7 +57,13 @@ public interface PetService {
      * TODO: 펫 연관 기능
      * - 펫 공유
      * - 사용자 펫 리스트
-     * - 가족 펫 리스트
      * - 대표펫 설정
      */
+
+    SharePetResponseDto sharePet(String username, Long petId);
+
+    FindAllPetResponseDto findAllPets(String username);
+
+    UpdateMainPetResponseDto updateMainPet(String username, UpdateMainPetRequestDto updateMainPetRequestDto);
+
 }
