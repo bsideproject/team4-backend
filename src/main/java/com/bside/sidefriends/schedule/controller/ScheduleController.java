@@ -7,15 +7,16 @@ import com.bside.sidefriends.schedule.service.ScheduleService;
 import com.bside.sidefriends.schedule.service.dto.*;
 import com.bside.sidefriends.security.auth.LoginUser;
 import com.bside.sidefriends.users.domain.User;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
 
+@Api(tags = {"schedule-controller (Deprecated?!)"})
 @SideFriendsController
 @RequiredArgsConstructor
 public class ScheduleController {
