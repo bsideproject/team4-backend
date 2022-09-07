@@ -1,6 +1,7 @@
 package com.bside.sidefriends.security;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.bside.sidefriends.common.response.ResponseCode;
@@ -20,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.function.BiFunction;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
@@ -55,16 +57,17 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             userName = JWT.require(HMAC512(JwtProperties.SECRET.getBytes()))
                 .build().verify(token).getSubject();
         } catch (TokenExpiredException e) {
-            ResponseDto<?> responseDto = ResponseDto.onFailWithoutData(ResponseCode.AUTH_TOKEN_EXPIRED);
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.setContentType("application/json; charset=utf8");
-            response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
+            response = setResponseDto.apply(response, ResponseCode.AUTH_TOKEN_EXPIRED);
+            return;
+        }  catch (JWTDecodeException e) {
+            response = setResponseDto.apply(response, ResponseCode.AUTH_DECODE_FAIL);
             return;
         } catch (JWTVerificationException e) {
-            ResponseDto<?> responseDto = ResponseDto.onFailWithoutData(ResponseCode.AUTH_VERIFICATION_FAIL);
-            response.setStatus(HttpServletResponse.SC_OK);
-            response.setContentType("application/json; charset=utf8");
-            response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
+            response = setResponseDto.apply(response, ResponseCode.AUTH_VERIFICATION_FAIL);
+            return;
+        }  catch (Exception e) {
+            response = setResponseDto.apply(response, ResponseCode.AUTH_FAIL);
+            return;
         }
 
         Authentication authentication;
@@ -84,4 +87,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         chain.doFilter(request, response);
     }
+
+    private BiFunction<HttpServletResponse, ResponseCode, HttpServletResponse> setResponseDto =
+            (response, responseCode) ->  {
+                ResponseDto<?> responseDto = ResponseDto.onFailWithoutData(responseCode);
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setContentType("application/json; charset=utf8");
+                try {
+                    response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                return response;
+            };
+
 }

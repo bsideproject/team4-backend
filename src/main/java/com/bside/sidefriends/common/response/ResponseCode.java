@@ -13,6 +13,8 @@ public enum ResponseCode {
     // 로그인(101-150)
     AUTH_TOKEN_EXPIRED("101","기간이 만료된 토큰입니다."),
     AUTH_VERIFICATION_FAIL("102","유효하지 않은 토큰입니다."),
+    AUTH_DECODE_FAIL("103","base64 인코딩이 아닙니다."),
+    AUTH_FAIL("104","토큰 검증 단계에서 실패하였습니다."),
 
     // 회원(151-199)
     U_CREATE_SUCCESS("151", "회원 가입에 성공하였습니다."),
