@@ -51,6 +51,8 @@ public enum ResponseCode {
     MODIFY_QUICK_ORDER_FAIL("308", "퀵 기록 순서 변경에 실패하였습니다."),
     MODIFY_QUICK_COUNT_SUCCESS("309", "퀵 기록 실행 횟수 증가에 성공하였습니다."),
     MODIFY_QUICK_COUNT_FAIL("310", "퀵 기록 실행 횟수 증가에 실패하였습니다."),
+    QUICK_INVALID_INPUT("311","퀵 기록 서비스 입력 값이 올바르지 않습니다."),
+    QUICK_NOT_FOUND("312","존재하지 않는 퀵 기록입니다."),
 
 
     // 체크리스트(401-450)
@@ -64,11 +66,11 @@ public enum ResponseCode {
     CHECKLIST_MODIFY_FAIL("408","할일 변경에 실패하였습니다."),
     CHECKLIST_DELETE_SUCCESS("409","할일 삭제에 성공하였습니다."),
     CHECKLIST_DELETE_FAIL("410","할일 삭제에 실패하였습니다."),
-    CHECKLIST_CHECKED_SUCCESS("409","할일 수행여부 변경에 성공하였습니다."),
-    CHECKLIST_CHECKED_FAIL("410","할일 수행여부 변경에 실패하였습니다."),
-    CHECKLIST_INVALID_INPUT("411","할일 서비스 입력 값이 올바르지 않습니다."),
-    CHECKLIST_NOT_FOUND("412","존재하지 않는 할일입니다."),
-    CHECKLIST_META_NOT_FOUND("412","존재하지 않는 반복 할일 정보입니다."),
+    CHECKLIST_CHECKED_SUCCESS("411","할일 수행여부 변경에 성공하였습니다."),
+    CHECKLIST_CHECKED_FAIL("412","할일 수행여부 변경에 실패하였습니다."),
+    CHECKLIST_INVALID_INPUT("413","할일 서비스 입력 값이 올바르지 않습니다."),
+    CHECKLIST_NOT_FOUND("414","존재하지 않는 할일입니다."),
+    CHECKLIST_META_NOT_FOUND("415","존재하지 않는 반복 할일 정보입니다."),
 
     // 할 일, 스케쥴(451-499)
     SCHEDULE_FIND_ALL_SUCCESS("451","일정 전체 조회에 성공하였습니다."),
