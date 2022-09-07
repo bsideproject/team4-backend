@@ -5,8 +5,8 @@ spring:
 
   datasource:
     url: jdbc:mysql://db-bn6bg.pub-cdb.ntruss.com:3306/SF
-    username: root_sidefriends
-    password: fnxm123!@#
+    username: x
+    password: x
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -22,8 +22,8 @@ spring:
       client:
         registration:
           google:
-            client-id: 894809724036-cbso4bmnv6krehpookmtbuqmnqg4s5c6.apps.googleusercontent.com
-            client-secret: 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
+            client-id: x
+            client-secret: x
             scope:
               - email
               - profile
