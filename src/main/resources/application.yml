@@ -4,30 +4,30 @@ server:
 spring:
 
   datasource:
-    url: jdbc:h2:tcp://localhost/~/sidefriends
-    username: eraser
-    password:
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://db-bn6bg.pub-cdb.ntruss.com:3306/SF
+    username: root_sidefriends
+    password: fnxm123!@#
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
         format_sql: true
   security:
     oauth2:
-      redirect_url: http://localhost:5000/login/oauth2
+      redirect_url: http://101.101.210.15:5000/login/oauth2
       client:
         registration:
           google:
-            client-id: xxx
-            client-secret: xxx
+            client-id: 894809724036-cbso4bmnv6krehpookmtbuqmnqg4s5c6.apps.googleusercontent.com
+            client-secret: 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
             scope:
-            - email
-            - profile
-          
+              - email
+              - profile
+
           kakao: # 카카오 oauth 로그인 client 설정
             client-id: xx
             client-secret: xx
@@ -45,7 +45,14 @@ spring:
             token-uri: https://kauth.kakao.com/oauth/token
             user-info-uri: https://kapi.kakao.com/v2/user/me
             user-name-attribute: id
-
+logging:
+  level:
+    org:
+      hibernate:
+        type:
+          descriptor:
+            sql:
+              trace
 image:
   server:
     base-uri: http://localhost:8888
