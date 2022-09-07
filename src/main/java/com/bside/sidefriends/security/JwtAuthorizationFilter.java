@@ -40,16 +40,21 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String header = request.getHeader(JwtProperties.HEADER_STRING);
         System.out.println("JwtAuthorizationFilter start : " + header);
 
-        // If header does not contain BEARER or is null delegate to Spring impl and exit
-        if (header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) {
+        // If header is null, delegate to Spring impl and exit
+        if (header == null) {
             chain.doFilter(request, response);
             return;
         }
-
         // Bearer%20 처리
         if (header.startsWith("Bearer%20")) {
             header = header.replace("Bearer%20", JwtProperties.TOKEN_PREFIX);
         }
+        // If header does not contain BEARER, delegate to Spring impl and exit
+        if (!header.startsWith(JwtProperties.TOKEN_PREFIX)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String token = header.replace(JwtProperties.TOKEN_PREFIX,"");
 
         String userName = "";
