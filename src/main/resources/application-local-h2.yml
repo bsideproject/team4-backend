@@ -1,0 +1,70 @@
+server:
+  port: 8080
+
+spring:
+
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/sidefriends
+    username: eraser
+    password:
+    driver-class-name: org.h2.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  security:
+    oauth2:
+      redirect_url: http://localhost:5000/login/oauth2
+      client:
+        registration:
+          google:
+            client-id: xxx
+            client-secret: xxx
+            scope:
+              - email
+              - profile
+
+          kakao: # 카카오 oauth 로그인 client 설정
+            client-id: xx
+            client-secret: xx
+            client-name: Kakao
+            authorization-grant-type: authorization_code
+            client-authentication-method: POST
+            redirect-uri: http://localhost:8080/login/oauth2/code/kakao
+            scope:
+              - profile_nickname
+              - account_email
+
+        provider:
+          kakao: # 카카오 oauth 로그인 provider 설정
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+image:
+  server:
+    base-uri: http://localhost:8888
+    upload-path: /images/upload
+    download-path: /images
+  local:
+    base-uri: http://localhost:8080
+    upload-path: /src/main/resources/images
+    download-path: /images
+#spring:
+#  datasource:
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    url: jdbc:mysql://db-b11vh.pub-cdb.ntruss.com:3306/SF?characterEncoding=UTF-8
+#    username:
+#    password:
+#    maximum-pool-size: 10
+#    minimum-idle: 10
+#
+#  jpa:
+#    hibernate:
+#      naming:
+#        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
