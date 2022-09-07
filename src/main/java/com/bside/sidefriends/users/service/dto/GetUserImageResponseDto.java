@@ -8,6 +8,8 @@ import org.hibernate.validator.constraints.URL;
 @AllArgsConstructor
 public class GetUserImageResponseDto {
 
+    private Long userId;
+
     @URL
-    String userImageUrl;
+    private String userImageUrl;
 }
