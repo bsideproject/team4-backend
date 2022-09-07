@@ -40,6 +40,7 @@ public class SecurityConfiguration {
 
     // 가족 그룹장 권한이 필요한 API 엔드포인트
     private static final String FAMILY_MANAGER_REQUIRED_ENDPOINTS = "/api/v1/family/{\\d+}/**";
+    private static final String PET_SHARE_ENDPOINT = "/api/v1/pet/**/share";
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -62,6 +63,7 @@ public class SecurityConfiguration {
                     .antMatchers(HttpMethod.DELETE, FAMILY_MANAGER_REQUIRED_ENDPOINTS).hasRole("MANAGER")
                     .antMatchers(HttpMethod.POST, FAMILY_MANAGER_REQUIRED_ENDPOINTS).hasRole("MANAGER")
                     .antMatchers(HttpMethod.PUT, FAMILY_MANAGER_REQUIRED_ENDPOINTS).hasRole("MANAGER")
+                    .antMatchers(HttpMethod.POST, PET_SHARE_ENDPOINT).hasRole("MANAGER") // 펫 공유
                 .anyRequest().permitAll()
             .and()
                 .oauth2Login()

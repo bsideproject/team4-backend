@@ -19,7 +19,7 @@ public class CreatePetResponseDto {
     private Long petId;
 
     // TODO: 유저 정보 응답 필요성 검토
-    private User user;
+    private Long userId;
 
     // TODO: 가족 정보 응답 필요성 검토
     private Family family;

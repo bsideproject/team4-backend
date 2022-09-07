@@ -5,10 +5,12 @@ import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.pet.service.PetService;
 import com.bside.sidefriends.pet.service.dto.*;
+import com.bside.sidefriends.security.mainOAuth2User;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -29,10 +31,59 @@ public class PetController {
     })
     @PostMapping("/pets")
     public ResponseEntity<ResponseDto<CreatePetResponseDto>> createPet(@Valid @RequestBody CreatePetRequestDto createPetRequestDto) {
-        CreatePetResponseDto createPetResponseDto = petService.createPet(createPetRequestDto);
+
+        // TODO: username 관련 변경 필요
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((mainOAuth2User) principal).getUsername();
+
+        CreatePetResponseDto createPetResponseDto = petService.createUserPet(username, createPetRequestDto);
 
         ResponseDto<CreatePetResponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.P_CREATE_SUCCESS, createPetResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+    @GetMapping("/pets")
+    public ResponseEntity<ResponseDto<FindAllPetResponseDto>> findAllPets() {
+
+        // TODO: username 관련 변경 필요
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((mainOAuth2User) principal).getUsername();
+
+        FindAllPetResponseDto findAllPetResponseDto = petService.findAllPets(username);
+
+        ResponseDto<FindAllPetResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.P_FIND_ALL_SUCCESS, findAllPetResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+    @PostMapping("/pets/{petId}/share")
+    public ResponseEntity<ResponseDto<SharePetResponseDto>> sharePet(@PathVariable("petId") Long petId) {
+
+        // TODO: username 관련 변경 필요
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((mainOAuth2User) principal).getUsername();
+
+        SharePetResponseDto sharePetResponseDto = petService.sharePet(username, petId);
+
+        ResponseDto<SharePetResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.P_SHARE_SUCCESS, sharePetResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+    @PutMapping("/pets/mainPet")
+    public ResponseEntity<ResponseDto<UpdateMainPetResponseDto>> updateMainPet(@Valid @RequestBody UpdateMainPetRequestDto updateMainPetRequestDto) {
+        // TODO: username 관련 변경 필요
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = ((mainOAuth2User) principal).getUsername();
+
+        UpdateMainPetResponseDto updateMainPetResponseDto = petService.updateMainPet(username, updateMainPetRequestDto);
+
+        ResponseDto<UpdateMainPetResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.P_UPDATE_MAIN_PET_SUCCESS, updateMainPetResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
     }
@@ -81,7 +132,7 @@ public class PetController {
             @ApiResponse(code=205, message = "펫 기록 활성화에 성공하였습니다. (200)")
     })
     @PutMapping("/pets/{petId}/activate")
-    public ResponseEntity<ResponseDto<ActivatePetResponseDto>> aactivatePet(@PathVariable("petId") Long petId) {
+    public ResponseEntity<ResponseDto<ActivatePetResponseDto>> activatePet(@PathVariable("petId") Long petId) {
         ActivatePetResponseDto deactivatePetResponseDto = petService.activatePet(petId);
 
         ResponseDto<ActivatePetResponseDto> responseDto = ResponseDto.onSuccessWithData(
@@ -95,6 +146,7 @@ public class PetController {
     })
     @DeleteMapping("/pets/{petId}")
     public ResponseEntity<ResponseDto<DeletePetResponseDto>> deletePet(@PathVariable("petId") Long petId) {
+
         DeletePetResponseDto deletePetResponseDto = petService.deletePet(petId);
 
         ResponseDto<DeletePetResponseDto> responseDto = ResponseDto.onSuccessWithData(
