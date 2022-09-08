@@ -1,5 +1,5 @@
 spring:
   profiles:
-#    active: local-h2
     active: local-db
+#    active: local-h2
 #    active: dev

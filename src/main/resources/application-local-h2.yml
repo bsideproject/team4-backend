@@ -29,7 +29,7 @@ spring:
               - profile
 
           kakao: # 카카오 oauth 로그인 client 설정
-            client-id: xx
+            client-id: xxx
             client-secret: xx
             client-name: Kakao
             authorization-grant-type: authorization_code
