@@ -17,8 +17,7 @@ public class ModifyUserResponseDto {
     @NotNull
     private String name;
 
-    // FIXME: Long 타입 변경 필요. IR.
-    private String mainPetId;
+    private Long mainPetId;
 
     private User.Role role;
 

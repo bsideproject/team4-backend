@@ -21,8 +21,7 @@ public class CreateUserResponseDto {
 
     private User.Role role;
 
-    // FIXME: Long 타입 변경 필요. IR.
-    private String mainPetId;
+    private Long mainPetId;
 
     @URL
     private String userImageUrl;

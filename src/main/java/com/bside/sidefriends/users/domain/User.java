@@ -35,8 +35,7 @@ public class User {
     private String email;
 
     // 대표펫 id
-    // FIXME: Long 타입으로 바꿀 예정. IR.
-    private String mainPetId;
+    private Long mainPetId;
 
     // 회원 권한
     @Enumerated(EnumType.STRING)
@@ -138,8 +137,7 @@ public class User {
 
     // 대표펫 등록
     public void setMainPet(Long petId) {
-        // FIXME: Long 타입 변경. IR.
-        this.mainPetId = String.valueOf(petId);
+        this.mainPetId = petId;
     }
 
 
