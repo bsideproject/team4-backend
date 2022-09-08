@@ -161,7 +161,7 @@ public class PetServiceImpl implements PetService {
 
         return new FindAllPetResponseDto(
                 findUser.getUserId(),
-                Long.valueOf(findUser.getMainPetId()), // FIXME: mainPetId Long 변경
+                findUser.getMainPetId(),
                 petList.size(),
                 petList
         );
@@ -264,7 +264,7 @@ public class PetServiceImpl implements PetService {
 
         return new UpdateMainPetResponseDto(
                 findUser.getUserId(),
-                Long.valueOf(findUser.getMainPetId()), // FIXME: Long 타입 수정
+                findUser.getMainPetId(),
                 getPetInfo.apply(findPet)
         );
     }
