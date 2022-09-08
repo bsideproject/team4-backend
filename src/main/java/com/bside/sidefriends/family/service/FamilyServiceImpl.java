@@ -27,67 +27,85 @@ public class FamilyServiceImpl implements FamilyService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public CreateFamilyReponseDto createFamily(CreateFamilyRequestDto createFamilyRequestDto) {
+    public CreateFamilyResponseDto createFamily(String memberUsername, CreateFamilyRequestDto createFamilyRequestDto) {
 
         Long groupManagerId = createFamilyRequestDto.getGroupManagerId();
-
         User managerUser = userRepository.findByUserIdAndIsDeletedFalse(groupManagerId)
                 .orElseThrow(() -> new FamilyManagerNotFoundException(new UserNotFoundException()));
+
+        User memberUser = userRepository.findByUsernameAndIsDeletedFalse(memberUsername)
+                .orElseThrow(() -> new FamilyMemberNotFoundException(new UserNotFoundException()));
+
+        if (memberUser.getUserId().equals(managerUser.getUserId())) {
+            throw new FamilyManagerRequiredException("가족 그룹장과 가족 그룹원은 동일할 수 없습니다.");
+        }
 
         if (userHasFamily.test(managerUser)) {
             throw new UserHasFamilyException();
         }
 
-        // TODO: 공유 펫 선택
-
         // 가족 생성
         Family family = new Family();
-        managerUser.changeRole(User.Role.ROLE_MANAGER); // 가족 그룹장 권한 부여
+
+        // 가족 그룹장 추가
+        managerUser.changeRole(User.Role.ROLE_MANAGER);
         family.addUser(managerUser);
+
+        // 가족 구성원 추가
+        family.addUser(memberUser);
         family.setDeleted(false);
         familyRepository.save(family);
 
-        return new CreateFamilyReponseDto(
+        // 사용자 정보 변경
+        userRepository.save(managerUser);
+        userRepository.save(memberUser);
+
+        // 생성된 가족 구성원 리스트
+        List<FamilyMember> familyMemberList = family.getMemberList().stream()
+                .map(getFamilyMemberInfo)
+                .collect(Collectors.toList());
+
+        return new CreateFamilyResponseDto(
                 family.getFamilyId(),
-                managerUser.getUserId()
+                managerUser.getUserId(),
+                familyMemberList
         );
     }
 
     @Override
-    public FindFamilyMembersByFamilyIdResponseDto findFamilyMembersByFamilyId(Long familyId) {
-
-        Family findFamily = familyRepository.findByFamilyIdAndIsDeletedFalse(familyId).orElseThrow(FamilyNotFoundException::new);
-
-        List<FamilyMember> familyMemberList = findFamily.getMemberList().stream()
-                        .map(getFamilyMemberInfo)
-                        .collect(Collectors.toList());
-
-        return new FindFamilyMembersByFamilyIdResponseDto(familyMemberList);
-    }
-
-    @Override
     @Transactional(rollbackFor = Exception.class)
-    public AddFamilyMemberResponseDto addFamilyMember(Long familyId, AddFamilyMemberRequestDto addFamilyMemberRequestDto) {
+    public AddFamilyMemberResponseDto addFamilyMember(String memberUsername, AddFamilyMemberRequestDto addFamilyMemberRequestDto) {
 
+        User memberUser = userRepository.findByUsernameAndIsDeletedFalse(memberUsername)
+                .orElseThrow(() -> new FamilyMemberNotFoundException(new UserNotFoundException()));
+
+        Long groupManagerId = addFamilyMemberRequestDto.getGroupManagerId();
+        User managerUser = userRepository.findByUserIdAndIsDeletedFalse(groupManagerId)
+                .orElseThrow(() -> new FamilyManagerNotFoundException(new UserNotFoundException()));
+
+        if (!managerUser.getRole().equals(User.Role.ROLE_MANAGER)) {
+            throw new FamilyManagerRequiredException("가족 그룹 구성원 추가는 그룹장만이 할 수 있습니다.");
+        }
+
+        Long familyId = managerUser.getFamilyIdInfo();
+
+        // TODO: 서버 에러로 변경. 그룹장에게만 노출되는 API를 타고 들어 왔으므로 null이면 안 됨. IR
         Family findFamily = familyRepository.findByFamilyIdAndIsDeletedFalse(familyId).orElseThrow(FamilyNotFoundException::new);
 
         if (findFamily.getFamilySize() >= 4) {
             throw new FamilyLimitExceededException();
         }
 
-        User newUser = userRepository.findByUserIdAndIsDeletedFalse(addFamilyMemberRequestDto.getAddMemberId())
-                .orElseThrow(() -> new FamilyMemberNotFoundException(new UserNotFoundException()));
-
-        if (newUser.isDeleted()) {
-            throw new FamilyMemberNotFoundException(new UserNotFoundException());
-        }
-
-        if (userHasFamily.test(newUser)) {
+        if (userHasFamily.test(memberUser)) {
             throw new UserHasFamilyException();
         }
 
-        findFamily.addUser(newUser);
+        // 가족 구성원 추가
+        findFamily.addUser(memberUser);
         familyRepository.save(findFamily);
+
+        // 사용자 정보 변경
+        userRepository.save(memberUser);
 
         List<FamilyMember> familyMemberList = findFamily.getMemberList().stream()
                 .map(getFamilyMemberInfo)
@@ -95,6 +113,22 @@ public class FamilyServiceImpl implements FamilyService {
 
         return new AddFamilyMemberResponseDto(
                 findFamily.getFamilyId(),
+                managerUser.getUserId(),
+                familyMemberList
+        );
+    }
+
+    @Override
+    public FindFamilyMembersResponseDto findFamilyMembers(Long familyId) {
+
+        Family findFamily = familyRepository.findByFamilyIdAndIsDeletedFalse(familyId).orElseThrow(FamilyNotFoundException::new);
+
+        List<FamilyMember> familyMemberList = findFamily.getMemberList().stream()
+                        .map(getFamilyMemberInfo)
+                        .collect(Collectors.toList());
+
+        return new FindFamilyMembersResponseDto(
+                findFamily.getFamilySize(),
                 familyMemberList
         );
     }
@@ -104,8 +138,6 @@ public class FamilyServiceImpl implements FamilyService {
     public DeleteFamilyMemberResponseDto deleteFamilyMember(Long familyId, DeleteFamilyMemberRequestDto deleteFamilyMemberRequestDto) {
 
         Family findFamily = familyRepository.findByFamilyIdAndIsDeletedFalse(familyId).orElseThrow(FamilyNotFoundException::new);
-
-        // TODO: 그룹장 권한 확인
 
         User existUser = userRepository.findByUserIdAndIsDeletedFalse(deleteFamilyMemberRequestDto.getDeleteMemberId())
                 .orElseThrow(() -> new FamilyMemberNotFoundException(new UserNotFoundException()));
@@ -127,6 +159,7 @@ public class FamilyServiceImpl implements FamilyService {
 
         return new DeleteFamilyMemberResponseDto(
                 findFamily.getFamilyId(),
+                findFamily.getFamilySize(),
                 familyMemberList
         );
     }
@@ -137,7 +170,6 @@ public class FamilyServiceImpl implements FamilyService {
 
         Family findFamily = familyRepository.findByFamilyIdAndIsDeletedFalse(familyId).orElseThrow(FamilyNotFoundException::new);
 
-        // TODO: 그룹장 권한 확인
         if (findFamily.getFamilySize() > 1) {
             throw new FamilyDeleteFailException("가족 그룹 구성원이 2명 이상입니다.");
         }

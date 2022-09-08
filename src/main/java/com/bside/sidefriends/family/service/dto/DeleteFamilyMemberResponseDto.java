@@ -11,8 +11,7 @@ import java.util.List;
 public class DeleteFamilyMemberResponseDto {
 
     private Long familyId;
-
-    @Getter
+    private Long familySize;
     private List<FamilyMember> familyMemberList;
 
 }

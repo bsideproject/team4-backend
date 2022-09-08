@@ -8,6 +8,7 @@ import javax.validation.constraints.NotNull;
 public class AddFamilyMemberRequestDto {
 
     @NotNull
-    private Long addMemberId;
+    private Long groupManagerId;
+
 
 }

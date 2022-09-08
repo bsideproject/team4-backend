@@ -10,8 +10,7 @@ import java.util.List;
 public class AddFamilyMemberResponseDto {
 
     private Long familyId;
-
-    @Getter
+    private Long familyManagerId;
     private List<FamilyMember> familyMemberList;
 
 }

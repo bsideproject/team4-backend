@@ -60,10 +60,9 @@ public class SecurityConfiguration {
                 .authorizeRequests()
                     .antMatchers("/user/**").authenticated()
                     .antMatchers("/manager/**").hasRole("MANAGER")
-                    .antMatchers(HttpMethod.DELETE, FAMILY_MANAGER_REQUIRED_ENDPOINTS).hasRole("MANAGER")
-                    .antMatchers(HttpMethod.POST, FAMILY_MANAGER_REQUIRED_ENDPOINTS).hasRole("MANAGER")
-                    .antMatchers(HttpMethod.PUT, FAMILY_MANAGER_REQUIRED_ENDPOINTS).hasRole("MANAGER")
-                    .antMatchers(HttpMethod.POST, PET_SHARE_ENDPOINT).hasRole("MANAGER") // 펫 공유
+                    .antMatchers(HttpMethod.DELETE, FAMILY_MANAGER_REQUIRED_ENDPOINTS).hasRole("MANAGER") // 가족 자원 삭제
+                    // .antMatchers(HttpMethod.POST, FAMILY_MANAGER_REQUIRED_ENDPOINTS).hasRole("MANAGER") // 가족 자원 생성(그룹장 권한 불필요)
+                    .antMatchers(HttpMethod.PUT, FAMILY_MANAGER_REQUIRED_ENDPOINTS).hasRole("MANAGER") // 가족 자원 수정
                 .anyRequest().permitAll()
             .and()
                 .oauth2Login()
