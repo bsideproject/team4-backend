@@ -35,7 +35,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code=152, message = "회원 조회에 성공하였습니다. (200)")
     })
-    @GetMapping("/users/{userId}")
+    @GetMapping("/users")
     public ResponseEntity<ResponseDto<FindUserByUserIdResponseDto>> findUserByUserId() {
 
         String username = getAuthenticatedUsername();
@@ -50,7 +50,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code=153, message = "회원 정보 수정에 성공하였습니다. (200)")
     })
-    @PutMapping("/users/{userId}")
+    @PutMapping("/users")
     public ResponseEntity<ResponseDto<ModifyUserResponseDto>> modifyUser(@Valid @RequestBody ModifyUserRequestDto modifyUserRequestDto) {
 
         String username = getAuthenticatedUsername();
@@ -65,7 +65,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code=154, message = "회원 삭제에 성공하였습니다. (200)")
     })
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("/users")
     public ResponseEntity<ResponseDto<DeleteUserResponseDto>> deleteUser() {
 
         String username = getAuthenticatedUsername();
@@ -81,7 +81,7 @@ public class UserController {
             @ApiResponse(code=151, message = "회원 가입에 성공하였습니다. (200)")
     })
     // FIXME: 1차 서비스에서 제공되지 않는 API. 시큐리티 회원가입 로직 작동 확인 완료 후 삭제 필요. IR.
-    @PostMapping("/api/v1/users")
+    @PostMapping("/users")
     public ResponseEntity<CreateUserResponseDto> createUser(@Valid @RequestBody CreateUserRequestDto userCreateRequestDto) {
 
         CreateUserResponseDto userCreateResponseDto = userService.createUser(userCreateRequestDto);
