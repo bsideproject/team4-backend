@@ -34,10 +34,13 @@ public enum ResponseCode {
     // 반려동물(201-299)
     P_CREATE_SUCCESS("201", "펫 생성에 성공하였습니다."),
     P_FIND_SUCCESS("202", "펫 조회에 성공하였습니다."),
-    P_MODIFY_SUCCESS("203", "펫 정보 수정에 성공하였습니다."),
-    P_DEACTIVATE_SUCCESS("204", "펫 기록 중지에 성공하였습니다."),
-    P_ACTIVATE_SUCCESS("205", "펫 기록 활성화에 성공하였습니다."),
-    P_DELETE_SUCCESS("206", "펫 삭제에 성공하였습니다."),
+    P_FIND_ALL_SUCCESS("203", "사용자의 모든 펫 조회에 성공하였습니다."),
+    P_MODIFY_SUCCESS("204", "펫 정보 수정에 성공하였습니다."),
+    P_DEACTIVATE_SUCCESS("205", "펫 기록 중지에 성공하였습니다."),
+    P_ACTIVATE_SUCCESS("206", "펫 기록 활성화에 성공하였습니다."),
+    P_DELETE_SUCCESS("207", "펫 삭제에 성공하였습니다."),
+    P_SHARE_SUCCESS("208", "펫 공유에 성공하였습니다."),
+    P_UPDATE_MAIN_PET_SUCCESS("209", "대표펫 지정에 성공하였습니다."),
 
     // 퀵 기록(301-399)
 
@@ -51,6 +54,8 @@ public enum ResponseCode {
     MODIFY_QUICK_ORDER_FAIL("308", "퀵 기록 순서 변경에 실패하였습니다."),
     MODIFY_QUICK_COUNT_SUCCESS("309", "퀵 기록 실행 횟수 증가에 성공하였습니다."),
     MODIFY_QUICK_COUNT_FAIL("310", "퀵 기록 실행 횟수 증가에 실패하였습니다."),
+    QUICK_INVALID_INPUT("311","퀵 기록 서비스 입력 값이 올바르지 않습니다."),
+    QUICK_NOT_FOUND("312","존재하지 않는 퀵 기록입니다."),
 
 
     // 체크리스트(401-450)
@@ -64,11 +69,11 @@ public enum ResponseCode {
     CHECKLIST_MODIFY_FAIL("408","할일 변경에 실패하였습니다."),
     CHECKLIST_DELETE_SUCCESS("409","할일 삭제에 성공하였습니다."),
     CHECKLIST_DELETE_FAIL("410","할일 삭제에 실패하였습니다."),
-    CHECKLIST_CHECKED_SUCCESS("409","할일 수행여부 변경에 성공하였습니다."),
-    CHECKLIST_CHECKED_FAIL("410","할일 수행여부 변경에 실패하였습니다."),
-    CHECKLIST_INVALID_INPUT("411","할일 서비스 입력 값이 올바르지 않습니다."),
-    CHECKLIST_NOT_FOUND("412","존재하지 않는 할일입니다."),
-    CHECKLIST_META_NOT_FOUND("412","존재하지 않는 반복 할일 정보입니다."),
+    CHECKLIST_CHECKED_SUCCESS("411","할일 수행여부 변경에 성공하였습니다."),
+    CHECKLIST_CHECKED_FAIL("412","할일 수행여부 변경에 실패하였습니다."),
+    CHECKLIST_INVALID_INPUT("413","할일 서비스 입력 값이 올바르지 않습니다."),
+    CHECKLIST_NOT_FOUND("414","존재하지 않는 할일입니다."),
+    CHECKLIST_META_NOT_FOUND("415","존재하지 않는 반복 할일 정보입니다."),
 
     // 할 일, 스케쥴(451-499)
     SCHEDULE_FIND_ALL_SUCCESS("451","일정 전체 조회에 성공하였습니다."),

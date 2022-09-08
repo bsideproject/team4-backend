@@ -3,10 +3,7 @@ package com.bside.sidefriends.users.domain;
 import com.bside.sidefriends.family.domain.Family;
 import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.users.service.dto.ModifyUserRequestDto;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -15,10 +12,11 @@ import javax.validation.constraints.Email;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 @Getter
 @Table(name = "users")
 public class User {
@@ -36,11 +34,8 @@ public class User {
     @Column(nullable = false)
     private String email;
 
-    // 회원별 펫
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Pet> pets = new ArrayList<>();
-
-    // TODO: 대표펫 id 삭제
+    // 대표펫 id
+    // FIXME: Long 타입으로 바꿀 예정. IR.
     private String mainPetId;
 
     // 회원 권한
@@ -80,20 +75,9 @@ public class User {
     @OneToOne(mappedBy = "user")
     private UserImage userImage;
 
-    @Builder
-    public User(String name, String email, String mainPetId, String username, Role role, String provider, String providerId,
-                LocalDateTime createdAt, LocalDateTime updatedAt, boolean isDeleted) {
-        this.name = name;
-        this.email = email;
-        this.mainPetId = mainPetId;
-        this.username = username;
-        this.role = role;
-        this.provider = provider;
-        this.providerId = providerId;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.isDeleted = isDeleted;
-    }
+    // 사용자 펫
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private final List<Pet> pets = new ArrayList<>();
 
     // 가족 그룹 가입
     public void setFamily(Family family) {
@@ -146,14 +130,25 @@ public class User {
         }
     }
 
+    // 사용자 펫 등록
+    public void addPet(Pet pet) {
+        pets.add(pet);
+        pet.setUser(this);
+    }
 
+    // 대표펫 등록
+    public void setMainPet(Long petId) {
+        // FIXME: Long 타입 변경. IR.
+        this.mainPetId = String.valueOf(petId);
+    }
+
+
+    /** 사용자 권한
+     * ROLE_USER: 일반 가족 구성원
+     * ROLE_MANAGER: 가족 그룹장
+     */
     public enum Role {
-        /**
-         * ROLE_USER: 일반 가족 구성원
-         * ROLE_MANAGER: 가족 그룹장
-         */
         ROLE_USER, ROLE_MANAGER;
-
     }
 
 }

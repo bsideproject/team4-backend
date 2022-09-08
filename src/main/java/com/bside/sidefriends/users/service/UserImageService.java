@@ -11,16 +11,16 @@ public interface UserImageService {
      * 유저 이미지 업로드
      * - 유저 이미지 최초 저장
      * - 유저 이미지 변경
-     * @param
-     * @return
+     * @param userId 이미지를 업로드할 회원 id
+     * @param file 회원 이미지 파일
+     * @return {@link UploadUserImageResponseDto} 회원 이미지 업로드 응답 DTO
      */
-    // TODO: request dto 없이 바로 파일을 넘겨도 괜찮은가
     UploadUserImageResponseDto uploadUserImage(Long userId, MultipartFile file);
 
     /**
      * 유저 이미지 반환
-     * @param userId
-     * @return
+     * @param userId 이미지(경로)를 반환할 회원 username
+     * @return {@link GetUserImageResponseDto} 회원 이미지 반환 응답 DTO
      */
     GetUserImageResponseDto getUserImage(Long userId);
 
