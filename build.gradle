@@ -23,6 +23,7 @@ dependencies {
 	// https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter : swagger
 	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
 //	implementation 'mysql:mysql-connector-java:8.0.29'
+	runtimeOnly 'mysql:mysql-connector-java'
 	runtimeOnly 'com.h2database:h2'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	compileOnly 'org.projectlombok:lombok:1.18.24'
