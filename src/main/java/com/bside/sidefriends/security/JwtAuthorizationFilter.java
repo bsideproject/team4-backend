@@ -1,13 +1,18 @@
 package com.bside.sidefriends.security;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.bside.sidefriends.common.response.ResponseCode;
+import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.repository.UserRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -16,8 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.function.BiFunction;
 
 import static com.auth0.jwt.algorithms.Algorithm.HMAC512;
 
@@ -36,20 +40,40 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         String header = request.getHeader(JwtProperties.HEADER_STRING);
         System.out.println("JwtAuthorizationFilter start : " + header);
 
-        // If header does not contain BEARER or is null delegate to Spring impl and exit
-        if (header == null || !header.startsWith(JwtProperties.TOKEN_PREFIX)) {
+        // If header is null, delegate to Spring impl and exit
+        if (header == null) {
             chain.doFilter(request, response);
             return;
         }
-
         // Bearer%20 처리
         if (header.startsWith("Bearer%20")) {
             header = header.replace("Bearer%20", JwtProperties.TOKEN_PREFIX);
         }
+        // If header does not contain BEARER, delegate to Spring impl and exit
+        if (!header.startsWith(JwtProperties.TOKEN_PREFIX)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         String token = header.replace(JwtProperties.TOKEN_PREFIX,"");
-        String userName = JWT.require(HMAC512(JwtProperties.SECRET.getBytes()))
-                .build().verify(token).getSubject(); //TODO : 유효하지 않은 Token이 들어오면 SignatureVerificationException이 발생한다
-        // TODO-jh : 유효기간이 만료한 Token이 들어오면 com.auth0.jwt.exceptions.TokenExpiredException: The Token has expired on 2022-08-08T11:13:57Z 발생
+
+        String userName = "";
+        try {
+            userName = JWT.require(HMAC512(JwtProperties.SECRET.getBytes()))
+                .build().verify(token).getSubject();
+        } catch (TokenExpiredException e) {
+            response = setResponseDto.apply(response, ResponseCode.AUTH_TOKEN_EXPIRED);
+            return;
+        }  catch (JWTDecodeException e) {
+            response = setResponseDto.apply(response, ResponseCode.AUTH_DECODE_FAIL);
+            return;
+        } catch (JWTVerificationException e) {
+            response = setResponseDto.apply(response, ResponseCode.AUTH_VERIFICATION_FAIL);
+            return;
+        }  catch (Exception e) {
+            response = setResponseDto.apply(response, ResponseCode.AUTH_FAIL);
+            return;
+        }
 
         Authentication authentication;
         if (userName != null) {
@@ -68,4 +92,18 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         chain.doFilter(request, response);
     }
+
+    private BiFunction<HttpServletResponse, ResponseCode, HttpServletResponse> setResponseDto =
+            (response, responseCode) ->  {
+                ResponseDto<?> responseDto = ResponseDto.onFailWithoutData(responseCode);
+                response.setStatus(HttpServletResponse.SC_OK);
+                response.setContentType("application/json; charset=utf8");
+                try {
+                    response.getWriter().write(new ObjectMapper().writeValueAsString(responseDto));
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                return response;
+            };
+
 }
