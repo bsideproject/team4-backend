@@ -24,7 +24,6 @@ public class Checklist {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pet_id")
     private Pet pet;
-//    private String petId;
 
     // Checklist Meta 데이터와의 양방향 관계성
     @OneToOne(mappedBy = "checklist", fetch = FetchType.LAZY)
