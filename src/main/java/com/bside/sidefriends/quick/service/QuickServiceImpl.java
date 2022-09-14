@@ -1,6 +1,10 @@
 package com.bside.sidefriends.quick.service;
 
 
+import com.bside.sidefriends.pet.domain.Pet;
+import com.bside.sidefriends.pet.error.exception.PetDeactivatedException;
+import com.bside.sidefriends.pet.error.exception.PetNotFoundException;
+import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.quick.domain.Quick;
 import com.bside.sidefriends.quick.domain.QuickDefault;
 import com.bside.sidefriends.quick.domain.QuickHistory;
@@ -8,7 +12,7 @@ import com.bside.sidefriends.quick.repository.QuickHistoryRepository;
 import com.bside.sidefriends.quick.repository.QuickRepository;
 import com.bside.sidefriends.quick.service.dto.*;
 import com.bside.sidefriends.users.domain.User;
-import com.bside.sidefriends.users.repository.UserRepository;
+import com.bside.sidefriends.users.error.exception.UserMainPetNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,23 +25,20 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class QuickServiceImpl implements QuickService {
 
-    private final UserRepository userRepository;
     private final QuickRepository quickRepository;
     private final QuickHistoryRepository quickHistoryRepository;
-
+    private final PetRepository petRepository;
 
     // TODO-jh : Pet Create 할 때 최초 1회 호출되어야 합니다
     @Override
     public CreateQuickResponseDto createDefaultQuick(User user) {
-        String petId = user.getMainPetId();
-        //TODO-jh : after pet entity added
-//        Pet pet = user.getPet();
-//        if (pet == null) {
-//            throw new IllegalStateException("대표펫이 없습니다.")
-//        }
-//        if (pet.isDeleted()) {
-//            throw new IllegalStateException("이미 삭제된 펫 입니다");
-//        }
+        // Get Main Pet Info
+        Long petId = user.getMainPetId();
+        if (petId == null) throw new UserMainPetNotFoundException();
+
+        Pet pet = petRepository.findByPetId(petId).orElseThrow(PetNotFoundException::new);
+        if (pet.isDeactivated()) throw new PetDeactivatedException();
+
 
         // Get Quick Default Values
         List<QuickDefault> quickDefault = List.of(QuickDefault.values());
@@ -45,7 +46,7 @@ public class QuickServiceImpl implements QuickService {
         // Create Default Quick
         List<Quick> quickEntityList = quickDefault.stream()
                 .map(q -> Quick.builder()
-                        .petId(petId)
+                        .pet(pet)
                         .name(q.getName())
                         .total(q.getTotal())
                         .explanation("")
@@ -74,22 +75,16 @@ public class QuickServiceImpl implements QuickService {
 
     @Override
     public FindQuickByPetIdResponseDto findQuickByPetId(User user, LocalDate date) {
-        String petId = user.getMainPetId();
-        //TODO-jh : after pet entity added
-//        Pet pet = user.getPet();
-//        if (pet == null) {
-//            throw new IllegalStateException("대표펫이 없습니다.")
-//        }
-//        if (pet.isDeleted()) {
-//            throw new IllegalStateException("이미 삭제된 펫 입니다");
-//        }
+        // Get Main Pet Info
+        Long petId = user.getMainPetId();
+        if (petId == null) throw new UserMainPetNotFoundException();
 
+        Pet pet = petRepository.findByPetId(petId).orElseThrow(PetNotFoundException::new);
+        if (pet.isDeactivated()) throw new PetDeactivatedException();
 
         // Get Quick Data within Date
         // 유효한 날짜 범위인 Quick 정보만 가져와야 한다 (startedAt <= date < endedAt 인 퀵기록 데이터)
-        //TODO-jh : after pet entity added
-//        List<Quick> quickList = quickRepository.findAllByPet(pet);
-        List<Quick> quickList = quickRepository.findAllByPetId(petId);
+        List<Quick> quickList = quickRepository.findAllByPet(pet);
         List<FindQuickByPetIdResponseDto.QuickDetail> quickDetailList = quickList.stream()
                 .map(q-> {
                     if (date.isAfter(q.getStartedAt().toLocalDate().minusDays(1)) && date.isBefore(q.getEndedAt().toLocalDate())) {
@@ -115,13 +110,13 @@ public class QuickServiceImpl implements QuickService {
     @Override
     public ChangeQuickResponseDto changeQuick(Long quickId, ChangeQuickRequestDto changeQuickRequestDto) {
 
+        // Get Quick Info
         Quick beforeQuick = quickRepository.findById(quickId)
                 .orElseThrow(() -> new IllegalStateException("존재하지 않는 퀵기록 Id 입니다 : " + quickId));
 
-        // TODO-jh : petId 대신 pet을 넣어야 합니다
         // Create afterQuick
         Quick afterQuick = Quick.builder()
-                .petId(beforeQuick.getPetId())
+                .pet(beforeQuick.getPet())
                 .name(changeQuickRequestDto.getName())
                 .total(changeQuickRequestDto.getTotal())
                 .explanation(changeQuickRequestDto.getExplanation())
@@ -142,6 +137,12 @@ public class QuickServiceImpl implements QuickService {
 
     @Override
     public ChangeQuickOrderResponseDto changeQuickOrder(User user, ChangeQuickOrderRequestDto changeQuickOrderRequestDto) {
+        // Get Main Pet Info
+        Long petId = user.getMainPetId();
+        if (petId == null) throw new UserMainPetNotFoundException();
+
+        Pet pet = petRepository.findByPetId(petId).orElseThrow(PetNotFoundException::new);
+        if (pet.isDeactivated()) throw new PetDeactivatedException();
 
         // Change Quick Order
         changeQuickOrderRequestDto.getQuickOrderList().stream()
@@ -149,10 +150,9 @@ public class QuickServiceImpl implements QuickService {
                     Quick beforeQuick = quickRepository.findById(quickOrder.getQuickId())
                             .orElseThrow(() -> new IllegalStateException("존재하지 않는 퀵기록 Id 입니다 : " + quickOrder.getQuickId()));
 
-                    // TODO-jh : petId 대신 pet을 넣어야 합니다
                     // Create afterQuick
                     Quick afterQuick = Quick.builder()
-                            .petId(beforeQuick.getPetId())
+                            .pet(beforeQuick.getPet())
                             .name(beforeQuick.getName())
                             .total(beforeQuick.getTotal())
                             .explanation(beforeQuick.getExplanation())
@@ -168,10 +168,9 @@ public class QuickServiceImpl implements QuickService {
 
                 });
 
-        // TODO-jh : findAllByPetId -> findAllByPet으로 수정해야 합니다
         // Generate Return DTO
         LocalDate date = LocalDate.now();
-        List<ChangeQuickOrderResponseDto.QuickDetail> quickDetailList = quickRepository.findAllByPetId(user.getMainPetId()).stream()
+        List<ChangeQuickOrderResponseDto.QuickDetail> quickDetailList = quickRepository.findAllByPet(pet).stream()
                 .map(q -> {
                     if (date.isAfter(q.getStartedAt().toLocalDate().minusDays(1)) && date.isBefore(q.getEndedAt().toLocalDate())) {
                         int count = quickHistoryRepository.findByQuickAndCreatedAt(q, date)

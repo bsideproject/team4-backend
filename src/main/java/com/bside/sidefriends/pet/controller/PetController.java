@@ -20,7 +20,9 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @ApiResponses({
         @ApiResponse(code=001, message = "입력 값이 올바르지 않습니다."),
-        @ApiResponse(code=003, message = "허용되지 않은 요청 방법입니다.")
+        @ApiResponse(code=003, message = "허용되지 않은 요청 방법입니다."),
+        @ApiResponse(code=210, message = "존재하지 않는 펫입니다."),
+        @ApiResponse(code=211, message = "비활성화된 펫입니다.")
 })
 public class PetController {
 
