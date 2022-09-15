@@ -34,6 +34,8 @@ public enum ResponseCode {
     U_IMAGE_UPLOAD_SUCCESS("180", "회원 이미지 업로드에 성공했습니다."),
     U_IMAGE_DOWNLOAD_SUCCESS("181", "회원 이미지 조회에 성공했습니다."),
     U_IMAGE_DELETE_SUCCESS("182", "회원 이미지 삭제에 성공했습니다."),
+    
+    U_MAIN_PET_NOT_FOUND("191", "회원의 메인 펫 정보가 존재하지 않습니다."),
 
     // 반려동물(201-299)
     P_CREATE_SUCCESS("201", "펫 생성에 성공하였습니다."),
@@ -45,6 +47,8 @@ public enum ResponseCode {
     P_DELETE_SUCCESS("207", "펫 삭제에 성공하였습니다."),
     P_SHARE_SUCCESS("208", "펫 공유에 성공하였습니다."),
     P_UPDATE_MAIN_PET_SUCCESS("209", "대표펫 지정에 성공하였습니다."),
+    P_ENTITY_NOT_FOUND("210", "존재하지 않는 펫입니다."),
+    P_ENTITY_DEACTIVATED("211", "비활성화된 펫입니다."),
 
     // 퀵 기록(301-399)
 

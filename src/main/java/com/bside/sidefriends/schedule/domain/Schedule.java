@@ -1,10 +1,10 @@
 package com.bside.sidefriends.schedule.domain;
 
+import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.schedule.service.dto.ModifyScheduleRequestDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,11 +24,9 @@ public class Schedule {
     // 반복일정에서 이 일정만 수정한 경우, 부모 scheduleId를 부여한다
     private Long originScheduleId;
 
-    // TODO-jh : PET 객체 관계 설정
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "pet_id")
-//    private Pet pet;
-    private String petId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pet_id")
+    private Pet pet;
 
     // Schedule Meta 데이터와의 양방향 관계성
     @OneToOne(mappedBy = "schedule", fetch = FetchType.LAZY)
@@ -68,9 +66,9 @@ public class Schedule {
     }
 
     @Builder
-    public Schedule(Long originScheduleId, String petId, ScheduleMeta scheduleMeta, String title, String explanation, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, boolean isAllDay, boolean isRepeated) {
+    public Schedule(Long originScheduleId, Pet pet, ScheduleMeta scheduleMeta, String title, String explanation, LocalDate startDate, LocalTime startTime, LocalDate endDate, LocalTime endTime, boolean isAllDay, boolean isRepeated) {
         this.originScheduleId = originScheduleId;
-        this.petId = petId;
+        this.pet = pet;
         this.scheduleMeta = scheduleMeta;
         this.title = title;
         this.explanation = explanation;
