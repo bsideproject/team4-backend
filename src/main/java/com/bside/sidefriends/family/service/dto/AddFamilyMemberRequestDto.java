@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class AddFamilyMemberRequestDto {
 
     @NotNull
-    @ApiModelProperty(value = "그룹장 회원 idval", example = "1")
+    @ApiModelProperty(value = "그룹장 회원 id", example = "1")
     private Long groupManagerId;
 
 
