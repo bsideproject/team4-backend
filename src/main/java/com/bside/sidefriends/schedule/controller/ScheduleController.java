@@ -8,6 +8,7 @@ import com.bside.sidefriends.schedule.service.dto.*;
 import com.bside.sidefriends.security.auth.LoginUser;
 import com.bside.sidefriends.users.domain.User;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -69,6 +70,8 @@ public class ScheduleController {
             @PathVariable("scheduleId") Long scheduleId,
             @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
             @Valid @RequestBody ModifyScheduleRequestDto modifyScheduleRequestDto,
+            @ApiParam(defaultValue = "none (반복 일정 없는 경우)",
+                    value = "onlyThis : 이 일정만 수정, afterThis : 이후 일정 모두 수정, all : 전체 일정 모두 수정")
             @PathVariable("modifyType") String modifyType) {
         ModifyScheduleResponseDto modifyScheduleResponseDto = scheduleService.modifySchedule(scheduleId, date, modifyType, modifyScheduleRequestDto) ;
 
@@ -82,6 +85,8 @@ public class ScheduleController {
     public ResponseEntity<ResponseDto<DeleteScheduleResponseDto>> deleteSchedule(
             @PathVariable("scheduleId") Long scheduleId,
             @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+            @ApiParam(defaultValue = "none (반복 일정 없는 경우)",
+                    value = "onlyThis : 이 일정만 삭제, afterThis : 이후 일정 모두 삭제, all : 전체 일정 모두 삭제")
             @PathVariable("deleteType") String deleteType) {
 
         DeleteScheduleResponseDto deleteScheduleResponseDto = scheduleService.deleteSchedule(scheduleId, date, deleteType);

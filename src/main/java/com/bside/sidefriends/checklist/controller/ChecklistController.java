@@ -7,8 +7,7 @@ import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.security.auth.LoginUser;
 import com.bside.sidefriends.users.domain.User;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -92,6 +91,8 @@ public class ChecklistController {
             @PathVariable("checklistId") Long checklistId,
             @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
             @Valid @RequestBody ModifyChecklistRequestDto modifyChecklistRequestDto,
+            @ApiParam(defaultValue = "none (반복 일정 없는 경우)",
+                    value = "onlyThis : 이 일정만 수정, afterThis : 이후 일정 모두 수정, all : 전체 일정 모두 수정")
             @PathVariable("modifyType") String modifyType) {
         ModifyChecklistResponseDto modifyChecklistResponseDto = checklistService.modifyChecklist(checklistId, date, modifyType, modifyChecklistRequestDto) ;
 
@@ -110,6 +111,8 @@ public class ChecklistController {
     public ResponseEntity<ResponseDto<DeleteChecklistResponseDto>> deleteChecklist(
             @PathVariable("checklistId") Long checklistId,
             @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+            @ApiParam(defaultValue = "none (반복 일정 없는 경우)",
+                    value = "onlyThis : 이 일정만 삭제, afterThis : 이후 일정 모두 삭제, all : 전체 일정 모두 삭제")
             @PathVariable("deleteType") String deleteType) {
 
         DeleteChecklistResponseDto deleteChecklistResponseDto = checklistService.deleteChecklist(checklistId, date, deleteType);
