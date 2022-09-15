@@ -29,7 +29,6 @@ public class QuickServiceImpl implements QuickService {
     private final QuickHistoryRepository quickHistoryRepository;
     private final PetRepository petRepository;
 
-    // TODO-jh : Pet Create 할 때 최초 1회 호출되어야 합니다
     @Override
     public CreateQuickResponseDto createDefaultQuick(User user) {
         // Get Main Pet Info

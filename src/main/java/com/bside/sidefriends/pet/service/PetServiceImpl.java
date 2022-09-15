@@ -3,11 +3,11 @@ package com.bside.sidefriends.pet.service;
 import com.bside.sidefriends.family.domain.Family;
 import com.bside.sidefriends.family.error.exception.FamilyNotFoundException;
 import com.bside.sidefriends.family.repository.FamilyRepository;
-import com.bside.sidefriends.family.service.dto.FamilyMember;
 import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.pet.domain.PetShareScope;
 import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.pet.service.dto.*;
+import com.bside.sidefriends.quick.service.QuickService;
 import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.error.exception.UserNotFoundException;
 import com.bside.sidefriends.users.repository.UserRepository;
@@ -30,6 +30,8 @@ public class PetServiceImpl implements PetService {
     // TODO: UserRepository, FamilyRepository 구현 변경 반영 필요
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
+
+    private final QuickService quickService;
 
     // TODO: 전체적으로 사용자 소유 펫인지 확인 필요
 
@@ -63,6 +65,9 @@ public class PetServiceImpl implements PetService {
             findUser.setMainPet(petEntity.getPetId());
         }
         userRepository.save(findUser);
+
+        // 펫 최초 생성 시, Default 퀵 정보 생성
+        quickService.createDefaultQuick(findUser);
 
         return CreatePetResponseDto.builder()
                 .petId(petEntity.getPetId())
