@@ -54,7 +54,7 @@ public class QuickController {
     @GetMapping("/quick/{date}")
     ResponseEntity<ResponseDto<FindQuickByPetIdResponseDto>> findQuick(
             @LoginUser User user,
-            @PathVariable("date") @DateTimeFormat(pattern = "yyyy.MM.dd") LocalDate date) { // 2022-01-01
+            @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) { // 2022-01-01
 
         FindQuickByPetIdResponseDto findQuickByPetIdResponseDto = quickService.findQuickByPetId(user, date);
 
