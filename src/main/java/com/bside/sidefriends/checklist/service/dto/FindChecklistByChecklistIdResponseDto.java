@@ -1,5 +1,6 @@
 package com.bside.sidefriends.checklist.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,6 +18,7 @@ public class FindChecklistByChecklistIdResponseDto {
     @ApiModelProperty(value = "할일 내용", example = "할일 내용")
     private String explanation;
     @ApiModelProperty(value = "할일 날짜", example = "2022-01-02")
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate date;
     @ApiModelProperty(value = "할일 수행여부", example = "false")
     private boolean isDone;
@@ -47,8 +49,10 @@ public class FindChecklistByChecklistIdResponseDto {
         @ApiModelProperty(value = "반복 주차", example = "2")
         private String eventWeek;
         @ApiModelProperty(value = "반복 시작일", example = "2022-07-01")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate startedAt;
         @ApiModelProperty(value = "반복 종료일", example = "2022-12-31")
+        @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate endedAt;
 
     }
