@@ -5,6 +5,9 @@ import com.bside.sidefriends.family.error.exception.FamilyNotFoundException;
 import com.bside.sidefriends.family.repository.FamilyRepository;
 import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.pet.domain.PetShareScope;
+import com.bside.sidefriends.pet.error.exception.PetModifyFailException;
+import com.bside.sidefriends.pet.error.exception.PetNotFoundException;
+import com.bside.sidefriends.pet.error.exception.PetShareFailException;
 import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.pet.service.dto.*;
 import com.bside.sidefriends.quick.service.QuickService;
@@ -90,21 +93,21 @@ public class PetServiceImpl implements PetService {
 
         Long familyId = findUser.getFamilyIdInfo();
         if (findUser.getFamily() == null) {
-            throw new IllegalStateException("펫을 공유할 가족 그룹이 없습니다.");
+            throw new PetShareFailException("펫을 공유할 가족 그룹이 없습니다.");
         }
 
         Family findFamily = familyRepository.findByFamilyIdAndIsDeletedFalse(familyId)
                 .orElseThrow(FamilyNotFoundException::new);
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalse(petId)
-                .orElseThrow(() -> new IllegalStateException("이미 삭제된 펫입니다."));
+                .orElseThrow(PetNotFoundException::new);
 
         if (!findPet.getUser().getUserId().equals(petId)) {
-            throw new IllegalStateException("사용자 소유의 펫이 아닙니다.");
+            throw new PetShareFailException("사용자 소유의 펫이 아닙니다.");
         }
 
         if (findPet.getFamily() != null) {
-            throw new IllegalStateException("이미 공유된 펫입니다.");
+            throw new PetShareFailException("이미 공유된 펫입니다.");
         }
 
         findFamily.addPet(findPet); // 가족에 펫 추가
@@ -123,7 +126,7 @@ public class PetServiceImpl implements PetService {
     public FindPetResponseDto findPet(Long petId) {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalse(petId)
-                .orElseThrow(() -> new IllegalStateException("이미 삭제된 펫입니다."));
+                .orElseThrow(PetNotFoundException::new);
 
         return FindPetResponseDto.builder()
                 .petId(findPet.getPetId())
@@ -176,10 +179,10 @@ public class PetServiceImpl implements PetService {
     public ModifyPetResponseDto modifyPet(Long petId, ModifyPetRequestDto modifyPetRequestDto) {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalse(petId)
-                .orElseThrow(() -> new IllegalStateException("이미 삭제된 펫입니다."));
+                .orElseThrow(PetNotFoundException::new);
 
         if (modifyPetRequestDto.isEmpty()) {
-            throw new IllegalStateException("수정할 펫 정보가 없습니다.");
+            throw new PetModifyFailException("수정할 펫 정보가 없습니다.");
         }
 
         // TODO: 필드 수정 방식 리팩토링
@@ -210,7 +213,7 @@ public class PetServiceImpl implements PetService {
     public DeactivatePetResponseDto deactivatePet(Long petId) {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalseAndIsDeactivatedFalse(petId)
-                .orElseThrow(() -> new IllegalStateException("삭제되었거나 비활성화된 펫입니다."));
+                .orElseThrow(() -> new PetNotFoundException("이미 삭제되었거나 비활성화된 펫입니다."));
 
         findPet.deactivate();
         petRepository.save(findPet);
@@ -225,7 +228,7 @@ public class PetServiceImpl implements PetService {
     public ActivatePetResponseDto activatePet(Long petId) {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalseAndIsDeactivatedTrue(petId)
-                .orElseThrow(() -> new IllegalStateException("삭제되었거나 이미 활성 상태인 펫입니다."));
+                .orElseThrow(() -> new PetNotFoundException("이미 삭제되었거나 비활성화된 펫입니다."));
 
         findPet.activate();
         petRepository.save(findPet);
@@ -240,7 +243,7 @@ public class PetServiceImpl implements PetService {
     public DeletePetResponseDto deletePet(Long petId) {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalse(petId)
-                .orElseThrow(() -> new IllegalStateException("이미 삭제된 펫입니다."));
+                .orElseThrow(PetNotFoundException::new);
 
         findPet.delete();
         petRepository.save(findPet);
@@ -260,7 +263,7 @@ public class PetServiceImpl implements PetService {
                 .orElseThrow(UserNotFoundException::new);
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalseAndIsDeactivatedFalse(petId)
-                .orElseThrow(() -> new IllegalStateException("삭제되었거나 이미 활성 상태인 펫입니다."));
+                .orElseThrow(() -> new PetNotFoundException("이미 삭제되었거나 비활성화된 펫입니다."));
 
         // TODO: 사용자 혹은 사용자 가족 그룹의 펫이 아닌 경우 예외 처리
 

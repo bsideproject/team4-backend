@@ -47,8 +47,12 @@ public enum ResponseCode {
     P_DELETE_SUCCESS("207", "펫 삭제에 성공하였습니다."),
     P_SHARE_SUCCESS("208", "펫 공유에 성공하였습니다."),
     P_UPDATE_MAIN_PET_SUCCESS("209", "대표펫 지정에 성공하였습니다."),
+
     P_ENTITY_NOT_FOUND("210", "존재하지 않는 펫입니다."),
     P_ENTITY_DEACTIVATED("211", "비활성화된 펫입니다."),
+    P_SHARE_FAIL("212", "펫 공유에 실패하였습니다."),
+    P_MODIFY_FAIL("213", "펫 정보 수정에 실패하였습니다."),
+
 
     // 퀵 기록(301-399)
 
