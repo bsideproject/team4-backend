@@ -22,6 +22,6 @@ public class FindPetResponseDto {
     private Long age;
     private String adoptionDate;
     private String animalRegistrationNumber;
+    private String petImageUrl;
 
-    // TODO: 펫 이미지
 }

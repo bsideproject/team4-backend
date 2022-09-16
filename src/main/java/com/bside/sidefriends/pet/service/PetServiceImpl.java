@@ -58,6 +58,7 @@ public class PetServiceImpl implements PetService {
                 .shareScope(PetShareScope.PRIVATE) // 펫 생성 시 기본 개인 펫 설정
                 .isDeactivated(false) // 펫 생성 시 비활성화 여부 기본값 false
                 .isDeleted(false) // 펫 생성 시 삭제 여부 기본값 false
+                // TODO: 펫 이미지
                 .build();
 
         petRepository.save(petEntity);
@@ -140,6 +141,7 @@ public class PetServiceImpl implements PetService {
                 .animalRegistrationNumber(findPet.getAnimalRegistrationNumber())
                 .userId(findPet.getUser().getUserId())
                 .familyId(findPet.getFamilyIdInfo())
+                .petImageUrl(findPet.getImageUrlInfo())
                 .build();
     }
 
@@ -206,6 +208,7 @@ public class PetServiceImpl implements PetService {
                 .adoptionDate(findPet.getAdoptionDate())
                 .age(findPet.getAge())
                 .animalRegistrationNumber(findPet.getAnimalRegistrationNumber())
+                .petImageUrl(findPet.getImageUrlInfo())
                 .build();
     }
 
@@ -278,6 +281,18 @@ public class PetServiceImpl implements PetService {
     }
 
     private static final Function<Pet, PetInfo> getPetInfo =
-            pet -> new PetInfo(pet.getPetId(), pet.getName(), pet.getShareScope(), pet.getUser().getUserId(), pet.getFamilyIdInfo(),
-                    pet.getGender(), pet.getBreed(), pet.getBirthday(), pet.getAge(), pet.getAdoptionDate(), pet.getAnimalRegistrationNumber());
+            pet -> new PetInfo(
+                    pet.getPetId(),
+                    pet.getName(),
+                    pet.getShareScope(),
+                    pet.getUser().getUserId(),
+                    pet.getFamilyIdInfo(),
+                    pet.getGender(),
+                    pet.getBreed(),
+                    pet.getBirthday(),
+                    pet.getAge(),
+                    pet.getAdoptionDate(),
+                    pet.getAnimalRegistrationNumber(),
+                    pet.getImageUrlInfo()
+            );
 }

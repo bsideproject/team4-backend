@@ -19,4 +19,5 @@ public class PetInfo {
     private Long age;
     private String adoptionDate;
     private String animalRegistrationNumber;
+    private String petImageUrl;
 }

@@ -32,4 +32,6 @@ public class ModifyPetResponseDto {
     private Long age;
 
     private String animalRegistrationNumber;
+
+    private String petImageUrl;
 }

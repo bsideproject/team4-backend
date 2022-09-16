@@ -93,6 +93,7 @@ public class Pet {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    // 펫 이미지
     @OneToOne(mappedBy = "pet")
     PetImage petImage;
 
@@ -130,12 +131,21 @@ public class Pet {
         this.shareScope = PetShareScope.FAMILY;
     }
 
-    // 가족 정보 반환
+    // 펫 가족 정보 반환
     public Long getFamilyIdInfo() {
         if (this.family == null) {
             return null;
         } else {
             return this.family.getFamilyId();
+        }
+    }
+
+    // 펫 이미지 url 반환
+    public String getImageUrlInfo() {
+        if (this.petImage == null) {
+            return null;
+        } else {
+            return this.petImage.getImageUrl();
         }
     }
 

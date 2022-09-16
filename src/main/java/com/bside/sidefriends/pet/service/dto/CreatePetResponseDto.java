@@ -3,7 +3,6 @@ package com.bside.sidefriends.pet.service.dto;
 import com.bside.sidefriends.family.domain.Family;
 import com.bside.sidefriends.pet.domain.PetGender;
 import com.bside.sidefriends.pet.domain.PetShareScope;
-import com.bside.sidefriends.users.domain.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -45,5 +44,5 @@ public class CreatePetResponseDto {
 
     private boolean isDeactivated;
 
-    // TODO: 펫 이미지
+    private String petImageUrl;
 }
