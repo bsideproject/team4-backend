@@ -29,9 +29,17 @@ public interface PetRepository extends JpaRepository<Pet, Long> {
             + " AND p.isDeactivated = true")
     Optional<Pet> findByPetIdAndIsDeletedFalseAndIsDeactivatedTrue(@Param("petId") Long petId);
 
-    List<Pet> findAllByUserUserId(Long userId);
+    @Query("SELECT p FROM Pet p"
+            + " WHERE p.user.userId = :userId"
+            + " AND p.isDeleted = false"
+    )
+    List<Pet> findAllByUserIdAndIsDeletedFalse(@Param("userId") Long userId);
 
-    List<Pet> findAllByFamilyFamilyId(Long familyId);
+    @Query("SELECT p FROM Pet p"
+            + " WHERE p.family.familyId = :familyId"
+            + " AND p.isDeleted = false"
+    )
+    List<Pet> findAllByFamilyIdAndIsDeletedFalse(@Param("familyId") Long familyId);
 
     // TODO: family_id, user_id join 쿼리
 

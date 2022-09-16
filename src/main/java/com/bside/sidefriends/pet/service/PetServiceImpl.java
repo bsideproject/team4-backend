@@ -151,11 +151,11 @@ public class PetServiceImpl implements PetService {
         Long userId = findUser.getUserId();
         Long familyId = findUser.getFamilyIdInfo();
 
-        List<Pet> userPets = petRepository.findAllByUserUserId(userId);
+        List<Pet> userPets = petRepository.findAllByUserIdAndIsDeletedFalse(userId);
         Set<Pet> setOfPets = new LinkedHashSet<>(userPets);
 
         if (familyId != null) {
-            List<Pet> familyPets = petRepository.findAllByFamilyFamilyId(familyId);
+            List<Pet> familyPets = petRepository.findAllByFamilyIdAndIsDeletedFalse(familyId);
             setOfPets.addAll(familyPets);
         }
 
