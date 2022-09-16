@@ -93,7 +93,8 @@ public class Pet {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    // TODO: 펫 이미지
+    @OneToOne(mappedBy = "pet")
+    PetImage petImage;
 
     // 질환
     // TODO: 질환 enum 관리 여부
