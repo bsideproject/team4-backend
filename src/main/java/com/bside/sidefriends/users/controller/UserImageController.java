@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
 
 @SideFriendsController
 @RequiredArgsConstructor
@@ -25,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
         @ApiResponse(code=001, message = "입력 값이 올바르지 않습니다."),
         @ApiResponse(code=003, message = "허용되지 않은 요청 방법입니다.")
 })
+@ApiIgnore
 public class UserImageController {
 
     private final UserImageService userImageService;

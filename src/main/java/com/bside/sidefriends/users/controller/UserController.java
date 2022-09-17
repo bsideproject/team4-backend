@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.validation.Valid;
 
@@ -80,8 +81,9 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(code=151, message = "회원 가입에 성공하였습니다. (200)")
     })
-    // FIXME: 1차 서비스에서 제공되지 않는 API. 시큐리티 회원가입 로직 작동 확인 완료 후 삭제 필요. IR.
     @PostMapping("/users")
+    @ApiIgnore
+    // FIXME: 1차 서비스에서 제공되지 않는 API. 시큐리티 회원가입 로직 작동 확인 완료 후 삭제 필요. IR.
     public ResponseEntity<CreateUserResponseDto> createUser(@Valid @RequestBody CreateUserRequestDto userCreateRequestDto) {
 
         CreateUserResponseDto userCreateResponseDto = userService.createUser(userCreateRequestDto);
