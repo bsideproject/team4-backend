@@ -43,4 +43,6 @@ public class ModifyPetResponseDto {
 
     @ApiModelProperty(value = "반려동물 동물등록번호")
     private String animalRegistrationNumber;
+
+    private String petImageUrl;
 }

@@ -46,6 +46,6 @@ public class PetInfo {
 
     @ApiModelProperty(value = "반려동물 동물등록번호")
     private String animalRegistrationNumber;
-
-    // TODO: 펫 이미지
+    
+    private String petImageUrl;
 }

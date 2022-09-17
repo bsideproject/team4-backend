@@ -50,6 +50,6 @@ public class FindPetResponseDto {
 
     @ApiModelProperty(value = "반려동물 동물등록번호")
     private String animalRegistrationNumber;
+    private String petImageUrl;
 
-    // TODO: 펫 이미지
 }

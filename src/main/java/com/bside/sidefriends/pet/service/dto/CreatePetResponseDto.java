@@ -56,5 +56,5 @@ public class CreatePetResponseDto {
     @ApiModelProperty(value = "반려동물 기록 중지 여부")
     private boolean isDeactivated;
 
-    // TODO: 펫 이미지
+    private String petImageUrl;
 }
