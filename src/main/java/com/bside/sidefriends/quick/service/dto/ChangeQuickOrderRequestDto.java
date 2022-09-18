@@ -3,6 +3,7 @@ package com.bside.sidefriends.quick.service.dto;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class ChangeQuickOrderRequestDto {
     private List<QuickOrder> quickOrderList;
 
     @Getter
+    @NoArgsConstructor
     @AllArgsConstructor
     public static class QuickOrder {
         @ApiModelProperty(value = "퀵 Id", example = "1")

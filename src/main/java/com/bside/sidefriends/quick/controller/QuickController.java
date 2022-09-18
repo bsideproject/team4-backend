@@ -7,6 +7,7 @@ import com.bside.sidefriends.quick.service.QuickService;
 import com.bside.sidefriends.quick.service.dto.*;
 import com.bside.sidefriends.security.auth.LoginUser;
 import com.bside.sidefriends.users.domain.User;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
@@ -99,15 +100,18 @@ public class QuickController {
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @ApiOperation(value = "changeQuickCount",
+            notes = "(2022-09-18) URI 변경. 변경전 : /quick/count/{quickId} 변경 후 : /quick/count/{quickId}/{date}")
     @ApiResponses({
             @ApiResponse(code=309, message = "퀵 기록 실행 횟수 증가에 성공하였습니다. (200)"),
             @ApiResponse(code=310, message = "퀵 기록 실행 횟수 증가에 실패하였습니다.")
     })
-    @PutMapping("/quick/count/{quickId}")
+    @PutMapping("/quick/count/{quickId}/{date}")
     ResponseEntity<ResponseDto<ChangeQuickCountResponseDto>> changeQuickCount (
-            @PathVariable("quickId") Long quickId) {
+            @PathVariable("quickId") Long quickId,
+            @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 
-        ChangeQuickCountResponseDto changeQuickCountResponseDto = quickService.changeQuickCount(quickId);
+        ChangeQuickCountResponseDto changeQuickCountResponseDto = quickService.changeQuickCount(quickId, date);
 
         ResponseDto<ChangeQuickCountResponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.MODIFY_QUICK_COUNT_SUCCESS, changeQuickCountResponseDto);

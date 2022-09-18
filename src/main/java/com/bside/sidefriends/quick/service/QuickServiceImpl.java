@@ -8,6 +8,8 @@ import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.quick.domain.Quick;
 import com.bside.sidefriends.quick.domain.QuickDefault;
 import com.bside.sidefriends.quick.domain.QuickHistory;
+import com.bside.sidefriends.quick.error.exception.QuickCountExceedException;
+import com.bside.sidefriends.quick.error.exception.QuickNotFoundException;
 import com.bside.sidefriends.quick.repository.QuickHistoryRepository;
 import com.bside.sidefriends.quick.repository.QuickRepository;
 import com.bside.sidefriends.quick.service.dto.*;
@@ -111,7 +113,7 @@ public class QuickServiceImpl implements QuickService {
 
         // Get Quick Info
         Quick beforeQuick = quickRepository.findById(quickId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 퀵기록 Id 입니다 : " + quickId));
+                .orElseThrow(() -> new QuickNotFoundException("존재하지 않는 퀵기록 Id 입니다 : " + quickId));
 
         // Create afterQuick
         Quick afterQuick = Quick.builder()
@@ -147,7 +149,7 @@ public class QuickServiceImpl implements QuickService {
         changeQuickOrderRequestDto.getQuickOrderList().stream()
                 .forEach(quickOrder -> {
                     Quick beforeQuick = quickRepository.findById(quickOrder.getQuickId())
-                            .orElseThrow(() -> new IllegalStateException("존재하지 않는 퀵기록 Id 입니다 : " + quickOrder.getQuickId()));
+                            .orElseThrow(() -> new QuickNotFoundException("존재하지 않는 퀵기록 Id 입니다 : " + quickOrder.getQuickId()));
 
                     // Create afterQuick
                     Quick afterQuick = Quick.builder()
@@ -191,28 +193,26 @@ public class QuickServiceImpl implements QuickService {
     }
 
     @Override
-    public ChangeQuickCountResponseDto changeQuickCount(Long quickId) {
+    public ChangeQuickCountResponseDto changeQuickCount(Long quickId, LocalDate date) {
         Quick quick = quickRepository.findById(quickId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 퀵기록 입니다."));
-
+                .orElseThrow(() -> new QuickNotFoundException("존재하지 않는 퀵기록 Id 입니다 : " + quickId));
 
         // Change Quick Count +1
-        LocalDate now = LocalDate.now();
-        quickHistoryRepository.findByQuickAndCreatedAt(quick, now)
+        quickHistoryRepository.findByQuickAndCreatedAt(quick, date)
                 .ifPresentOrElse(
                         qhist -> { // If Present, count +1
                             if (qhist.getCount() < quick.getTotal()) {
                                 qhist.increaseCount();
                                 quickHistoryRepository.save(qhist);
                             } else {
-                                throw new IllegalStateException("퀵기록 실행횟수를 초과하였습니다.");
+                                throw new QuickCountExceedException("퀵기록 현재 실행 횟수 : " + Integer.toString(qhist.getCount()));
                             }
                         },
                         () -> { // If not Present, create new
                             QuickHistory quickHistoryEntity = QuickHistory.builder()
                                     .quick(quick)
                                     .count(1)
-                                    .createdAt(now)
+                                    .createdAt(date)
                                     .build();
                             quickHistoryRepository.save(quickHistoryEntity);
                         });
