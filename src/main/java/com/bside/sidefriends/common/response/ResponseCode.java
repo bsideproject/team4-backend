@@ -68,6 +68,7 @@ public enum ResponseCode {
     MODIFY_QUICK_COUNT_FAIL("310", "퀵 기록 실행 횟수 증가에 실패하였습니다."),
     QUICK_INVALID_INPUT("311","퀵 기록 서비스 입력 값이 올바르지 않습니다."),
     QUICK_NOT_FOUND("312","존재하지 않는 퀵 기록입니다."),
+    QUICK_COUNT_EXCEED("313","퀵 기록 실행횟수를 초과하였습니다."),
 
 
     // 체크리스트(401-450)

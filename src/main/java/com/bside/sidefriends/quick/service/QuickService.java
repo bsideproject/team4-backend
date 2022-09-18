@@ -48,6 +48,6 @@ public interface QuickService {
      * @param quickId 수정할 퀵 id
      * @return {@link ChangeQuickCountResponseDto} 퀵기록 실행횟수 변경 응답 DTO
      */
-    ChangeQuickCountResponseDto changeQuickCount(Long quickId);
+    ChangeQuickCountResponseDto changeQuickCount(Long quickId, LocalDate date);
     
 }
