@@ -61,7 +61,7 @@ public class PetServiceImpl implements PetService {
                 // TODO: 펫 이미지
                 .build();
 
-        petRepository.save(petEntity);
+        Pet pet = petRepository.save(petEntity);
 
         // 사용자 펫 추가
         findUser.addPet(petEntity);
@@ -71,7 +71,7 @@ public class PetServiceImpl implements PetService {
         userRepository.save(findUser);
 
         // 펫 최초 생성 시, Default 퀵 정보 생성
-        quickService.createDefaultQuick(findUser);
+        quickService.createDefaultQuick(pet);
 
         return CreatePetResponseDto.builder()
                 .petId(petEntity.getPetId())

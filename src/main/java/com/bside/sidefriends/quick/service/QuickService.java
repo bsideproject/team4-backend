@@ -1,5 +1,6 @@
 package com.bside.sidefriends.quick.service;
 
+import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.quick.service.dto.*;
 import com.bside.sidefriends.users.domain.User;
 
@@ -9,10 +10,10 @@ public interface QuickService {
 
     /**
      * 퀵기록 최초 생성
-     * @param user @LoginUser
+     * @param pet 펫
      * @return {@link CreateQuickResponseDto} 퀵기록 생성 응답 DTO
      */
-    CreateQuickResponseDto createDefaultQuick(User user);
+    CreateQuickResponseDto createDefaultQuick(Pet pet);
 
 
     /**

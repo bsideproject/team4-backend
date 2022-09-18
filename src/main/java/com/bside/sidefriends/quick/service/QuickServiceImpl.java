@@ -30,14 +30,10 @@ public class QuickServiceImpl implements QuickService {
     private final PetRepository petRepository;
 
     @Override
-    public CreateQuickResponseDto createDefaultQuick(User user) {
-        // Get Main Pet Info
-        Long petId = user.getMainPetId();
-        if (petId == null) throw new UserMainPetNotFoundException();
-
-        Pet pet = petRepository.findByPetId(petId).orElseThrow(PetNotFoundException::new);
+    public CreateQuickResponseDto createDefaultQuick(Pet pet) {
+        // Verify Pet Info
+        if (pet == null) throw new UserMainPetNotFoundException();
         if (pet.isDeactivated()) throw new PetDeactivatedException();
-
 
         // Get Quick Default Values
         List<QuickDefault> quickDefault = List.of(QuickDefault.values());
