@@ -3,6 +3,7 @@ package com.bside.sidefriends.quick.controller;
 import com.bside.sidefriends.common.annotation.SideFriendsController;
 import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
+import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.quick.service.QuickService;
 import com.bside.sidefriends.quick.service.dto.*;
 import com.bside.sidefriends.security.auth.LoginUser;
@@ -38,9 +39,9 @@ public class QuickController {
             @ApiResponse(code=302, message = "퀵 기록 생성에 실패하였습니다.")
     })
     @GetMapping("/quick")
-    ResponseEntity<ResponseDto<CreateQuickResponseDto>> createDefaultQuick(@LoginUser User user) {
+    ResponseEntity<ResponseDto<CreateQuickResponseDto>> createDefaultQuick(Pet pet) {
 
-        CreateQuickResponseDto createQuickResponseDto = quickService.createDefaultQuick(user);
+        CreateQuickResponseDto createQuickResponseDto = quickService.createDefaultQuick(pet);
 
         ResponseDto<CreateQuickResponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.CREATE_QUICK_SUCCESS, createQuickResponseDto);
