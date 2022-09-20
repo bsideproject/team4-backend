@@ -1,5 +1,6 @@
 package com.bside.sidefriends.schedule.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,8 +15,12 @@ public class ModifyScheduleRequestDto {
     private Long scheduleId;
     private String title;
     private String explanation;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate;
     private LocalTime startTime;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate endDate;
     private LocalTime endTime;
     private boolean isAllDay;
@@ -39,7 +44,10 @@ public class ModifyScheduleRequestDto {
         private String eventMonth;
         private String eventDay;
         private String eventWeek;
+
+        @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate startedAt;
+        @JsonFormat(pattern = "yyyy-MM-dd")
         private LocalDate endedAt;
 
     }

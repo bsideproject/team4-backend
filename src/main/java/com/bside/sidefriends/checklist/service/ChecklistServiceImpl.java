@@ -9,7 +9,12 @@ import com.bside.sidefriends.checklist.repository.ChecklistHistoryRepository;
 import com.bside.sidefriends.checklist.repository.ChecklistMetaRepository;
 import com.bside.sidefriends.checklist.repository.ChecklistRepository;
 import com.bside.sidefriends.checklist.service.dto.*;
+import com.bside.sidefriends.pet.domain.Pet;
+import com.bside.sidefriends.pet.error.exception.PetDeactivatedException;
+import com.bside.sidefriends.pet.error.exception.PetNotFoundException;
+import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.users.domain.User;
+import com.bside.sidefriends.users.error.exception.UserMainPetNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,28 +30,24 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ChecklistServiceImpl implements ChecklistService {
 
+    private final PetRepository petRepository;
     private final ChecklistRepository checklistRepository;
     private final ChecklistMetaRepository checklistMetaRepository;
     private final ChecklistHistoryRepository checklistHistoryRepository;
 
     //TODO-jh : Exception 처리
-    //TODO-jh : pet_id로 된 부분은 모두 pet 으로 변경
 
     // [Summary] 해당 유저의 날짜의 모든 할일 정보를 조회해서, List 로 반환해준다(FindChecklistResponseDto)
     @Override
     public FindChecklistResponseDto findChecklist(User user, LocalDate date) {
 
-        String petId = user.getMainPetId();
-        //TODO-jh : after pet entity added
-//        Pet pet = user.getPet();
-//        if (pet == null) {
-//            throw new IllegalStateException("대표펫이 없습니다.")
-//        }
-//        if (pet.isDeleted()) {
-//            throw new IllegalStateException("이미 삭제된 펫 입니다");
-//        }
+        // Get Main Pet Info
+        Long petId = user.getMainPetId();
+        if (petId == null) throw new UserMainPetNotFoundException();
 
-        List<Checklist> findChecklist = checklistRepository.findAllByPetId(petId);
+        Pet pet = petRepository.findByPetId(petId).orElseThrow(PetNotFoundException::new);
+        if (pet.isDeactivated()) throw new PetDeactivatedException();
+        List<Checklist> findChecklist = checklistRepository.findAllByPet(pet);
 
 
         // 1. Date 날짜 필터링 : 조회일(date) 이전에 생성된 체크리스트만 조회
@@ -55,7 +56,6 @@ public class ChecklistServiceImpl implements ChecklistService {
                 .collect(Collectors.toList());
         //TODO-jh-exception : 날짜범위외 조회 시 exception 발생
 
-        System.out.println("size : " + findChecklist.size());
         // 2. isRepeated 필터링
         List<FindChecklistResponseDto.ChecklistDetail> checklistDetailList = findChecklist.stream()
                 .map(checklist -> {
@@ -177,20 +177,16 @@ public class ChecklistServiceImpl implements ChecklistService {
     @Override
     @Transactional
     public CreateChecklistResponseDto createChecklist(User user, CreateChecklistRequestDto createChecklistRequestDto) {
-        String petId = user.getMainPetId();
-        //TODO-jh : after pet entity added
-//        Pet pet = user.getPet();
-//        if (pet == null) {
-//            throw new IllegalStateException("대표펫이 없습니다.")
-//        }
-//        if (pet.isDeleted()) {
-//            throw new IllegalStateException("이미 삭제된 펫 입니다");
-//        }
+        // Get Main Pet Info
+        Long petId = user.getMainPetId();
+        if (petId == null) throw new UserMainPetNotFoundException();
 
+        Pet pet = petRepository.findByPetId(petId).orElseThrow(PetNotFoundException::new);
+        if (pet.isDeactivated()) throw new PetDeactivatedException();
 
         // 1. Checklist 생성
         Checklist checklistEntity = Checklist.builder()
-                .petId(petId)
+                .pet(pet)
                 .title(createChecklistRequestDto.getTitle() == null ?
                         "제목 없음" : createChecklistRequestDto.getTitle())
                 .explanation(createChecklistRequestDto.getExplanation())
@@ -308,7 +304,7 @@ public class ChecklistServiceImpl implements ChecklistService {
                 // Create New Checklist
                 Checklist checklist = Checklist.builder()
                         .originChecklistId(findChecklist.getChecklistId())
-                        .petId(findChecklist.getPetId())
+                        .pet(findChecklist.getPet())
                         .title(modifyChecklistRequestDto.getTitle())
                         .explanation(modifyChecklistRequestDto.getExplanation())
                         .date(modifyChecklistRequestDto.getDate())
@@ -332,7 +328,7 @@ public class ChecklistServiceImpl implements ChecklistService {
 
                 // Create New Checklist
                 Checklist checklist = Checklist.builder()
-                        .petId(findChecklist.getPetId())
+                        .pet(findChecklist.getPet())
                         .title(modifyChecklistRequestDto.getTitle())
                         .explanation(modifyChecklistRequestDto.getExplanation())
                         .date(modifyChecklistRequestDto.getDate())

@@ -3,14 +3,18 @@ package com.bside.sidefriends.pet.service;
 import com.bside.sidefriends.pet.service.dto.*;
 import com.bside.sidefriends.pet.service.dto.ActivatePetResponseDto;
 
+import java.util.List;
+
 public interface PetService {
 
     /**
-     * 펫 정보 생성(최초 등록)
+     * 사용자 펫 정보 생성(최초 등록)
+     * @param username 펫을 등록할 회원 id
      * @param createPetRequestDto {@link CreatePetRequestDto} 펫 정보 생성 요청 DTO
      * @return {@link CreatePetResponseDto} 생성된 펫 정보 응답 DTO
      */
-    CreatePetResponseDto createPet(CreatePetRequestDto createPetRequestDto);
+    CreatePetResponseDto createUserPet(String username, CreatePetRequestDto createPetRequestDto);
+
 
     /**
      * 펫 상세 정보 조회
@@ -53,7 +57,13 @@ public interface PetService {
      * TODO: 펫 연관 기능
      * - 펫 공유
      * - 사용자 펫 리스트
-     * - 가족 펫 리스트
      * - 대표펫 설정
      */
+
+    SharePetResponseDto sharePet(String username, Long petId);
+
+    FindAllPetResponseDto findAllPets(String username);
+
+    UpdateMainPetResponseDto updateMainPet(String username, UpdateMainPetRequestDto updateMainPetRequestDto);
+
 }

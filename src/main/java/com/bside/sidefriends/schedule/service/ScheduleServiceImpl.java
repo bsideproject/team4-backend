@@ -1,5 +1,9 @@
 package com.bside.sidefriends.schedule.service;
 
+import com.bside.sidefriends.pet.domain.Pet;
+import com.bside.sidefriends.pet.error.exception.PetDeactivatedException;
+import com.bside.sidefriends.pet.error.exception.PetNotFoundException;
+import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.schedule.domain.Schedule;
 import com.bside.sidefriends.schedule.domain.ScheduleMeta;
 import com.bside.sidefriends.schedule.error.exception.ScheduleMetaNotFoundException;
@@ -8,6 +12,7 @@ import com.bside.sidefriends.schedule.repository.ScheduleMetaRepository;
 import com.bside.sidefriends.schedule.repository.ScheduleRepository;
 import com.bside.sidefriends.schedule.service.dto.*;
 import com.bside.sidefriends.users.domain.User;
+import com.bside.sidefriends.users.error.exception.UserMainPetNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,11 +28,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ScheduleServiceImpl implements ScheduleService {
 
+    private final PetRepository petRepository;
     private final ScheduleRepository scheduleRepository;
     private final ScheduleMetaRepository scheduleMetaRepository;
 
     //TODO-jh : Exception 처리
-    //TODO-jh : pet_id로 된 부분은 모두 pet 으로 변경
 
     // Summary) 해당 유저의 대표펫의 해당 날짜의 모든 일정 정보를 조회해서, List 로 반환해준다(FindScheduleResponseDto)
     // 1. 해당 user 의 대표 petId에 연관된 모든 일정 중, date 로 먼저 필터링 ( startDate ≤ {date} ≤ endDate )
@@ -38,27 +43,21 @@ public class ScheduleServiceImpl implements ScheduleService {
         // 이 때, 기존 일정에 LocalTime 값이 있으면, 반복 일정에도 Time 정보를 넣어줘야 한다
     @Override
     public FindScheduleResponseDto findSchedule(User user, LocalDate date) {
+        // Get Main Pet Info
+        Long petId = user.getMainPetId();
+        if (petId == null) throw new UserMainPetNotFoundException();
 
-        String petId = user.getMainPetId();
-        //TODO-jh : after pet entity added
-//        Pet pet = user.getPet();
-//        if (pet == null) {
-//            throw new IllegalStateException("대표펫이 없습니다.")
-//        }
-//        if (pet.isDeleted()) {
-//            throw new IllegalStateException("이미 삭제된 펫 입니다");
-//        }
+        Pet pet = petRepository.findByPetId(petId).orElseThrow(PetNotFoundException::new);
+        if (pet.isDeactivated()) throw new PetDeactivatedException();
 
-        List<Schedule> findSchedule = scheduleRepository.findAllByPetId(petId);
-
-        System.out.println("size before filter " + findSchedule.size());
+        // Get Schedule Info
+        List<Schedule> findSchedule = scheduleRepository.findAllByPet(pet);
 
         // 1. date 에 해당되는 일정 필터링
         findSchedule = findSchedule.stream()
                 .filter(schedule -> date.isAfter(schedule.getStartDate().minusDays(1))
                         && date.isBefore(schedule.getEndDate().plusDays(1)))
                 .collect(Collectors.toList());
-        System.out.println("size after filter " + findSchedule.size());
 
         // 2. 반복 일정 여부 확인
         List<FindScheduleResponseDto.ScheduleDetail> scheduleDetailList = findSchedule.stream()
@@ -175,18 +174,16 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Transactional
     public CreateScheduleResponseDto createSchedule(User user, CreateScheduleRequestDto createScheduleRequestDto) {
 
-        String petId = user.getMainPetId();
-        //TODO-jh : after pet entity added
-//        Pet pet = user.getPet();
-//        if (pet == null) {
-//            throw new IllegalStateException("대표펫이 없습니다.")
-//        }
-//        if (pet.isDeleted()) {
-//            throw new IllegalStateException("이미 삭제된 펫 입니다");
-//        }
+        // Get Main Pet Info
+        Long petId = user.getMainPetId();
+        if (petId == null) throw new UserMainPetNotFoundException();
 
+        Pet pet = petRepository.findByPetId(petId).orElseThrow(PetNotFoundException::new);
+        if (pet.isDeactivated()) throw new PetDeactivatedException();
+
+        // Create Schedule Entity
         Schedule scheduleEntity = Schedule.builder()
-                .petId(petId)
+                .pet(pet)
                 .title(createScheduleRequestDto.getTitle() == null ?
                         "제목 없음" : createScheduleRequestDto.getTitle())
                 .explanation(createScheduleRequestDto.getExplanation())
@@ -308,7 +305,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 // 신규 컬럼 생성
                 Schedule scheduleEntity = Schedule.builder()
                         .originScheduleId(findSchedule.getScheduleId())
-                        .petId(findSchedule.getPetId())
+                        .pet(findSchedule.getPet())
                         .title(modifyScheduleRequestDto.getTitle())
                         .explanation(modifyScheduleRequestDto.getExplanation())
                         .startDate(modifyScheduleRequestDto.getStartDate())
@@ -332,7 +329,7 @@ public class ScheduleServiceImpl implements ScheduleService {
                 // 신규 Schedule 생성
                 Schedule scheduleEntity = Schedule.builder()
                         .originScheduleId(findSchedule.getScheduleId())
-                        .petId(findSchedule.getPetId())
+                        .pet(findSchedule.getPet())
                         .title(modifyScheduleRequestDto.getTitle())
                         .explanation(modifyScheduleRequestDto.getExplanation())
                         .startDate(modifyScheduleRequestDto.getStartDate())

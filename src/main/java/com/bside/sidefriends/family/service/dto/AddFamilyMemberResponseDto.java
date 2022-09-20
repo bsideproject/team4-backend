@@ -1,5 +1,6 @@
 package com.bside.sidefriends.family.service.dto;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,9 +10,13 @@ import java.util.List;
 @AllArgsConstructor
 public class AddFamilyMemberResponseDto {
 
+    @ApiModelProperty(value = "가족 그룹 id", example="1")
     private Long familyId;
 
-    @Getter
+    @ApiModelProperty(value = "가족 그룹장 id", example="1")
+    private Long familyManagerId;
+
+    @ApiModelProperty(value="가족 그룹 구성원 리스트")
     private List<FamilyMember> familyMemberList;
 
 }

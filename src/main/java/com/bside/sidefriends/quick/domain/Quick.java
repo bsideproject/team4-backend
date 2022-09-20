@@ -1,5 +1,6 @@
 package com.bside.sidefriends.quick.domain;
 
+import com.bside.sidefriends.pet.domain.Pet;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,11 +19,9 @@ public class Quick {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long quickId;
 
-    // TODO-jh : PET 객체 관계 설정
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "pet_id")
-//    private Pet pet;
-    private String petId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pet_id")
+    private Pet pet;
 
     // Quick History 와 양방향 관계성
     @OneToMany(mappedBy = "quick", fetch = FetchType.LAZY)
@@ -54,9 +53,9 @@ public class Quick {
     }
 
     @Builder
-    public Quick(Long quickId, String petId, String name, int total, String explanation, int order, LocalDateTime startedAt, LocalDateTime endedAt) {
+    public Quick(Long quickId, Pet pet, String name, int total, String explanation, int order, LocalDateTime startedAt, LocalDateTime endedAt) {
         this.quickId = quickId;
-        this.petId = petId;
+        this.pet = pet;
         this.name = name;
         this.total = total;
         this.explanation = explanation;

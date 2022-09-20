@@ -1,6 +1,7 @@
 package com.bside.sidefriends.checklist.domain;
 
 import com.bside.sidefriends.checklist.service.dto.ModifyChecklistRequestDto;
+import com.bside.sidefriends.pet.domain.Pet;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,15 +18,12 @@ public class Checklist {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long checklistId;
 
-    // 기존값 = 자기 자신의 checklistId
-    // 반복일정에서 이 할일만 수정한 경우, 부모 checklistId를 부여한다
+    // 기존값 = 자기 자신의 checklistId : 반복일정에서 이 할일만 수정한 경우, 부모 checklistId를 부여한다
     private Long originChecklistId;
 
-    // TODO-jh : PET 객체 관계 설정
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "pet_id")
-//    private Pet pet;
-    private String petId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pet_id")
+    private Pet pet;
 
     // Checklist Meta 데이터와의 양방향 관계성
     @OneToOne(mappedBy = "checklist", fetch = FetchType.LAZY)
@@ -36,7 +34,6 @@ public class Checklist {
 //    private ChecklistHistory checklistHistory;
 
     // 할일 제목
-//    @ColumnDefault("제목 없음")
     private String title;
 
     // 할일 설명
@@ -60,9 +57,9 @@ public class Checklist {
     }
 
     @Builder
-    public Checklist(Long originChecklistId, String petId, ChecklistMeta checklistMeta, ChecklistHistory checklistHistory, String title, String explanation, LocalDate date, boolean isDone, boolean isRepeated) {
+    public Checklist(Long originChecklistId, Pet pet, ChecklistMeta checklistMeta, ChecklistHistory checklistHistory, String title, String explanation, LocalDate date, boolean isDone, boolean isRepeated) {
         this.originChecklistId = originChecklistId;
-        this.petId = petId;
+        this.pet = pet;
         this.checklistMeta = checklistMeta;
 //        this.checklistHistory = checklistHistory;
         this.title = title;

@@ -20,6 +20,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web:2.7.0'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa:2.7.0'
 	implementation 'com.auth0:java-jwt:4.0.0'
+	// https://mvnrepository.com/artifact/io.springfox/springfox-boot-starter : swagger
+	implementation group: 'io.springfox', name: 'springfox-boot-starter', version: '3.0.0'
 //	implementation 'mysql:mysql-connector-java:8.0.29'
 	runtimeOnly 'mysql:mysql-connector-java'
 	runtimeOnly 'com.h2database:h2'
