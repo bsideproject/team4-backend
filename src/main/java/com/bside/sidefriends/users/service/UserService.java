@@ -34,5 +34,12 @@ public interface UserService {
      */
     DeleteUserResponseDto deleteUser(String username);
 
+    /**
+     * 회원 가족 그룹 탈퇴
+     * @param username 가족 그룹을 탈퇴할 회원 username
+     * @return {@link LeaveFamilyResponseDto} 회원 가족 탈퇴 응답 DTO
+     */
+    LeaveFamilyResponseDto leaveFamily(String username);
+
 
 }

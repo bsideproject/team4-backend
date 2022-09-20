@@ -21,6 +21,7 @@ public enum ResponseCode {
     U_FIND_SUCCESS("152", "회원 조회에 성공하였습니다."),
     U_MODIFY_SUCCESS("153", "회원 정보 수정에 성공하였습니다."),
     U_DELETE_SUCCESS("154", "회원 삭제에 성공하였습니다."),
+    U_LEAVE_FAMILY_SUCCESS("155", "회원 가족 그룹 탈퇴에 성공하였습니다."),
 
     U_INVALID_INPUT("160", "회원 서비스 입력 값이 올바르지 않습니다."),
     U_ENTITY_NOT_FOUND("161", "존재하지 않는 회원입니다."),
@@ -30,6 +31,7 @@ public enum ResponseCode {
     U_DELETE_FAIL("165", "회원을 삭제할 수 없습니다."),
 
     U_ENTITY_WITH_MANAGER_ROLE("173", "가족 그룹장 권한을 가지고 있는 회원입니다."),
+    U_ENTITY_WITHOUT_FAMILY("174", "가족 그룹에 속해 있지 않은 회원입니다."),
 
     U_IMAGE_UPLOAD_SUCCESS("180", "회원 이미지 업로드에 성공했습니다."),
     U_IMAGE_DOWNLOAD_SUCCESS("181", "회원 이미지 조회에 성공했습니다."),
