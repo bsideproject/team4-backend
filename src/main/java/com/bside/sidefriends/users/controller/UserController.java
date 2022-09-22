@@ -27,7 +27,8 @@ import javax.validation.Valid;
         @ApiResponse(code=163, message = "이미 삭제된 회원입니다."),
         @ApiResponse(code=164, message = "수정하려는 회원 정보가 동일합니다."),
         @ApiResponse(code=165, message = "회원을 삭제할 수 없습니다."),
-        @ApiResponse(code=173, message = "가족 그룹장 권한을 가지고 있는 회원입니다.")
+        @ApiResponse(code=173, message = "가족 그룹장 권한을 가지고 있는 회원입니다."),
+        @ApiResponse(code=174, message="가족 그룹에 속해 있지 않은 회원입니다.")
 })
 public class UserController {
 
@@ -78,12 +79,27 @@ public class UserController {
         return ResponseEntity.ok().body(responseDto);
     }
 
+    @ApiResponses(
+            @ApiResponse(code=155, message = "회원 가족 그룹 탈퇴에 성공하였습니다. (200)")
+    )
+    @PostMapping("/users/family")
+    public ResponseEntity<ResponseDto<LeaveFamilyResponseDto>> leaveFromFamily() {
+
+        String username = getAuthenticatedUsername();
+        LeaveFamilyResponseDto leaveFamilyResponseDto = userService.leaveFamily(username);
+
+        ResponseDto<LeaveFamilyResponseDto> responseDto = ResponseDto.onSuccessWithData(
+                ResponseCode.U_LEAVE_FAMILY_SUCCESS, leaveFamilyResponseDto);
+
+        return ResponseEntity.ok().body(responseDto);
+    }
+
+
     @ApiResponses({
             @ApiResponse(code=151, message = "회원 가입에 성공하였습니다. (200)")
     })
     @PostMapping("/users")
-    @ApiIgnore
-    // FIXME: 1차 서비스에서 제공되지 않는 API. 시큐리티 회원가입 로직 작동 확인 완료 후 삭제 필요. IR.
+    @ApiIgnore // 1차 서비스에서 제공되지 않는 API
     public ResponseEntity<CreateUserResponseDto> createUser(@Valid @RequestBody CreateUserRequestDto userCreateRequestDto) {
 
         CreateUserResponseDto userCreateResponseDto = userService.createUser(userCreateRequestDto);
@@ -96,5 +112,9 @@ public class UserController {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return ((mainOAuth2User) principal).getUsername();
     }
+
+
+
+
 
 }

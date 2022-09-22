@@ -130,4 +130,30 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    @Override
+    public LeaveFamilyResponseDto leaveFamily(String username) {
+
+        User findUser = userRepository.findByUsernameAndIsDeletedFalse(username).orElseThrow(UserNotFoundException::new);
+
+        if (findUser.getFamilyIdInfo() == null) {
+            throw new UserHasNoFamilyException();
+        }
+
+        if (findUser.getRole().equals(User.Role.ROLE_MANAGER)) {
+            throw new UserAlreadyManagerException();
+        }
+
+        findUser.leaveFamily();
+        userRepository.save(findUser);
+
+        return new LeaveFamilyResponseDto(
+                findUser.getUserId(),
+                findUser.getName(),
+                findUser.getEmail(),
+                findUser.getRole(),
+                findUser.getMainPetId(),
+                findUser.getImageUrlInfo(),
+                findUser.getFamilyIdInfo()
+        );
+    }
 }
