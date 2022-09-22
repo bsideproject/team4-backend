@@ -115,7 +115,7 @@ public class FamilyController {
     @ApiResponses({
             @ApiResponse(code=606, message = "가족 그룹 구성원 삭제에 성공하였습니다. (200)")
     })
-    @DeleteMapping("/family/{familyId}/members")
+    @PostMapping("/family/{familyId}/members")
     ResponseEntity<ResponseDto<DeleteFamilyMemberResponseDto>> deleteFamilyMember(@PathVariable("familyId") Long familyId,
                                                                      @Valid @RequestBody DeleteFamilyMemberRequestDto deleteFamilyMemberRequestDto) {
         DeleteFamilyMemberResponseDto deleteFamilyMemberResponseDto
