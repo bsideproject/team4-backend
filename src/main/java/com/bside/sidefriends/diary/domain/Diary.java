@@ -1,4 +1,4 @@
-package com.bside.sidefriends.care.domain;
+package com.bside.sidefriends.diary.domain;
 
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
