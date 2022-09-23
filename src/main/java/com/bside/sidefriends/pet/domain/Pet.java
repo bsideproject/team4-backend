@@ -1,5 +1,6 @@
 package com.bside.sidefriends.pet.domain;
 
+import com.bside.sidefriends.diary.domain.Diary;
 import com.bside.sidefriends.family.domain.Family;
 import com.bside.sidefriends.users.domain.User;
 import lombok.*;
@@ -8,6 +9,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -96,6 +99,9 @@ public class Pet {
     // 펫 이미지
     @OneToOne(mappedBy = "pet")
     PetImage petImage;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet")
+    private final List<Diary> diaries = new ArrayList<>();
 
     // 질환
     // TODO: 질환 enum 관리 여부
