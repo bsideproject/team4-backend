@@ -2,6 +2,9 @@ package com.bside.sidefriends.diary.domain;
 
 import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.users.domain.User;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -10,6 +13,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Getter
 public class Diary {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +24,10 @@ public class Diary {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pet_id")
+    private Pet pet;
 
     @Column(length = 140) // TODO: 140자 영문 한글 기준 확인 필요. IR.
     private String contents;
@@ -29,9 +39,5 @@ public class Diary {
     @CreationTimestamp
     @Column(nullable = false)
     private LocalDateTime updatedAt;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "pet_id")
-    private Pet pet;
 
 }
