@@ -12,6 +12,10 @@ import com.bside.sidefriends.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class DiaryServiceImpl implements DiaryService {
@@ -46,8 +50,14 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public GetPetDiaryResponseDto getPetDiaryList(Long petId) {
-        return null;
+    public GetPetDiaryListResponseDto getPetDiaryList(Long petId) {
+        List<Diary> findPetDiaries = diaryRepository.findAllByPetId(petId);
+
+        List<PetDiary> petDiaryList = findPetDiaries.stream()
+                .map(getPetDiaryInfo)
+                .collect(Collectors.toList());
+
+        return new GetPetDiaryListResponseDto(petDiaryList);
     }
 
     @Override
@@ -59,4 +69,15 @@ public class DiaryServiceImpl implements DiaryService {
     public DeletePetDiaryResponseDto deletePetDiary(Long diaryId) {
         return null;
     }
+
+    Function<Diary, PetDiary> getPetDiaryInfo = diary -> {
+        String writer;
+        User user = diary.getUser();
+        if (user == null || user.isDeleted()) {
+            writer = null;
+        } else {
+            writer = user.getName();
+        }
+        return new PetDiary(writer, diary.getContents(), diary.getUpdatedAt());
+    };
 }

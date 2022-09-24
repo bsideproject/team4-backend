@@ -16,9 +16,9 @@ public interface DiaryService {
     /**
      * 펫 한줄일기 리스트 조회
      * @param petId 한줄일기를 조회할 펫 id
-     * @return {@link GetPetDiaryResponseDto} 펫 한줄일기 리스트 조회 응답 DTO
+     * @return {@link GetPetDiaryListResponseDto} 펫 한줄일기 리스트 조회 응답 DTO
      */
-    GetPetDiaryResponseDto getPetDiaryList(Long petId);
+    GetPetDiaryListResponseDto getPetDiaryList(Long petId);
 
     /**
      * 펫 한줄일기 수정
