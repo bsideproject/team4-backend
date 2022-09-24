@@ -7,10 +7,11 @@ public interface DiaryService {
     /**
      * 펫 한줄일기 작성
      * @param petId 한줄일기를 작성할 펫 id
+     * @param username 한줄일기를 작성할 회원 username
      * @param createDiaryRequestDto {@link CreatePetDiaryRequestDto} 펫 한줄일기 생성 요청 DTO
      * @return {@link CreatePetDiaryResponseDto} 펫 한줄일기 생성 응답 DTO
      */
-    CreatePetDiaryResponseDto createPetDiary(Long petId, CreatePetDiaryRequestDto createDiaryRequestDto);
+    CreatePetDiaryResponseDto createPetDiary(Long petId, String username, CreatePetDiaryRequestDto createDiaryRequestDto);
 
     /**
      * 펫 한줄일기 리스트 조회
