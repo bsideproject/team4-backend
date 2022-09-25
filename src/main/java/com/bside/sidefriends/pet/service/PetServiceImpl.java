@@ -1,18 +1,16 @@
 package com.bside.sidefriends.pet.service;
 
 import com.bside.sidefriends.family.domain.Family;
-import com.bside.sidefriends.family.error.exception.FamilyNotFoundException;
+import com.bside.sidefriends.users.exception.*;
+import com.bside.sidefriends.family.exception.*;
+import com.bside.sidefriends.pet.exception.*;
 import com.bside.sidefriends.family.repository.FamilyRepository;
 import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.pet.domain.PetShareScope;
-import com.bside.sidefriends.pet.error.exception.PetModifyFailException;
-import com.bside.sidefriends.pet.error.exception.PetNotFoundException;
-import com.bside.sidefriends.pet.error.exception.PetShareFailException;
 import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.pet.service.dto.*;
 import com.bside.sidefriends.quick.service.QuickService;
 import com.bside.sidefriends.users.domain.User;
-import com.bside.sidefriends.users.error.exception.UserNotFoundException;
 import com.bside.sidefriends.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

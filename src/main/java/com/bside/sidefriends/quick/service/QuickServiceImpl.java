@@ -2,8 +2,8 @@ package com.bside.sidefriends.quick.service;
 
 
 import com.bside.sidefriends.pet.domain.Pet;
-import com.bside.sidefriends.pet.error.exception.PetDeactivatedException;
-import com.bside.sidefriends.pet.error.exception.PetNotFoundException;
+import com.bside.sidefriends.pet.exception.PetDeactivatedException;
+import com.bside.sidefriends.pet.exception.PetNotFoundException;
 import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.quick.domain.Quick;
 import com.bside.sidefriends.quick.domain.QuickDefault;
@@ -14,7 +14,7 @@ import com.bside.sidefriends.quick.repository.QuickHistoryRepository;
 import com.bside.sidefriends.quick.repository.QuickRepository;
 import com.bside.sidefriends.quick.service.dto.*;
 import com.bside.sidefriends.users.domain.User;
-import com.bside.sidefriends.users.error.exception.UserMainPetNotFoundException;
+import com.bside.sidefriends.users.exception.UserMainPetNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
