@@ -52,6 +52,7 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 //        http.csrf().disable();
 
+        http.cors();
         http
             .csrf().disable()
 //            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
