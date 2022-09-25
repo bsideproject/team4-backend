@@ -1,6 +1,10 @@
 package com.bside.sidefriends.diary.service;
 
 import com.bside.sidefriends.diary.domain.Diary;
+import com.bside.sidefriends.diary.exception.DiaryCreateLimitedException;
+import com.bside.sidefriends.diary.exception.DiaryDeleteNotAllowedException;
+import com.bside.sidefriends.diary.exception.DiaryModifyNotAllowedException;
+import com.bside.sidefriends.diary.exception.DiaryNotFoundException;
 import com.bside.sidefriends.diary.repository.DiaryRepository;
 import com.bside.sidefriends.diary.service.dto.*;
 import com.bside.sidefriends.pet.domain.Pet;
@@ -28,18 +32,16 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public CreatePetDiaryResponseDto createPetDiary(Long petId, String username, CreatePetDiaryRequestDto createDiaryRequestDto) {
 
-        Pet findPet = petRepository.findByPetIdAndIsDeletedFalse(petId)
-                .orElseThrow(PetNotFoundException::new);
+        Pet findPet = petRepository.findByPetIdAndIsDeletedFalse(petId).orElseThrow(PetNotFoundException::new);
         if (findPet.isDeactivated()) {
             throw new PetDeactivatedException();
         }
 
         User findUser = userRepository.findByUsernameAndIsDeletedFalse(username)
                 .orElseThrow(UserNotFoundException::new);
-
         if (diaryRepository.existsByUserUsername(username)) {
-            throw new IllegalStateException("하루에 한 개의 한줄일기만 작성할 수 있습니다.");
-        };
+            throw new DiaryCreateLimitedException();
+        }
 
         Diary diary = Diary.builder()
                 .pet(findPet)
@@ -72,15 +74,14 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public ModifyPetDiaryResponseDto modifyPetDiary(Long diaryId, String username, ModifyPetDiaryRequestDto modifyDiaryRequestDto) {
 
-        Diary findDiary = diaryRepository.findById(diaryId)
-                .orElseThrow(() -> new IllegalStateException("한줄일기를 찾을 수 없습니다."));
+        Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(DiaryNotFoundException::new);
 
         User findUser = userRepository.findByUsernameAndIsDeletedFalse(username)
                 .orElseThrow(UserNotFoundException::new);
 
         User writer = findDiary.getUser();
         if (writer == null || !writer.getUserId().equals(findUser.getUserId())) {
-            throw new IllegalStateException("자신이 작성한 한줄일기만 수정할 수 있습니다.");
+            throw new DiaryModifyNotAllowedException();
         }
 
         Pet diaryPet = findDiary.getPet();
@@ -101,15 +102,14 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public DeletePetDiaryResponseDto deletePetDiary(Long diaryId, String username) {
 
-        Diary findDiary= diaryRepository.findById(diaryId)
-                .orElseThrow(() -> new IllegalStateException("한줄일기를 찾을 수 없습니다."));
+        Diary findDiary= diaryRepository.findById(diaryId).orElseThrow(DiaryNotFoundException::new);
 
         User findUser = userRepository.findByUsernameAndIsDeletedFalse(username)
                 .orElseThrow(UserNotFoundException::new);
 
         User writer = findDiary.getUser();
         if (writer == null || !writer.getUserId().equals(findUser.getUserId())) {
-            throw new IllegalStateException("자신이 작성한 한줄일기만 삭제할 수 있습니다.");
+            throw new DiaryDeleteNotAllowedException();
         }
 
         diaryRepository.delete(findDiary);
