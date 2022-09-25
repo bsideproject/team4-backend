@@ -32,8 +32,9 @@ public interface DiaryService {
     /**
      * 펫 한줄일기 삭제
      * @param diaryId 삭제할 펫 한줄일기 id
+     * @param username 한줄일기를 삭제할 회원 username
      * @return {@link DeletePetDiaryResponseDto} 펫 한줄일기 삭제 응답 DTO
      */
-    DeletePetDiaryResponseDto deletePetDiary(Long diaryId);
+    DeletePetDiaryResponseDto deletePetDiary(Long diaryId, String username);
 
 }

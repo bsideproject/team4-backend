@@ -22,7 +22,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     private final PetRepository petRepository;
     private final UserRepository userRepository;
-    private final DiaryRepository petDiaryRepository;
+    private final DiaryRepository diaryRepository;
 
     @Override
     public CreatePetDiaryResponseDto createPetDiary(Long petId, String username, CreatePetDiaryRequestDto createDiaryRequestDto) {
@@ -41,7 +41,7 @@ public class DiaryServiceImpl implements DiaryService {
                 .contents(createDiaryRequestDto.getContents())
                 .build();
 
-        petDiaryRepository.save(diary);
+        diaryRepository.save(diary);
 
         return new CreatePetDiaryResponseDto(
                 diary.getPet().getPetId(),
@@ -51,7 +51,7 @@ public class DiaryServiceImpl implements DiaryService {
 
     @Override
     public GetPetDiaryListResponseDto getPetDiaryList(Long petId) {
-        List<Diary> findPetDiaries = petDiaryRepository.findAllByPetId(petId);
+        List<Diary> findPetDiaries = diaryRepository.findAllByPetId(petId);
 
         List<PetDiaryInfo> petDiaryList = findPetDiaries.stream()
                 .map(getPetDiaryInfo)
@@ -66,13 +66,14 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public ModifyPetDiaryResponseDto modifyPetDiary(Long diaryId, String username, ModifyPetDiaryRequestDto modifyDiaryRequestDto) {
 
-        Diary findDiary = petDiaryRepository.findById(diaryId)
+        Diary findDiary = diaryRepository.findById(diaryId)
                 .orElseThrow(() -> new IllegalStateException("한줄일기를 찾을 수 없습니다."));
 
         User findUser = userRepository.findByUsernameAndIsDeletedFalse(username)
                 .orElseThrow(UserNotFoundException::new);
 
-        if (findDiary.getUser() == null || !findDiary.getUser().getUserId().equals(findUser.getUserId())) {
+        User writer = findDiary.getUser();
+        if (writer == null || !writer.getUserId().equals(findUser.getUserId())) {
             throw new IllegalStateException("자신이 작성한 한줄일기만 수정할 수 있습니다.");
         }
 
@@ -83,7 +84,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         findDiary.modify(modifyDiaryRequestDto.getContents());
 
-        petDiaryRepository.save(findDiary);
+        diaryRepository.save(findDiary);
 
         return new ModifyPetDiaryResponseDto(
                 diaryPet.getPetId(),
@@ -92,8 +93,22 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public DeletePetDiaryResponseDto deletePetDiary(Long diaryId) {
-        return null;
+    public DeletePetDiaryResponseDto deletePetDiary(Long diaryId, String username) {
+
+        Diary findDiary= diaryRepository.findById(diaryId)
+                .orElseThrow(() -> new IllegalStateException("한줄일기를 찾을 수 없습니다."));
+
+        User findUser = userRepository.findByUsernameAndIsDeletedFalse(username)
+                .orElseThrow(UserNotFoundException::new);
+
+        User writer = findDiary.getUser();
+        if (writer == null || !writer.getUserId().equals(findUser.getUserId())) {
+            throw new IllegalStateException("자신이 작성한 한줄일기만 삭제할 수 있습니다.");
+        }
+
+        diaryRepository.delete(findDiary);
+
+        return new DeletePetDiaryResponseDto(diaryId);
     }
 
     Function<Diary, PetDiaryInfo> getPetDiaryInfo = diary -> {
