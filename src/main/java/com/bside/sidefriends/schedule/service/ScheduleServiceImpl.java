@@ -1,8 +1,8 @@
 package com.bside.sidefriends.schedule.service;
 
 import com.bside.sidefriends.pet.domain.Pet;
-import com.bside.sidefriends.pet.error.exception.PetDeactivatedException;
-import com.bside.sidefriends.pet.error.exception.PetNotFoundException;
+import com.bside.sidefriends.pet.exception.PetDeactivatedException;
+import com.bside.sidefriends.pet.exception.PetNotFoundException;
 import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.schedule.domain.Schedule;
 import com.bside.sidefriends.schedule.domain.ScheduleMeta;
@@ -12,7 +12,7 @@ import com.bside.sidefriends.schedule.repository.ScheduleMetaRepository;
 import com.bside.sidefriends.schedule.repository.ScheduleRepository;
 import com.bside.sidefriends.schedule.service.dto.*;
 import com.bside.sidefriends.users.domain.User;
-import com.bside.sidefriends.users.error.exception.UserMainPetNotFoundException;
+import com.bside.sidefriends.users.exception.UserMainPetNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
