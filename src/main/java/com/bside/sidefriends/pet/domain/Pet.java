@@ -103,15 +103,6 @@ public class Pet {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet")
     private final List<Diary> diaries = new ArrayList<>();
 
-    // 질환
-    // TODO: 질환 enum 관리 여부
-
-    // 중성화 여부
-    // TODO: 중성화 필요 여부 및 불필요 시 성별 기록 여부
-
-    // 혈액형
-    // TODO: 혈액형 기록 필요 여부 및 기록 시 enum 관리 여부
-
     // 펫 기록 활성화
     public void activate() {
         this.isDeactivated = false;
