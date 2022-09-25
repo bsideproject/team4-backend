@@ -22,11 +22,12 @@ public interface DiaryService {
 
     /**
      * 펫 한줄일기 수정
-     * @param petId 한줄일기를 수정할 펫 id
+     * @param diaryId 수정할 한줄일기 id
+     * @param username 한줄일기를 수정할 회원 username
      * @param modifyDiaryRequestDto {@link ModifyPetDiaryRequestDto} 펫 한줄일기 수정 요청 DTO
      * @return {@link ModifyPetDiaryResponseDto} 펫 한줄일기 수정 응답 DTO
      */
-    ModifyPetDiaryResponseDto modifyPetDiary(Long petId, ModifyPetDiaryRequestDto modifyDiaryRequestDto);
+    ModifyPetDiaryResponseDto modifyPetDiary(Long diaryId, String username, ModifyPetDiaryRequestDto modifyDiaryRequestDto);
 
     /**
      * 펫 한줄일기 삭제

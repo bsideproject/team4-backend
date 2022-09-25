@@ -22,10 +22,12 @@ public class DiaryServiceImpl implements DiaryService {
 
     private final PetRepository petRepository;
     private final UserRepository userRepository;
-    private final DiaryRepository diaryRepository;
+    private final DiaryRepository petDiaryRepository;
 
     @Override
     public CreatePetDiaryResponseDto createPetDiary(Long petId, String username, CreatePetDiaryRequestDto createDiaryRequestDto) {
+
+        // TODO: 하루에 한 건 작성 예외 추가
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalseAndIsDeactivatedFalse(petId)
                 .orElseThrow(PetNotFoundException::new); // TODO: 펫 예외 생성자 수정 필요. IR.
@@ -39,30 +41,54 @@ public class DiaryServiceImpl implements DiaryService {
                 .contents(createDiaryRequestDto.getContents())
                 .build();
 
-        diaryRepository.save(diary);
+        petDiaryRepository.save(diary);
 
         return new CreatePetDiaryResponseDto(
-                diary.getDiaryId(),
                 diary.getPet().getPetId(),
-                diary.getUser().getName(),
-                diary.getContents()
+                getPetDiaryInfo.apply(diary)
         );
     }
 
     @Override
     public GetPetDiaryListResponseDto getPetDiaryList(Long petId) {
-        List<Diary> findPetDiaries = diaryRepository.findAllByPetId(petId);
+        List<Diary> findPetDiaries = petDiaryRepository.findAllByPetId(petId);
 
-        List<PetDiary> petDiaryList = findPetDiaries.stream()
+        List<PetDiaryInfo> petDiaryList = findPetDiaries.stream()
                 .map(getPetDiaryInfo)
                 .collect(Collectors.toList());
 
-        return new GetPetDiaryListResponseDto(petDiaryList);
+        return new GetPetDiaryListResponseDto(
+                petDiaryList.size(),
+                petDiaryList
+        );
     }
 
     @Override
-    public ModifyPetDiaryResponseDto modifyPetDiary(Long petId, ModifyPetDiaryRequestDto modifyDiaryRequestDto) {
-        return null;
+    public ModifyPetDiaryResponseDto modifyPetDiary(Long diaryId, String username, ModifyPetDiaryRequestDto modifyDiaryRequestDto) {
+
+        Diary findDiary = petDiaryRepository.findById(diaryId)
+                .orElseThrow(() -> new IllegalStateException("한줄일기를 찾을 수 없습니다."));
+
+        User findUser = userRepository.findByUsernameAndIsDeletedFalse(username)
+                .orElseThrow(UserNotFoundException::new);
+
+        if (findDiary.getUser() == null || !findDiary.getUser().getUserId().equals(findUser.getUserId())) {
+            throw new IllegalStateException("자신이 작성한 한줄일기만 수정할 수 있습니다.");
+        }
+
+        Pet diaryPet = findDiary.getPet();
+        if (diaryPet == null || diaryPet.isDeactivated() || diaryPet.isDeleted()) {
+            throw new IllegalStateException("기록이 활성화된 펫이 아닙니다.");
+        }
+
+        findDiary.modify(modifyDiaryRequestDto.getContents());
+
+        petDiaryRepository.save(findDiary);
+
+        return new ModifyPetDiaryResponseDto(
+                diaryPet.getPetId(),
+                getPetDiaryInfo.apply(findDiary)
+        );
     }
 
     @Override
@@ -70,7 +96,7 @@ public class DiaryServiceImpl implements DiaryService {
         return null;
     }
 
-    Function<Diary, PetDiary> getPetDiaryInfo = diary -> {
+    Function<Diary, PetDiaryInfo> getPetDiaryInfo = diary -> {
         String writer;
         User user = diary.getUser();
         if (user == null || user.isDeleted()) {
@@ -78,6 +104,6 @@ public class DiaryServiceImpl implements DiaryService {
         } else {
             writer = user.getName();
         }
-        return new PetDiary(writer, diary.getContents(), diary.getUpdatedAt());
+        return new PetDiaryInfo(diary.getDiaryId(), writer, diary.getContents(), diary.getUpdatedAt());
     };
 }

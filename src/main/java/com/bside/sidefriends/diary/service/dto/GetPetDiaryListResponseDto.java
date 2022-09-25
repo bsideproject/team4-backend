@@ -9,5 +9,6 @@ import java.util.List;
 @AllArgsConstructor
 public class GetPetDiaryListResponseDto {
 
-    List<PetDiary> petDiaryList;
+    int totalNum;
+    List<PetDiaryInfo> petDiaryList;
 }

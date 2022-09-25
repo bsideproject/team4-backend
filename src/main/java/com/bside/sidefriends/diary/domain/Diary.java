@@ -40,4 +40,9 @@ public class Diary {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    // 한줄일기 수정 메서드
+    public void modify(String contents) {
+        this.contents = contents;
+    }
+
 }

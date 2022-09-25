@@ -7,7 +7,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class PetDiary {
+public class PetDiaryInfo {
+
+    private Long diaryId;
     private String writer;
     private String contents;
 

@@ -7,12 +7,8 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CreatePetDiaryResponseDto {
 
-    private Long diaryId;
-
     private Long petId;
 
-    private String writer;
-
-    private String contents;
+    private PetDiaryInfo petDiaryInfo;
 
 }
