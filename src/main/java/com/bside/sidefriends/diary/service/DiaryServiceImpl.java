@@ -8,7 +8,7 @@ import com.bside.sidefriends.diary.exception.DiaryNotFoundException;
 import com.bside.sidefriends.diary.repository.DiaryRepository;
 import com.bside.sidefriends.diary.service.dto.*;
 import com.bside.sidefriends.pet.domain.Pet;
-import com.bside.sidefriends.pet.error.exception.PetNotFoundException;
+import com.bside.sidefriends.pet.exception.PetNotFoundException;
 import com.bside.sidefriends.pet.exception.PetDeactivatedException;
 import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.users.domain.User;
