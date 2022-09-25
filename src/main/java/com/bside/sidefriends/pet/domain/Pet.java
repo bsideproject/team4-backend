@@ -98,7 +98,7 @@ public class Pet {
 
     // 펫 이미지
     @OneToOne(mappedBy = "pet")
-    PetImage petImage;
+    private PetImage petImage;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet")
     private final List<Diary> diaries = new ArrayList<>();
