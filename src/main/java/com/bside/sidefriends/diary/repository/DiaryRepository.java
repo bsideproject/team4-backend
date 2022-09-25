@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
@@ -17,4 +18,6 @@ public interface DiaryRepository extends JpaRepository<Diary, Long> {
             " WHERE d.pet.petId = :petId" +
             " AND d.pet.isDeactivated = false")
     List<Diary> findAllByPetIdAndPetIsDeactivatedFalse(@Param("petId") Long petId);
+
+    boolean existsByUserUsername(String username);
 }

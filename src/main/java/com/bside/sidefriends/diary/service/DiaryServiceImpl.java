@@ -5,6 +5,7 @@ import com.bside.sidefriends.diary.repository.DiaryRepository;
 import com.bside.sidefriends.diary.service.dto.*;
 import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.pet.error.exception.PetNotFoundException;
+import com.bside.sidefriends.pet.exception.PetDeactivatedException;
 import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.error.exception.UserNotFoundException;
@@ -27,13 +28,18 @@ public class DiaryServiceImpl implements DiaryService {
     @Override
     public CreatePetDiaryResponseDto createPetDiary(Long petId, String username, CreatePetDiaryRequestDto createDiaryRequestDto) {
 
-        // TODO: 하루에 한 건 작성 예외 추가
-
-        Pet findPet = petRepository.findByPetIdAndIsDeletedFalseAndIsDeactivatedFalse(petId)
-                .orElseThrow(PetNotFoundException::new); // TODO: 펫 예외 생성자 수정 필요. IR.
+        Pet findPet = petRepository.findByPetIdAndIsDeletedFalse(petId)
+                .orElseThrow(PetNotFoundException::new);
+        if (findPet.isDeactivated()) {
+            throw new PetDeactivatedException();
+        }
 
         User findUser = userRepository.findByUsernameAndIsDeletedFalse(username)
                 .orElseThrow(UserNotFoundException::new);
+
+        if (diaryRepository.existsByUserUsername(username)) {
+            throw new IllegalStateException("하루에 한 개의 한줄일기만 작성할 수 있습니다.");
+        };
 
         Diary diary = Diary.builder()
                 .pet(findPet)
@@ -79,7 +85,7 @@ public class DiaryServiceImpl implements DiaryService {
 
         Pet diaryPet = findDiary.getPet();
         if (diaryPet == null || diaryPet.isDeactivated() || diaryPet.isDeleted()) {
-            throw new IllegalStateException("기록이 활성화된 펫이 아닙니다.");
+            throw new PetDeactivatedException();
         }
 
         findDiary.modify(modifyDiaryRequestDto.getContents());
