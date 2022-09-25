@@ -1,5 +1,6 @@
 package com.bside.sidefriends.users.domain;
 
+import com.bside.sidefriends.diary.domain.Diary;
 import com.bside.sidefriends.family.domain.Family;
 import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.users.service.dto.ModifyUserRequestDto;
@@ -77,6 +78,10 @@ public class User {
     // 사용자 펫
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private final List<Pet> pets = new ArrayList<>();
+
+    // 사용자 펫 한줄일기
+    @OneToOne(mappedBy = "user")
+    private Diary diary;
 
     // 가족 그룹 가입
     public void setFamily(Family family) {
