@@ -1,7 +1,7 @@
 package com.bside.sidefriends.users.service;
 
 import com.bside.sidefriends.users.domain.User;
-import com.bside.sidefriends.users.error.exception.*;
+import com.bside.sidefriends.users.exception.*;
 import com.bside.sidefriends.users.repository.UserRepository;
 import com.bside.sidefriends.users.service.dto.*;
 import lombok.RequiredArgsConstructor;
