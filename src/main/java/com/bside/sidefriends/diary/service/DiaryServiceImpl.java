@@ -39,6 +39,8 @@ public class DiaryServiceImpl implements DiaryService {
 
         User findUser = userRepository.findByUsernameAndIsDeletedFalse(username)
                 .orElseThrow(UserNotFoundException::new);
+        // TODO: 사용자 혹은 가족 그룹 펫인지 확인 필요
+
         if (diaryRepository.existsByUserUsername(username)) {
             throw new DiaryCreateLimitedException();
         }

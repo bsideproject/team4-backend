@@ -1,5 +1,6 @@
 package com.bside.sidefriends.diary.service.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -13,6 +14,6 @@ public class PetDiaryInfo {
     private String writer;
     private String contents;
 
-    // TODO: 날짜 반환 형식
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDateTime lastModifiedAt;
 }
