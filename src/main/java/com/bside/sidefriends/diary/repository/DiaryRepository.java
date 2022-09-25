@@ -10,11 +10,11 @@ import java.util.Optional;
 
 public interface DiaryRepository extends JpaRepository<Diary, Long> {
 
-    @Query("SELECT * FROM DIARY d" +
+    @Query("SELECT d FROM DIARY d" +
             " WHERE d.pet.petId = :petId")
     List<Diary> findAllByPetId(@Param("petId") Long petId);
 
-    @Query("SELECT * FROM DIARY d" +
+    @Query("SELECT d FROM DIARY d" +
             " WHERE d.pet.petId = :petId" +
             " AND d.pet.isDeactivated = false")
     List<Diary> findAllByPetIdAndPetIsDeactivatedFalse(@Param("petId") Long petId);
