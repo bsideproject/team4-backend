@@ -99,6 +99,11 @@ public class ChecklistMeta {
         this.endedAt = repeatDetail.getEndedAt();
     }
 
+    public void modifyMonthAndDay(String month, String day) {
+        this.eventMonth = month;
+        this.eventDay = day;
+    }
+
     public void deleteDateOnExceptionDateList(LocalDate date) {
         List<String> exceptionDateList = Arrays.asList(eventExceptionDate.split(","));
 
