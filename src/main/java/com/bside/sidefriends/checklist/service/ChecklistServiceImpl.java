@@ -204,8 +204,10 @@ public class ChecklistServiceImpl implements ChecklistService {
                     .eventMonth(createChecklistRequestDto.getRepeatDetail().getEventMonth())
                     .eventDay(createChecklistRequestDto.getRepeatDetail().getEventDay())
                     .eventWeek(createChecklistRequestDto.getRepeatDetail().getEventWeek())
-                    .startedAt(createChecklistRequestDto.getRepeatDetail().getStartedAt())
-                    .endedAt(createChecklistRequestDto.getRepeatDetail().getEndedAt())
+                    .startedAt(createChecklistRequestDto.getRepeatDetail().getStartedAt() == null ?
+                            createChecklistRequestDto.getDate() : createChecklistRequestDto.getRepeatDetail().getStartedAt())
+                    .endedAt(createChecklistRequestDto.getRepeatDetail().getEndedAt() == null ?
+                            LocalDate.of(9999,12,31) : createChecklistRequestDto.getRepeatDetail().getEndedAt())
                     .build();
 
             // If eventPeriod is yearly
