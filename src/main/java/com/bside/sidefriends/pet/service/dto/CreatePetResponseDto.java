@@ -1,13 +1,11 @@
 package com.bside.sidefriends.pet.service.dto;
 
-import com.bside.sidefriends.family.domain.Family;
 import com.bside.sidefriends.pet.domain.PetGender;
 import com.bside.sidefriends.pet.domain.PetShareScope;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
 
 import javax.validation.constraints.NotNull;
 
