@@ -7,6 +7,7 @@ import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.users.domain.User;
+import com.bside.sidefriends.users.exception.UserNotFoundException;
 import com.bside.sidefriends.users.repository.UserRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,7 +80,14 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         if (userName != null) {
 
             // FIXME: soft delete 레코드 메서드 구현 여부 변경에 따라, 서비스 시 회원 조회 맥락 고려 후 필요시 아래 메서드 변경 필요. IR.
-            User user = userRepository.findByUsername(userName).orElseThrow(); //TODO : findByUsername한 값이 없을 때 처리할 Exception 구현해야 한다
+            User user = new User();
+            try {
+                user = userRepository.findByUsername(userName).orElseThrow(UserNotFoundException::new);
+            } catch (UserNotFoundException e) {
+                response = setResponseDto.apply(response, ResponseCode.U_ENTITY_NOT_FOUND);
+                return;
+            }
+
             mainOAuth2User oAuth2User = new mainOAuth2User(user);
 
             UsernamePasswordAuthenticationToken auth
