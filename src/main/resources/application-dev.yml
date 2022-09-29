@@ -6,7 +6,7 @@ spring:
   datasource:
     url: ${DATASOURCE_URL}
     username: ${DATASOURCE_USERNAME}
-    password: ${DATASOURCE_PASSWROD}
+    password: ${DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
@@ -18,7 +18,7 @@ spring:
         format_sql: true
   security:
     oauth2:
-      redirect_url: ${REDIRECT_URL}
+      redirect_url: ${OAUTH_REDIRECT_URL}
       client:
         registration:
           google:
