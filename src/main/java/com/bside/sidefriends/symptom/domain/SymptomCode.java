@@ -1,6 +1,9 @@
-package com.bside.sidefriends.symptoms.service.code;
+package com.bside.sidefriends.symptom.domain;
 
-public enum Symptom {
+import lombok.Getter;
+
+@Getter
+public enum SymptomCode {
 
     DIARRHEA("설사를 해요."),
     CONSTIPATION("변비가 있어요."),
@@ -67,7 +70,7 @@ public enum Symptom {
 
     private String description;
 
-    Symptom(String description) {
+    SymptomCode(String description) {
         this.description = description;
     }
 }
