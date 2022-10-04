@@ -2,6 +2,8 @@ package com.bside.sidefriends.symptom.service;
 
 import com.bside.sidefriends.symptom.service.dto.*;
 
+import java.time.LocalDate;
+
 public interface SymptomService {
 
     /**
@@ -25,5 +27,5 @@ public interface SymptomService {
      * @param petId 이상징후를 조회할 펫 id
      * @return {@link GetPetSymptomListResponseDto} 펫 이상징후 기록 요청 응답 DTO
      */
-    GetPetSymptomListResponseDto getPetSymptomList(Long petId);
+    GetPetSymptomListResponseDto getPetSymptomList(Long petId, LocalDate date);
 }
