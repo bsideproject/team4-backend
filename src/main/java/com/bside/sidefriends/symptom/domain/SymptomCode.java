@@ -78,7 +78,14 @@ public enum SymptomCode {
     }
 
     public static String of(String description) {
-        return DESCRIPTIONS.get(description).toString();
+
+        SymptomCode descriptionCode = DESCRIPTIONS.get(description);
+
+        if (descriptionCode == null) {
+            return null;
+        }
+
+        return descriptionCode.toString();
     }
 
     private static Map<String, SymptomCode> DESCRIPTIONS = new HashMap<>();
