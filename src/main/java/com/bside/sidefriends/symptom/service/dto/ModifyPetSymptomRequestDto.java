@@ -9,5 +9,8 @@ import java.util.List;
 public class ModifyPetSymptomRequestDto {
 
     @NotNull
+    String date;
+
+    @NotNull
     List<String> symptoms;
 }

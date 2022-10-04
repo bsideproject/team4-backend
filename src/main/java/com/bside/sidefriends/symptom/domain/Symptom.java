@@ -23,6 +23,8 @@ public class Symptom {
     @JoinColumn(name = "pet_id")
     private Pet pet;
 
+    private String date;
+
     private String symptomList;
 
     @Column(nullable = false, updatable = false)
@@ -34,8 +36,9 @@ public class Symptom {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Symptom(Pet pet, String symptomList) {
+    public Symptom(Pet pet, String date, String symptomList) {
         this.pet = pet;
+        this.date = date;
         this.symptomList = symptomList;
     }
 

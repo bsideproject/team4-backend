@@ -13,5 +13,7 @@ public class CreatePetSymptomResponseDto {
 
     private Long petSymptomId;
 
+    private String date;
+
     private List<String> symptoms;
 }

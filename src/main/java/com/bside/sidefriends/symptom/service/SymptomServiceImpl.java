@@ -36,6 +36,7 @@ public class SymptomServiceImpl implements SymptomService {
         Symptom symptomEntity = Symptom.builder()
                 .pet(findPet)
                 .symptomList(petSymptoms)
+                .date(createPetSymptomRequestDto.getDate())
                 .build();
 
         symptomRepository.save(symptomEntity);
@@ -43,6 +44,7 @@ public class SymptomServiceImpl implements SymptomService {
         return new CreatePetSymptomResponseDto(
                 symptomEntity.getPet().getPetId(),
                 symptomEntity.getSymptomId(),
+                symptomEntity.getDate(),
                 symptomDescriptionList
         );
     }
@@ -59,6 +61,7 @@ public class SymptomServiceImpl implements SymptomService {
         Symptom symptomEntity = Symptom.builder()
                 .pet(findSymptom.getPet())
                 .symptomList(petSymptoms)
+                .date(modifyPetSymptomRequestDto.getDate())
                 .build();
 
         symptomRepository.save(symptomEntity);
@@ -66,6 +69,7 @@ public class SymptomServiceImpl implements SymptomService {
         return new ModifyPetSymptomResponseDto(
                 symptomEntity.getPet().getPetId(),
                 symptomEntity.getSymptomId(),
+                symptomEntity.getDate(),
                 symptomDescriptionList
         );
 
@@ -84,6 +88,7 @@ public class SymptomServiceImpl implements SymptomService {
         return new GetPetSymptomListResponseDto(
                 findSymptom.getPet().getPetId(),
                 findSymptom.getSymptomId(),
+                findSymptom.getDate(),
                 symptomDescriptionList
         );
     }

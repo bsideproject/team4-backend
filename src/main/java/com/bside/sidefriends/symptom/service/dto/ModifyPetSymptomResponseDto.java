@@ -13,6 +13,8 @@ public class ModifyPetSymptomResponseDto {
 
     private Long petSymptomId;
 
+    private String date;
+
     private List<String> symptoms;
 
 }
