@@ -5,6 +5,7 @@ import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.diary.controller.DiaryController;
 import com.bside.sidefriends.family.controller.FamilyController;
 import com.bside.sidefriends.pet.controller.PetController;
+import com.bside.sidefriends.symptom.controller.SymptomController;
 import com.bside.sidefriends.users.controller.UserController;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
@@ -19,7 +20,8 @@ import java.util.stream.Collectors;
         UserController.class,
         FamilyController.class,
         PetController.class,
-        DiaryController.class
+        DiaryController.class,
+        SymptomController.class
 })
 public class BusinessExceptionHandler {
 

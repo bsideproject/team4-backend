@@ -117,6 +117,14 @@ public enum ResponseCode {
     C_DIARY_DELETE_NOT_ALLOWED("512", "자신이 작성한 한줄일기만 삭제할 수 있습니다."),
     C_DIARY_LIMIT_EXCEEDED("513", "하루에 한 개의 한줄일기만 작성할 수 있습니다."),
 
+    C_SYMPTOM_CREATE_SUCCESS("520", "이상징후 기록 생성에 성공하였습니다."),
+    C_SYMPTOM_FIND_SUCCESS("521", "이상징후 기록 조회에 성공하였습니다."),
+    C_SYMPTOM_MODIFY_SUCCESS("522", "이상징후 기록 수정에 성공하였습니다."),
+
+    C_SYMPTOM_ENTITY_NOT_FOUND("530", "존재하지 않는 이상징후 기록입니다."),
+    C_SYMPTOM_NOT_SUPPORTED("531", "기록이 지원되지 않는 이상징후 항목입니다."),
+
+
     // 가족 그룹(601-699)
     F_CREATE_SUCCESS("601", "가족 그룹 생성에 성공하였습니다."),
     F_FIND_SUCCESS("602", "가족 그룹 조회에 성공하였습니다."),

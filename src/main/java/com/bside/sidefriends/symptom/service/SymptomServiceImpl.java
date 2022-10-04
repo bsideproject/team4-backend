@@ -5,6 +5,8 @@ import com.bside.sidefriends.pet.exception.PetNotFoundException;
 import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.symptom.domain.Symptom;
 import com.bside.sidefriends.symptom.domain.SymptomCode;
+import com.bside.sidefriends.symptom.exception.SymptomNotFoundException;
+import com.bside.sidefriends.symptom.exception.SymptomNotSupportedException;
 import com.bside.sidefriends.symptom.repository.SymptomRepository;
 import com.bside.sidefriends.symptom.service.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +51,7 @@ public class SymptomServiceImpl implements SymptomService {
     public ModifyPetSymptomResponseDto modifyPetSymptom(Long symptomId, ModifyPetSymptomRequestDto modifyPetSymptomRequestDto) {
 
         Symptom findSymptom = symptomRepository.findById(symptomId)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 이상징후 기록입니다."));
+                .orElseThrow(SymptomNotFoundException::new);
 
         List<String> symptomDescriptionList = modifyPetSymptomRequestDto.getSymptoms();
         String petSymptoms = buildSymptomList(symptomDescriptionList);
@@ -73,7 +75,7 @@ public class SymptomServiceImpl implements SymptomService {
     public GetPetSymptomListResponseDto getPetSymptomList(Long petId, LocalDate date) {
 
         Symptom findSymptom = symptomRepository.findByPetPetIdAndDate(petId, date)
-                .orElseThrow(() -> new IllegalStateException("존재하지 않는 이상징후 기록입니다."));
+                .orElseThrow(SymptomNotFoundException::new);
 
         List<String> symptomDescriptionList = Arrays.asList(findSymptom.getSymptomList()).stream()
                 .map(symptom -> SymptomCode.valueOf(symptom).getDescription())
@@ -93,7 +95,7 @@ public class SymptomServiceImpl implements SymptomService {
         for (String symptomDescription: symptomDescriptionList) {
             String symptomCodeString = SymptomCode.of(symptomDescription);
             if (symptomCodeString == null) {
-                throw new IllegalStateException("입력할 수 없는 이상징후 증상입니다.");
+                throw new SymptomNotSupportedException(symptomDescription);
             }
             sb.append(symptomCodeString);
         }
