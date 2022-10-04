@@ -14,11 +14,11 @@ public interface SymptomService {
 
     /**
      * 펫 이상징후 기록 수정
-     * @param petId 이상징후 기록을 수정할 펫 id
+     * @param symptomId 이상징후 기록을 수정할 이상징후 기록 id
      * @param modifyPetSymptomRequestDto {@link ModifyPetSymptomRequestDto} 펫 이상징후 기록 수정 요청 DTO
      * @return {@link ModifyPetSymptomResponseDto} 펫 이상징후 기록 수정 응답 DTO
      */
-    ModifyPetSymptomResponseDto modifyPetSymptom(Long petId, ModifyPetSymptomRequestDto modifyPetSymptomRequestDto);
+    ModifyPetSymptomResponseDto modifyPetSymptom(Long symptomId, ModifyPetSymptomRequestDto modifyPetSymptomRequestDto);
 
     /**
      * 펫 이상징후 기록 요청
