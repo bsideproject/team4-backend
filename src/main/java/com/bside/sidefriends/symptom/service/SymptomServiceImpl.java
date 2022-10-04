@@ -10,7 +10,10 @@ import com.bside.sidefriends.symptom.service.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -67,8 +70,20 @@ public class SymptomServiceImpl implements SymptomService {
     }
 
     @Override
-    public GetPetSymptomListResponseDto getPetSymptomList(Long petId) {
-        return null;
+    public GetPetSymptomListResponseDto getPetSymptomList(Long petId, LocalDate date) {
+
+        Symptom findSymptom = symptomRepository.findByPetPetIdAndDate(petId, date)
+                .orElseThrow(() -> new IllegalStateException("존재하지 않는 이상징후 기록입니다."));
+
+        List<String> symptomDescriptionList = Arrays.asList(findSymptom.getSymptomList()).stream()
+                .map(symptom -> SymptomCode.valueOf(symptom).getDescription())
+                .collect(Collectors.toList());
+
+        return new GetPetSymptomListResponseDto(
+                findSymptom.getPet().getPetId(),
+                findSymptom.getSymptomId(),
+                symptomDescriptionList
+        );
     }
 
     private String buildSymptomList(List<String> symptomDescriptionList) {
