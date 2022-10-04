@@ -2,6 +2,9 @@ package com.bside.sidefriends.symptom.domain;
 
 import lombok.Getter;
 
+import java.util.*;
+import java.util.stream.Stream;
+
 @Getter
 public enum SymptomCode {
 
@@ -73,4 +76,21 @@ public enum SymptomCode {
     SymptomCode(String description) {
         this.description = description;
     }
+
+    public static String of(String description) {
+        return DESCRIPTIONS.get(description).toString();
+    }
+
+    private static Map<String, SymptomCode> DESCRIPTIONS = new HashMap<>();
+
+    static {
+        for (SymptomCode sc : values()) {
+            DESCRIPTIONS.put(sc.getDescription(), sc);
+        }
+
+        DESCRIPTIONS = Collections.unmodifiableMap(DESCRIPTIONS);
+
+    }
+
 }
+
