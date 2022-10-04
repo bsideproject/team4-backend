@@ -1,6 +1,8 @@
 package com.bside.sidefriends.symptom.domain;
 
 import com.bside.sidefriends.pet.domain.Pet;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
@@ -30,5 +32,11 @@ public class Symptom {
     @Column(nullable = false)
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    @Builder
+    public Symptom(Pet pet, String symptomList) {
+        this.pet = pet;
+        this.symptomList = symptomList;
+    }
 
 }
