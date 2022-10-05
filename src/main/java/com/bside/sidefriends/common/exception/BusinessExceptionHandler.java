@@ -2,6 +2,7 @@ package com.bside.sidefriends.common.exception;
 
 import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
+import com.bside.sidefriends.diary.controller.DiaryController;
 import com.bside.sidefriends.family.controller.FamilyController;
 import com.bside.sidefriends.pet.controller.PetController;
 import com.bside.sidefriends.users.controller.UserController;
@@ -17,7 +18,8 @@ import java.util.stream.Collectors;
 @ControllerAdvice(basePackageClasses = {
         UserController.class,
         FamilyController.class,
-        PetController.class
+        PetController.class,
+        DiaryController.class
 })
 public class BusinessExceptionHandler {
 

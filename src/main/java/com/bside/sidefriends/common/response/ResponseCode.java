@@ -107,6 +107,15 @@ public enum ResponseCode {
 
 
     // 양육일지(501-599)
+    C_DIARY_CREATE_SUCCESS("501", "한줄일기 생성에 성공하였습니다."),
+    C_DIARY_FIND_ALL_SUCCESS("502", "펫 모든 한줄일기 조회에 성공하였습니다."),
+    C_DIARY_MODIFY_SUCCESS("503", "한줄일기 수정에 성공하였습니다."),
+    C_DIARY_DELETE_SUCCESS("504", "한줄일기 삭제에 성공하였습니다."),
+
+    C_DIARY_ENTITY_NOT_FOUND("510", "존재하지 않는 한줄일기입니다."),
+    C_DIARY_MODIFY_NOT_ALLOWED("511", "자신이 작성한 한줄일기만 수정할 수 있습니다."),
+    C_DIARY_DELETE_NOT_ALLOWED("512", "자신이 작성한 한줄일기만 삭제할 수 있습니다."),
+    C_DIARY_LIMIT_EXCEEDED("513", "하루에 한 개의 한줄일기만 작성할 수 있습니다."),
 
     // 가족 그룹(601-699)
     F_CREATE_SUCCESS("601", "가족 그룹 생성에 성공하였습니다."),

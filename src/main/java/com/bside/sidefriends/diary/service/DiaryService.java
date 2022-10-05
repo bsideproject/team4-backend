@@ -16,23 +16,25 @@ public interface DiaryService {
     /**
      * 펫 한줄일기 리스트 조회
      * @param petId 한줄일기를 조회할 펫 id
-     * @return {@link GetPetDiaryResponseDto} 펫 한줄일기 리스트 조회 응답 DTO
+     * @return {@link GetPetDiaryListResponseDto} 펫 한줄일기 리스트 조회 응답 DTO
      */
-    GetPetDiaryResponseDto getPetDiaryList(Long petId);
+    GetPetDiaryListResponseDto getPetDiaryList(Long petId);
 
     /**
      * 펫 한줄일기 수정
-     * @param petId 한줄일기를 수정할 펫 id
+     * @param diaryId 수정할 한줄일기 id
+     * @param username 한줄일기를 수정할 회원 username
      * @param modifyDiaryRequestDto {@link ModifyPetDiaryRequestDto} 펫 한줄일기 수정 요청 DTO
      * @return {@link ModifyPetDiaryResponseDto} 펫 한줄일기 수정 응답 DTO
      */
-    ModifyPetDiaryResponseDto modifyPetDiary(Long petId, ModifyPetDiaryRequestDto modifyDiaryRequestDto);
+    ModifyPetDiaryResponseDto modifyPetDiary(Long diaryId, String username, ModifyPetDiaryRequestDto modifyDiaryRequestDto);
 
     /**
      * 펫 한줄일기 삭제
      * @param diaryId 삭제할 펫 한줄일기 id
+     * @param username 한줄일기를 삭제할 회원 username
      * @return {@link DeletePetDiaryResponseDto} 펫 한줄일기 삭제 응답 DTO
      */
-    DeletePetDiaryResponseDto deletePetDiary(Long diaryId);
+    DeletePetDiaryResponseDto deletePetDiary(Long diaryId, String username);
 
 }
