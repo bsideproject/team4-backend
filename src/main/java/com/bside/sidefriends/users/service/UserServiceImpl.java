@@ -21,54 +21,26 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public CreateUserResponseDto createUser(CreateUserRequestDto createUserRequestDto){
 
-        Optional<User> findUser = userRepository.findByProviderAndProviderId(
-                createUserRequestDto.getProvider(), createUserRequestDto.getProviderId());
+        User userEntity = User.builder()
+                .name(createUserRequestDto.getName())
+                .email(createUserRequestDto.getEmail())
+                .role(User.Role.ROLE_USER) // 회원 가입 시 회원 권한 기본값 ROLE_USER
+                .provider(createUserRequestDto.getProvider())
+                .providerId(createUserRequestDto.getProviderId())
+                .username(createUserRequestDto.getProvider() + "_" + createUserRequestDto.getProviderId())
+                .isDeleted(false) // 회원 가입 시 회원 삭제 여부 false
+                .build();
 
-        User userEntity;
+        userRepository.save(userEntity);
 
-        if (findUser.isPresent()) {
-            // FIXME: 실제 1차 서비스 단계에서는 타지 않을 로직이지만, 시큐리티 회원가입 로직 테스트와 동기화를 위해 작성. IR.
-            userEntity = findUser.get();
-
-            if (userEntity.isDeleted()) {
-                userEntity.restore();
-                userEntity.setEmail(createUserRequestDto.getEmail());
-                userRepository.save(userEntity);
-                return new CreateUserResponseDto(
-                        userEntity.getUserId(),
-                        userEntity.getName(),
-                        userEntity.getEmail(),
-                        userEntity.getRole(),
-                        userEntity.getMainPetId(),
-                        userEntity.getImageUrlInfo()
-                );
-            } else {
-                throw new UserAlreadyExistsException();
-            }
-        } else {
-            // 신규 회원 가입
-            userEntity = User.builder()
-                    .name(createUserRequestDto.getName())
-                    .email(createUserRequestDto.getEmail())
-                    .role(User.Role.ROLE_USER) // 회원 가입 시 회원 권한 기본값 ROLE_USER
-                    .provider(createUserRequestDto.getProvider())
-                    .providerId(createUserRequestDto.getProviderId())
-                    .username(createUserRequestDto.getProvider() + "_" + createUserRequestDto.getProviderId())
-                    .isDeleted(false) // 회원 가입 시 회원 삭제 여부 false
-                    .build();
-
-            userRepository.save(userEntity);
-
-            return new CreateUserResponseDto(
-                    userEntity.getUserId(),
-                    userEntity.getName(),
-                    userEntity.getEmail(),
-                    userEntity.getRole(),
-                    userEntity.getMainPetId(),
-                    userEntity.getImageUrlInfo()
-            );
-
-        }
+        return new CreateUserResponseDto(
+                userEntity.getUserId(),
+                userEntity.getName(),
+                userEntity.getEmail(),
+                userEntity.getRole(),
+                userEntity.getMainPetId(),
+                userEntity.getImageUrlInfo()
+        );
     }
 
     @Override
