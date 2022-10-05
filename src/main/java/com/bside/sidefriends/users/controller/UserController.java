@@ -95,18 +95,6 @@ public class UserController {
     }
 
 
-    @ApiResponses({
-            @ApiResponse(code=151, message = "회원 가입에 성공하였습니다. (200)")
-    })
-    @PostMapping("/users")
-    @ApiIgnore // 1차 서비스에서 제공되지 않는 API
-    public ResponseEntity<CreateUserResponseDto> createUser(@Valid @RequestBody CreateUserRequestDto userCreateRequestDto) {
-
-        CreateUserResponseDto userCreateResponseDto = userService.createUser(userCreateRequestDto);
-
-        return ResponseEntity.ok().body(userCreateResponseDto);
-    }
-
     // TODO: 컨트롤러에 private 메서드 두어도 될지 고민
     private String getAuthenticatedUsername() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
