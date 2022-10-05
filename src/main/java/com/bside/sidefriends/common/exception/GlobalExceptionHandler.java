@@ -5,6 +5,7 @@ import com.bside.sidefriends.common.response.ResponseDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -61,7 +62,17 @@ public class GlobalExceptionHandler {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    /**
-     * Busine
-     */
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ResponseDto<Map<String, String>>> handleMissingServletParameterException(MissingServletRequestParameterException e) {
+
+        final Map<String, String> errors = new HashMap<>();
+        errors.put(e.getParameterName(), e.getMessage());
+
+        ResponseDto<Map<String, String>> responseDto
+                = ResponseDto.onFailWithData(ResponseCode.INVALID_INPUT, errors);
+
+        return ResponseEntity.ok().body(responseDto);
+
+    }
+
 }
