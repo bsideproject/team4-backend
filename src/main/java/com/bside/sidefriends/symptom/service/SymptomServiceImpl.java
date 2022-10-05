@@ -5,11 +5,13 @@ import com.bside.sidefriends.pet.exception.PetNotFoundException;
 import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.symptom.domain.Symptom;
 import com.bside.sidefriends.symptom.domain.SymptomCode;
+import com.bside.sidefriends.symptom.exception.SymptomExistsException;
 import com.bside.sidefriends.symptom.exception.SymptomNotFoundException;
 import com.bside.sidefriends.symptom.exception.SymptomNotSupportedException;
 import com.bside.sidefriends.symptom.repository.SymptomRepository;
 import com.bside.sidefriends.symptom.service.dto.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -31,6 +33,10 @@ public class SymptomServiceImpl implements SymptomService {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalseAndIsDeactivatedFalse(petId)
                 .orElseThrow(PetNotFoundException::new);
+
+        if (symptomRepository.findByPetPetIdAndDate(petId, createPetSymptomRequestDto.getDate()).isPresent()) {
+            throw new SymptomExistsException();
+        }
 
         List<String> symptomDescriptionList = createPetSymptomRequestDto.getSymptoms();
         String petSymptoms = buildSymptomList(symptomDescriptionList);
@@ -62,6 +68,7 @@ public class SymptomServiceImpl implements SymptomService {
 
         Symptom symptomEntity = Symptom.builder()
                 .pet(findSymptom.getPet())
+                .date(findSymptom.getDate())
                 .symptomList(petSymptoms)
                 .build();
 

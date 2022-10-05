@@ -122,7 +122,8 @@ public enum ResponseCode {
     C_SYMPTOM_MODIFY_SUCCESS("522", "이상징후 기록 수정에 성공하였습니다."),
 
     C_SYMPTOM_ENTITY_NOT_FOUND("530", "존재하지 않는 이상징후 기록입니다."),
-    C_SYMPTOM_NOT_SUPPORTED("531", "기록이 지원되지 않는 이상징후 항목입니다."),
+    C_SYMPTOM_ENTITY_EXISTS("531", "이상징후 기록이 존재합니다. 수정을 이용해 주세요."),
+    C_SYMPTOM_NOT_SUPPORTED("532", "기록이 지원되지 않는 이상징후 항목입니다."),
 
 
     // 가족 그룹(601-699)
