@@ -131,6 +131,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public LeaveFamilyResponseDto leaveFamily(String username) {
 
         User findUser = userRepository.findByUsernameAndIsDeletedFalse(username).orElseThrow(UserNotFoundException::new);
