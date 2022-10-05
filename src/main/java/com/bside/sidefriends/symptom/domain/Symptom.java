@@ -9,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -23,7 +24,8 @@ public class Symptom {
     @JoinColumn(name = "pet_id")
     private Pet pet;
 
-    private String date;
+    @Column(nullable = false)
+    private LocalDate date;
 
     private String symptomList;
 
@@ -36,7 +38,7 @@ public class Symptom {
     private LocalDateTime updatedAt;
 
     @Builder
-    public Symptom(Pet pet, String date, String symptomList) {
+    public Symptom(Pet pet, LocalDate date, String symptomList) {
         this.pet = pet;
         this.date = date;
         this.symptomList = symptomList;

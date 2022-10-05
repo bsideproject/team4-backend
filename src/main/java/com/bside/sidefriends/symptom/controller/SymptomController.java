@@ -5,7 +5,6 @@ import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.symptom.service.SymptomService;
 import com.bside.sidefriends.symptom.service.dto.*;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +19,8 @@ public class SymptomController {
 
     private final SymptomService symptomService;
 
-    @PostMapping("/pet/{petId}/symptoms")
-    public ResponseEntity<ResponseDto<CreatePetSymptomResponseDto>> createPetSymptoms(@PathVariable("petId") Long petId,
+    @PostMapping("/pets/{petId}/symptoms")
+    public ResponseEntity<ResponseDto<CreatePetSymptomResponseDto>> createPetSymptom(@PathVariable("petId") Long petId,
                                                                                      @RequestBody @Valid CreatePetSymptomRequestDto createPetSymptomRequestDto) {
 
         CreatePetSymptomResponseDto createPetSymptomResponseDto = symptomService.createPetSymptom(petId, createPetSymptomRequestDto);
@@ -32,7 +31,7 @@ public class SymptomController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @GetMapping("/pet/{petId}/symptoms")
+    @GetMapping("/pets/{petId}/symptoms")
     public ResponseEntity<ResponseDto<GetPetSymptomListResponseDto>> getPetSymptomList(@PathVariable("petId") Long petId,
                                                                                        @RequestParam("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
         GetPetSymptomListResponseDto getPetSymptomListResponseDto = symptomService.getPetSymptomList(petId, date);
@@ -43,7 +42,7 @@ public class SymptomController {
         return ResponseEntity.ok().body(responseDto);
     }
 
-    @PutMapping("/pet/{petId}/symptoms/{symptomId}")
+    @PutMapping("/pets/{petId}/symptoms/{symptomId}")
     public ResponseEntity<ResponseDto<ModifyPetSymptomResponseDto>> modifyPetSymptom(@PathVariable Long symptomId,
                                                                                      @RequestBody @Valid ModifyPetSymptomRequestDto modifyPetSymptomRequestDto) {
         ModifyPetSymptomResponseDto modifyPetSymptomResponseDto = symptomService.modifyPetSymptom(symptomId, modifyPetSymptomRequestDto);

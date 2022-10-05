@@ -8,5 +8,5 @@ import java.util.Optional;
 
 public interface SymptomRepository extends JpaRepository<Symptom, Long> {
 
-    Optional<Symptom> findByPetPetIdAndDate(Long PetId, LocalDate date);
+    Optional<Symptom> findByPetPetIdAndDate(Long petId, LocalDate date);
 }

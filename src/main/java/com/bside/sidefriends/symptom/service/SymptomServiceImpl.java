@@ -13,9 +13,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -81,7 +83,7 @@ public class SymptomServiceImpl implements SymptomService {
         Symptom findSymptom = symptomRepository.findByPetPetIdAndDate(petId, date)
                 .orElseThrow(SymptomNotFoundException::new);
 
-        List<String> symptomDescriptionList = Arrays.asList(findSymptom.getSymptomList()).stream()
+        List<String> symptomDescriptionList = Stream.of(findSymptom.getSymptomList().split(", "))
                 .map(symptom -> SymptomCode.valueOf(symptom).getDescription())
                 .collect(Collectors.toList());
 
@@ -93,19 +95,20 @@ public class SymptomServiceImpl implements SymptomService {
         );
     }
 
+    // TODO: 좋은 방법일지 고민 필요. IR.
     private String buildSymptomList(List<String> symptomDescriptionList) {
 
-        StringBuffer sb = new StringBuffer();
+        List<String> symptoms = new ArrayList<>();
 
         for (String symptomDescription: symptomDescriptionList) {
             String symptomCodeString = SymptomCode.of(symptomDescription);
             if (symptomCodeString == null) {
                 throw new SymptomNotSupportedException(symptomDescription);
             }
-            sb.append(symptomCodeString);
+            symptoms.add(symptomCodeString);
         }
 
-        return sb.toString();
+        return symptoms.toString().replace("[", "").replace("]", "");
 
     }
 }

@@ -3,13 +3,14 @@ package com.bside.sidefriends.symptom.service.dto;
 import lombok.Getter;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 public class ModifyPetSymptomRequestDto {
 
     @NotNull
-    String date;
+    LocalDate date;
 
     @NotNull
     List<String> symptoms;
