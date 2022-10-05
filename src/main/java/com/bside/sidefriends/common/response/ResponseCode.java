@@ -148,6 +148,9 @@ public enum ResponseCode {
     F_ROLE_MANAGER_REQUIRED("620", "가족 그룹장이 있어야 합니다."),
 
 
+    // 설정 (700-749)
+    FEEDBACK_CREATE_SUCCESS("700", "피드백 전송에 성공하였습니다"),
+
     ;
 
     private final String code;

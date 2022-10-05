@@ -7,7 +7,9 @@ import com.bside.sidefriends.common.response.ResponseCode;
 import com.bside.sidefriends.common.response.ResponseDto;
 import com.bside.sidefriends.security.auth.LoginUser;
 import com.bside.sidefriends.users.domain.User;
-import io.swagger.annotations.*;
+import io.swagger.annotations.ApiParam;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +39,6 @@ public class ChecklistController {
     public ResponseEntity<ResponseDto<FindChecklistResponseDto>> findChecklist(
             @LoginUser User user,
             @PathVariable("date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
-        System.out.println("ChecklistController findChecklist");
 
         FindChecklistResponseDto findChecklistResponseDto = checklistService.findChecklist(user, date);
 
@@ -55,7 +56,6 @@ public class ChecklistController {
     public ResponseEntity<ResponseDto<CreateChecklistResponseDto>> createChecklist(
             @LoginUser User user,
             @Valid @RequestBody CreateChecklistRequestDto createChecklistRequestDto) {
-        System.out.println("ChecklistController createChecklist");
 
         CreateChecklistResponseDto createChecklistResponseDto = checklistService.createChecklist(user, createChecklistRequestDto);
 
@@ -72,7 +72,6 @@ public class ChecklistController {
     @GetMapping("/checklist/{checklistId}")
     public ResponseEntity<ResponseDto<FindChecklistByChecklistIdResponseDto>> findChecklistByChecklistId(
             @PathVariable("checklistId") Long checklistId) {
-        System.out.println("ChecklistController findChecklistByChecklistId");
 
         FindChecklistByChecklistIdResponseDto findChecklistByChecklistIdResponseDto = checklistService.findChecklistByChecklistId(checklistId);
 
