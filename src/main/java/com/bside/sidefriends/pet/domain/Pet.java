@@ -2,6 +2,7 @@ package com.bside.sidefriends.pet.domain;
 
 import com.bside.sidefriends.diary.domain.Diary;
 import com.bside.sidefriends.family.domain.Family;
+import com.bside.sidefriends.symptom.domain.Symptom;
 import com.bside.sidefriends.users.domain.User;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -100,13 +101,19 @@ public class Pet {
     @OneToOne(mappedBy = "pet")
     private PetImage petImage;
 
+    // 펫 한줄일기
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet")
     private final List<Diary> diaries = new ArrayList<>();
+
+    // 펫 이상징후
+    @OneToOne(mappedBy = "pet")
+    private Symptom symptom;
 
     // 펫 기록 활성화
     public void activate() {
         this.isDeactivated = false;
     }
+
     // 펫 기록 비활성화
     public void deactivate() {
         this.isDeactivated = true;
