@@ -63,7 +63,6 @@ public class SymptomServiceImpl implements SymptomService {
         Symptom symptomEntity = Symptom.builder()
                 .pet(findSymptom.getPet())
                 .symptomList(petSymptoms)
-                .date(modifyPetSymptomRequestDto.getDate())
                 .build();
 
         symptomRepository.save(symptomEntity);
