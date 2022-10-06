@@ -16,6 +16,7 @@ import com.bside.sidefriends.users.error.exception.UserNotFoundException;
 import com.bside.sidefriends.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.function.Function;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DiaryServiceImpl implements DiaryService {
 
     private final PetRepository petRepository;
@@ -30,6 +32,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final DiaryRepository diaryRepository;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CreatePetDiaryResponseDto createPetDiary(Long petId, String username, CreatePetDiaryRequestDto createDiaryRequestDto) {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalse(petId).orElseThrow(PetNotFoundException::new);
@@ -74,6 +77,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ModifyPetDiaryResponseDto modifyPetDiary(Long diaryId, String username, ModifyPetDiaryRequestDto modifyDiaryRequestDto) {
 
         Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(DiaryNotFoundException::new);
@@ -102,6 +106,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public DeletePetDiaryResponseDto deletePetDiary(Long diaryId, String username) {
 
         Diary findDiary= diaryRepository.findById(diaryId).orElseThrow(DiaryNotFoundException::new);
