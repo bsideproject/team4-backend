@@ -132,6 +132,6 @@ public class DiaryServiceImpl implements DiaryService {
         } else {
             writer = user.getName();
         }
-        return new PetDiaryInfo(diary.getDiaryId(), writer, diary.getContents(), diary.getUpdatedAt());
+        return new PetDiaryInfo(diary.getDiaryId(), writer, diary.getContents(), diary.getCreatedAt(), diary.getUpdatedAt());
     };
 }

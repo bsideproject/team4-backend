@@ -23,6 +23,10 @@ public class PetDiaryInfo {
     private String contents;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
-    @ApiModelProperty(value = "한줄일기 마지막 수정 시각")
+    @ApiModelProperty(value = "한줄일기 작성 날짜")
+    private LocalDateTime createdAt;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @ApiModelProperty(value = "한줄일기 마지막 수정 날짜")
     private LocalDateTime lastModifiedAt;
 }
