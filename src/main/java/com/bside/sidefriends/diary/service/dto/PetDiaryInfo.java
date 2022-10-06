@@ -16,8 +16,14 @@ public class PetDiaryInfo {
     @ApiModelProperty(value = "한줄일기 id", example = "1")
     private Long diaryId;
 
+    @ApiModelProperty(value = "한줄일기 작성자 id", example = "1")
+    private Long userId;
+
     @ApiModelProperty(value = "한줄일기 작성자명", example = "사이드프렌즈")
-    private String writer;
+    private String userName;
+
+    @ApiModelProperty(value = "한줄일기 작성자 삭제 여부", example = "false")
+    private boolean isDeleted;
 
     @ApiModelProperty(value = "한줄일기 내용")
     private String contents;

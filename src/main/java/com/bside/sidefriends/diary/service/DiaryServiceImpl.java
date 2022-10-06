@@ -129,13 +129,15 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     Function<Diary, PetDiaryInfo> getPetDiaryInfo = diary -> {
-        String writer;
         User user = diary.getUser();
-        if (user == null || user.isDeleted()) {
-            writer = null;
-        } else {
-            writer = user.getName();
-        }
-        return new PetDiaryInfo(diary.getDiaryId(), writer, diary.getContents(), diary.getCreatedAt(), diary.getUpdatedAt());
+        
+        return new PetDiaryInfo(
+            diary.getDiaryId(), 
+            user.getUserId(),
+            user.getName(),
+            user.isDeleted(),
+            diary.getContents(), 
+            diary.getCreatedAt(), 
+            diary.getUpdatedAt());
     };
 }
