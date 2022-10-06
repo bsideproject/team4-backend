@@ -14,6 +14,7 @@ import com.bside.sidefriends.users.domain.User;
 import com.bside.sidefriends.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -24,6 +25,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class PetServiceImpl implements PetService {
 
     private final PetRepository petRepository;
@@ -37,6 +39,7 @@ public class PetServiceImpl implements PetService {
     // TODO: 전체적으로 사용자 소유 펫인지 확인 필요
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CreatePetResponseDto createUserPet(String username, CreatePetRequestDto createPetRequestDto) {
 
         User findUser = userRepository.findByUsernameAndIsDeletedFalse(username)
@@ -56,7 +59,7 @@ public class PetServiceImpl implements PetService {
                 .shareScope(PetShareScope.PRIVATE) // 펫 생성 시 기본 개인 펫 설정
                 .isDeactivated(false) // 펫 생성 시 비활성화 여부 기본값 false
                 .isDeleted(false) // 펫 생성 시 삭제 여부 기본값 false
-                // TODO: 펫 이미지
+                .petImage(null)
                 .build();
 
         Pet pet = petRepository.save(petEntity);
@@ -81,10 +84,12 @@ public class PetServiceImpl implements PetService {
                 .age(petEntity.getAge())
                 .animalRegistrationNumber(petEntity.getAnimalRegistrationNumber())
                 .userId(petEntity.getUser().getUserId())
+                .petImageUrl(petEntity.getImageUrlInfo())
                 .build();
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public SharePetResponseDto sharePet(String username, Long petId) {
 
         User findUser = userRepository.findByUsernameAndIsDeletedFalse(username)
@@ -176,6 +181,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ModifyPetResponseDto modifyPet(Long petId, ModifyPetRequestDto modifyPetRequestDto) {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalse(petId)
@@ -211,6 +217,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public DeactivatePetResponseDto deactivatePet(Long petId) {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalseAndIsDeactivatedFalse(petId)
@@ -226,6 +233,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ActivatePetResponseDto activatePet(Long petId) {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalseAndIsDeactivatedTrue(petId)
@@ -241,6 +249,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public DeletePetResponseDto deletePet(Long petId) {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalse(petId)
@@ -256,6 +265,7 @@ public class PetServiceImpl implements PetService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public UpdateMainPetResponseDto updateMainPet(String username, UpdateMainPetRequestDto updateMainPetRequestDto) {
 
         Long petId = updateMainPetRequestDto.getMainPetId();
