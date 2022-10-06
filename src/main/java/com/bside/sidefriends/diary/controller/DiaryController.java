@@ -33,7 +33,7 @@ public class DiaryController {
     @ApiResponses({
             @ApiResponse(code=501, message = "한줄일기 생성에 성공하였습니다. (200)")
     })
-    @PostMapping("/pet/{petId}/diaries")
+    @PostMapping("/pets/{petId}/diaries")
     ResponseEntity<ResponseDto<CreatePetDiaryResponseDto>> createPetDiary(@PathVariable("petId") Long petId,
                                                                           @Valid @RequestBody CreatePetDiaryRequestDto createPetDiaryRequestDto) {
         String username = getAuthenticatedUsername();
@@ -49,7 +49,7 @@ public class DiaryController {
     @ApiResponses({
             @ApiResponse(code=502, message = "펫 모든 한줄일기 조회에 성공하였습니다. (200)")
     })
-    @GetMapping("/pet/{petId}/diaries")
+    @GetMapping("/pets/{petId}/diaries")
     ResponseEntity<ResponseDto<GetPetDiaryListResponseDto>> getPetDiaryList(@PathVariable("petId") Long petId) {
 
         GetPetDiaryListResponseDto getPetDiaryListResponseDto = diaryService.getPetDiaryList(petId);
@@ -63,7 +63,7 @@ public class DiaryController {
     @ApiResponses({
             @ApiResponse(code=503, message = "한줄일기 수정에 성공하였습니다. (200)")
     })
-    @PutMapping("/pet/{petId}/diaries/{diaryId}")
+    @PutMapping("/pets/{petId}/diaries/{diaryId}")
     ResponseEntity<ResponseDto<ModifyPetDiaryResponseDto>> modifyPetDiary(@PathVariable("diaryId") Long diaryId,
                                                                           @Valid @RequestBody ModifyPetDiaryRequestDto modifyPetDiaryRequestDto) {
 
@@ -79,7 +79,7 @@ public class DiaryController {
     @ApiResponses({
             @ApiResponse(code=504, message = "한줄일기 삭제에 성공하였습니다. (200)")
     })
-    @DeleteMapping("/pet/{petId}/diaries/{diaryId}")
+    @DeleteMapping("/pets/{petId}/diaries/{diaryId}")
     ResponseEntity<ResponseDto<DeletePetDiaryResponseDto>> deletePetDiary(@PathVariable("diaryId") Long diaryId) {
 
         String username = getAuthenticatedUsername();
