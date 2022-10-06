@@ -122,6 +122,12 @@ public class Pet {
     // 펫 삭제
     public void delete() {
         this.isDeleted = true;
+
+        // 유저 대표펫이었던 경우 대표펫 설정 해제
+        if (this.user.getMainPetId().equals(this.petId)) {
+            this.user.setMainPet(null);
+        }
+
     }
 
     // 사용자 펫 설정

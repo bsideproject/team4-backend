@@ -30,7 +30,6 @@ public class PetServiceImpl implements PetService {
 
     private final PetRepository petRepository;
 
-    // TODO: UserRepository, FamilyRepository 구현 변경 반영 필요
     private final UserRepository userRepository;
     private final FamilyRepository familyRepository;
 
@@ -64,9 +63,9 @@ public class PetServiceImpl implements PetService {
 
         Pet pet = petRepository.save(petEntity);
 
-        // 사용자 펫 추가
+        // 사용자 펫 추가 및 최초 등록 시 대표펫 설정
         findUser.addPet(petEntity);
-        if (findUser.getMainPetId() == null) { // 최초 등록 시 대표펫 설정
+        if (findUser.getMainPetId() == null) {
             findUser.setMainPet(petEntity.getPetId());
         }
         userRepository.save(findUser);
@@ -254,6 +253,8 @@ public class PetServiceImpl implements PetService {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalse(petId)
                 .orElseThrow(PetNotFoundException::new);
+
+        // TODO: 대표펫 삭제 시, 대표펫이 없는 경우 처리 방법 논의 필요. IR.
 
         findPet.delete();
         petRepository.save(findPet);
