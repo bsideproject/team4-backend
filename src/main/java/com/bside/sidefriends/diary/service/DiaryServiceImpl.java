@@ -18,6 +18,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -63,8 +65,10 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public GetPetDiaryListResponseDto getPetDiaryList(Long petId) {
-        List<Diary> findPetDiaries = diaryRepository.findAllByPetId(petId);
+    public GetPetDiaryListResponseDto getPetDiaryList(Long petId, LocalDate date) {
+        LocalDateTime startDate = date.atStartOfDay();
+        LocalDateTime endDate = startDate.plusDays(1);
+        List<Diary> findPetDiaries = diaryRepository.findAllByPetIdAndDate(petId, startDate, endDate);
 
         List<PetDiaryInfo> petDiaryList = findPetDiaries.stream()
                 .map(getPetDiaryInfo)

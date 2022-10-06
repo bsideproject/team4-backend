@@ -9,12 +9,14 @@ import com.bside.sidefriends.security.mainOAuth2User;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 
 @SideFriendsController
 @Controller
@@ -50,9 +52,10 @@ public class DiaryController {
             @ApiResponse(code=502, message = "펫 모든 한줄일기 조회에 성공하였습니다. (200)")
     })
     @GetMapping("/pets/{petId}/diaries")
-    ResponseEntity<ResponseDto<GetPetDiaryListResponseDto>> getPetDiaryList(@PathVariable("petId") Long petId) {
+    ResponseEntity<ResponseDto<GetPetDiaryListResponseDto>> getPetDiaryList(@PathVariable("petId") Long petId,
+                                                                            @RequestParam(value = "date") @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date) {
 
-        GetPetDiaryListResponseDto getPetDiaryListResponseDto = diaryService.getPetDiaryList(petId);
+        GetPetDiaryListResponseDto getPetDiaryListResponseDto = diaryService.getPetDiaryList(petId, date);
 
         ResponseDto<GetPetDiaryListResponseDto> responseDto = ResponseDto.onSuccessWithData(
                 ResponseCode.C_DIARY_FIND_ALL_SUCCESS, getPetDiaryListResponseDto);

@@ -2,6 +2,8 @@ package com.bside.sidefriends.diary.service;
 
 import com.bside.sidefriends.diary.service.dto.*;
 
+import java.time.LocalDate;
+
 public interface DiaryService {
 
     /**
@@ -16,9 +18,10 @@ public interface DiaryService {
     /**
      * 펫 한줄일기 리스트 조회
      * @param petId 한줄일기를 조회할 펫 id
+     * @param date 한줄일기를 조회할 날짜
      * @return {@link GetPetDiaryListResponseDto} 펫 한줄일기 리스트 조회 응답 DTO
      */
-    GetPetDiaryListResponseDto getPetDiaryList(Long petId);
+    GetPetDiaryListResponseDto getPetDiaryList(Long petId, LocalDate date);
 
     /**
      * 펫 한줄일기 수정
