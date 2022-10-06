@@ -137,20 +137,12 @@ public class Pet {
 
     // 펫 가족 정보 반환
     public Long getFamilyIdInfo() {
-        if (this.family == null) {
-            return null;
-        } else {
-            return this.family.getFamilyId();
-        }
+        return this.family == null ? null : this.family.getFamilyId();
     }
 
     // 펫 이미지 url 반환
     public String getImageUrlInfo() {
-        if (this.petImage == null) {
-            return null;
-        } else {
-            return this.petImage.getImageUrl();
-        }
+        return this.petImage == null ? null : this.petImage.getImageUrl();
     }
 
 }
