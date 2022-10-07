@@ -18,28 +18,27 @@ import java.util.Properties;
 
 @Service
 @RequiredArgsConstructor
-@PropertySource("classpath:config.properties")
 public class FeedbackServiceImpl implements FeedbackService {
 
-    @Value("${FROM}")
+    @Value("${config.properties.FROM}")
     private String FROM;
 
-    @Value("${FROM-NAME}")
+    @Value("${config.properties.FROM-NAME}")
     private String FROM_NAME;
 
-    @Value("${TO}")
+    @Value("${config.properties.TO}")
     private String TO;
 
-    @Value("${SMTP-USERNAME}")
+    @Value("${config.properties.SMTP-USERNAME}")
     private String SMTP_USERNAME;
 
-    @Value("${SMTP-PASSWORD}")
+    @Value("${config.properties.SMTP-PASSWORD}")
     private String SMTP_PASSWORD;
 
-    @Value("${HOST}")
+    @Value("${config.properties.HOST}")
     private String HOST;
 
-    @Value("${PORT}")
+    @Value("${config.properties.PORT}")
     private int PORT;
 
     @Override
