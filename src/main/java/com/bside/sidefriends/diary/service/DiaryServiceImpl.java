@@ -16,13 +16,17 @@ import com.bside.sidefriends.users.error.exception.UserNotFoundException;
 import com.bside.sidefriends.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class DiaryServiceImpl implements DiaryService {
 
     private final PetRepository petRepository;
@@ -30,6 +34,7 @@ public class DiaryServiceImpl implements DiaryService {
     private final DiaryRepository diaryRepository;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public CreatePetDiaryResponseDto createPetDiary(Long petId, String username, CreatePetDiaryRequestDto createDiaryRequestDto) {
 
         Pet findPet = petRepository.findByPetIdAndIsDeletedFalse(petId).orElseThrow(PetNotFoundException::new);
@@ -60,8 +65,10 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
-    public GetPetDiaryListResponseDto getPetDiaryList(Long petId) {
-        List<Diary> findPetDiaries = diaryRepository.findAllByPetId(petId);
+    public GetPetDiaryListResponseDto getPetDiaryList(Long petId, LocalDate date) {
+        LocalDateTime startDate = date.atStartOfDay();
+        LocalDateTime endDate = startDate.plusDays(1);
+        List<Diary> findPetDiaries = diaryRepository.findAllByPetIdAndDate(petId, startDate, endDate);
 
         List<PetDiaryInfo> petDiaryList = findPetDiaries.stream()
                 .map(getPetDiaryInfo)
@@ -74,6 +81,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public ModifyPetDiaryResponseDto modifyPetDiary(Long diaryId, String username, ModifyPetDiaryRequestDto modifyDiaryRequestDto) {
 
         Diary findDiary = diaryRepository.findById(diaryId).orElseThrow(DiaryNotFoundException::new);
@@ -102,6 +110,7 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public DeletePetDiaryResponseDto deletePetDiary(Long diaryId, String username) {
 
         Diary findDiary= diaryRepository.findById(diaryId).orElseThrow(DiaryNotFoundException::new);
@@ -120,13 +129,15 @@ public class DiaryServiceImpl implements DiaryService {
     }
 
     Function<Diary, PetDiaryInfo> getPetDiaryInfo = diary -> {
-        String writer;
         User user = diary.getUser();
-        if (user == null || user.isDeleted()) {
-            writer = null;
-        } else {
-            writer = user.getName();
-        }
-        return new PetDiaryInfo(diary.getDiaryId(), writer, diary.getContents(), diary.getUpdatedAt());
+        
+        return new PetDiaryInfo(
+            diary.getDiaryId(), 
+            user.getUserId(),
+            user.getName(),
+            user.isDeleted(),
+            diary.getContents(), 
+            diary.getCreatedAt(), 
+            diary.getUpdatedAt());
     };
 }

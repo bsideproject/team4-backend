@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
 
     @Override
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public CreateUserResponseDto createUser(CreateUserRequestDto createUserRequestDto){
 
         User userEntity = User.builder()
