@@ -118,20 +118,12 @@ public class User {
 
     // 사용자 가족 정보 반환
     public Long getFamilyIdInfo() {
-        if (this.family == null) {
-            return null;
-        } else {
-            return this.family.getFamilyId();
-        }
+        return this.family == null ? null : this.family.getFamilyId();
     }
 
     // 사용자 이미지 반환
     public String getImageUrlInfo() {
-        if (this.userImage == null) {
-            return null;
-        } else {
-            return this.userImage.getImageUrl();
-        }
+        return this.userImage == null ? null : this.userImage.getImageUrl();
     }
 
     // 사용자 펫 등록
