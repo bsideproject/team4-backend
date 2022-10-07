@@ -122,6 +122,12 @@ public class Pet {
     // 펫 삭제
     public void delete() {
         this.isDeleted = true;
+
+        // 유저 대표펫이었던 경우 대표펫 설정 해제
+        if (this.user.getMainPetId().equals(this.petId)) {
+            this.user.setMainPet(null);
+        }
+
     }
 
     // 사용자 펫 설정
@@ -137,20 +143,12 @@ public class Pet {
 
     // 펫 가족 정보 반환
     public Long getFamilyIdInfo() {
-        if (this.family == null) {
-            return null;
-        } else {
-            return this.family.getFamilyId();
-        }
+        return this.family == null ? null : this.family.getFamilyId();
     }
 
     // 펫 이미지 url 반환
     public String getImageUrlInfo() {
-        if (this.petImage == null) {
-            return null;
-        } else {
-            return this.petImage.getImageUrl();
-        }
+        return this.petImage == null ? null : this.petImage.getImageUrl();
     }
 
 }
