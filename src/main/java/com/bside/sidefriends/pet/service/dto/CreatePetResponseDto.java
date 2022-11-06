@@ -1,13 +1,11 @@
 package com.bside.sidefriends.pet.service.dto;
 
-import com.bside.sidefriends.family.domain.Family;
 import com.bside.sidefriends.pet.domain.PetGender;
 import com.bside.sidefriends.pet.domain.PetShareScope;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
-
 
 import javax.validation.constraints.NotNull;
 
@@ -56,5 +54,6 @@ public class CreatePetResponseDto {
     @ApiModelProperty(value = "반려동물 기록 중지 여부")
     private boolean isDeactivated;
 
+    @ApiModelProperty(value = "반려동물 프로필 이미지 url")
     private String petImageUrl;
 }

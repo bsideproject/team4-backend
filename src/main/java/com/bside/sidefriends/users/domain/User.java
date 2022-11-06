@@ -1,5 +1,6 @@
 package com.bside.sidefriends.users.domain;
 
+import com.bside.sidefriends.diary.domain.Diary;
 import com.bside.sidefriends.family.domain.Family;
 import com.bside.sidefriends.pet.domain.Pet;
 import com.bside.sidefriends.users.service.dto.ModifyUserRequestDto;
@@ -78,6 +79,10 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private final List<Pet> pets = new ArrayList<>();
 
+    // 사용자 펫 한줄일기
+    @OneToOne(mappedBy = "user")
+    private Diary diary;
+
     // 가족 그룹 가입
     public void setFamily(Family family) {
         this.family = family;
@@ -113,20 +118,12 @@ public class User {
 
     // 사용자 가족 정보 반환
     public Long getFamilyIdInfo() {
-        if (this.family == null) {
-            return null;
-        } else {
-            return this.family.getFamilyId();
-        }
+        return this.family == null ? null : this.family.getFamilyId();
     }
 
     // 사용자 이미지 반환
     public String getImageUrlInfo() {
-        if (this.userImage == null) {
-            return null;
-        } else {
-            return this.userImage.getImageUrl();
-        }
+        return this.userImage == null ? null : this.userImage.getImageUrl();
     }
 
     // 사용자 펫 등록

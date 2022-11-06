@@ -1,6 +1,8 @@
 package com.bside.sidefriends.pet.domain;
 
+import com.bside.sidefriends.diary.domain.Diary;
 import com.bside.sidefriends.family.domain.Family;
+import com.bside.sidefriends.symptom.domain.Symptom;
 import com.bside.sidefriends.users.domain.User;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -8,6 +10,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -95,21 +99,21 @@ public class Pet {
 
     // 펫 이미지
     @OneToOne(mappedBy = "pet")
-    PetImage petImage;
+    private PetImage petImage;
 
-    // 질환
-    // TODO: 질환 enum 관리 여부
+    // 펫 한줄일기
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "pet")
+    private final List<Diary> diaries = new ArrayList<>();
 
-    // 중성화 여부
-    // TODO: 중성화 필요 여부 및 불필요 시 성별 기록 여부
-
-    // 혈액형
-    // TODO: 혈액형 기록 필요 여부 및 기록 시 enum 관리 여부
+    // 펫 이상징후
+    @OneToOne(mappedBy = "pet")
+    private Symptom symptom;
 
     // 펫 기록 활성화
     public void activate() {
         this.isDeactivated = false;
     }
+
     // 펫 기록 비활성화
     public void deactivate() {
         this.isDeactivated = true;
@@ -118,6 +122,12 @@ public class Pet {
     // 펫 삭제
     public void delete() {
         this.isDeleted = true;
+
+        // 유저 대표펫이었던 경우 대표펫 설정 해제
+        if (this.user.getMainPetId().equals(this.petId)) {
+            this.user.setMainPet(null);
+        }
+
     }
 
     // 사용자 펫 설정
@@ -133,20 +143,12 @@ public class Pet {
 
     // 펫 가족 정보 반환
     public Long getFamilyIdInfo() {
-        if (this.family == null) {
-            return null;
-        } else {
-            return this.family.getFamilyId();
-        }
+        return this.family == null ? null : this.family.getFamilyId();
     }
 
     // 펫 이미지 url 반환
     public String getImageUrlInfo() {
-        if (this.petImage == null) {
-            return null;
-        } else {
-            return this.petImage.getImageUrl();
-        }
+        return this.petImage == null ? null : this.petImage.getImageUrl();
     }
 
 }

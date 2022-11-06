@@ -36,9 +36,7 @@ public class PetController {
     @PostMapping("/pets")
     public ResponseEntity<ResponseDto<CreatePetResponseDto>> createPet(@Valid @RequestBody CreatePetRequestDto createPetRequestDto) {
 
-        // TODO: username 관련 변경 필요
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((mainOAuth2User) principal).getUsername();
+        String username = getAuthenticatedUsername();
 
         CreatePetResponseDto createPetResponseDto = petService.createUserPet(username, createPetRequestDto);
 
@@ -51,9 +49,7 @@ public class PetController {
     @GetMapping("/pets")
     public ResponseEntity<ResponseDto<FindAllPetResponseDto>> findAllPets() {
 
-        // TODO: username 관련 변경 필요
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((mainOAuth2User) principal).getUsername();
+        String username = getAuthenticatedUsername();
 
         FindAllPetResponseDto findAllPetResponseDto = petService.findAllPets(username);
 
@@ -66,9 +62,7 @@ public class PetController {
     @PostMapping("/pets/{petId}/share")
     public ResponseEntity<ResponseDto<SharePetResponseDto>> sharePet(@PathVariable("petId") Long petId) {
 
-        // TODO: username 관련 변경 필요
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((mainOAuth2User) principal).getUsername();
+        String username = getAuthenticatedUsername();
 
         SharePetResponseDto sharePetResponseDto = petService.sharePet(username, petId);
 
@@ -80,9 +74,8 @@ public class PetController {
 
     @PutMapping("/pets/mainPet")
     public ResponseEntity<ResponseDto<UpdateMainPetResponseDto>> updateMainPet(@Valid @RequestBody UpdateMainPetRequestDto updateMainPetRequestDto) {
-        // TODO: username 관련 변경 필요
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = ((mainOAuth2User) principal).getUsername();
+
+        String username = getAuthenticatedUsername();
 
         UpdateMainPetResponseDto updateMainPetResponseDto = petService.updateMainPet(username, updateMainPetRequestDto);
 
@@ -157,6 +150,11 @@ public class PetController {
                 ResponseCode.P_DELETE_SUCCESS, deletePetResponseDto);
 
         return ResponseEntity.ok().body(responseDto);
+    }
+
+    private String getAuthenticatedUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return ((mainOAuth2User) principal).getUsername();
     }
 
 }

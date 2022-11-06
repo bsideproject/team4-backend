@@ -1,11 +1,11 @@
 package com.bside.sidefriends.family.service;
 
 import com.bside.sidefriends.family.domain.Family;
-import com.bside.sidefriends.family.error.exception.*;
+import com.bside.sidefriends.family.exception.*;
 import com.bside.sidefriends.family.repository.FamilyRepository;
 import com.bside.sidefriends.family.service.dto.*;
 import com.bside.sidefriends.users.domain.User;
-import com.bside.sidefriends.users.error.exception.*;
+import com.bside.sidefriends.users.exception.*;
 import com.bside.sidefriends.users.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

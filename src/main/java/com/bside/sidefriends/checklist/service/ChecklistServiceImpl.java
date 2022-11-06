@@ -10,11 +10,11 @@ import com.bside.sidefriends.checklist.repository.ChecklistMetaRepository;
 import com.bside.sidefriends.checklist.repository.ChecklistRepository;
 import com.bside.sidefriends.checklist.service.dto.*;
 import com.bside.sidefriends.pet.domain.Pet;
-import com.bside.sidefriends.pet.error.exception.PetDeactivatedException;
-import com.bside.sidefriends.pet.error.exception.PetNotFoundException;
+import com.bside.sidefriends.pet.exception.PetDeactivatedException;
+import com.bside.sidefriends.pet.exception.PetNotFoundException;
 import com.bside.sidefriends.pet.repository.PetRepository;
 import com.bside.sidefriends.users.domain.User;
-import com.bside.sidefriends.users.error.exception.UserMainPetNotFoundException;
+import com.bside.sidefriends.users.exception.UserMainPetNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,8 +35,6 @@ public class ChecklistServiceImpl implements ChecklistService {
     private final ChecklistMetaRepository checklistMetaRepository;
     private final ChecklistHistoryRepository checklistHistoryRepository;
 
-    //TODO-jh : Exception 처리
-
     // [Summary] 해당 유저의 날짜의 모든 할일 정보를 조회해서, List 로 반환해준다(FindChecklistResponseDto)
     @Override
     public FindChecklistResponseDto findChecklist(User user, LocalDate date) {
@@ -54,7 +52,6 @@ public class ChecklistServiceImpl implements ChecklistService {
         findChecklist = findChecklist.stream()
                 .filter(checklist -> checklist.getDate().isBefore(date.plusDays(1)))
                 .collect(Collectors.toList());
-        //TODO-jh-exception : 날짜범위외 조회 시 exception 발생
 
         // 2. isRepeated 필터링
         List<FindChecklistResponseDto.ChecklistDetail> checklistDetailList = findChecklist.stream()
@@ -196,10 +193,10 @@ public class ChecklistServiceImpl implements ChecklistService {
                 .build();
 
         Checklist checklist = checklistRepository.save(checklistEntity);
-        //TODO-jh-exception : save 에서 exception 이 발생한다면/!
 
         // 2. (isRepeated 인 경우) ChecklistMeta 도 생성
         if (createChecklistRequestDto.getIsRepeated() == true) {
+
             ChecklistMeta checklistMetaEntity = ChecklistMeta.builder()
                     .checklist(checklist)
                     .eventPeriod(createChecklistRequestDto.getRepeatDetail().getEventPeriod())
@@ -207,12 +204,23 @@ public class ChecklistServiceImpl implements ChecklistService {
                     .eventMonth(createChecklistRequestDto.getRepeatDetail().getEventMonth())
                     .eventDay(createChecklistRequestDto.getRepeatDetail().getEventDay())
                     .eventWeek(createChecklistRequestDto.getRepeatDetail().getEventWeek())
-                    .startedAt(createChecklistRequestDto.getRepeatDetail().getStartedAt())
-                    .endedAt(createChecklistRequestDto.getRepeatDetail().getEndedAt())
+                    .startedAt(createChecklistRequestDto.getRepeatDetail().getStartedAt() == null ?
+                            createChecklistRequestDto.getDate() : createChecklistRequestDto.getRepeatDetail().getStartedAt())
+                    .endedAt(createChecklistRequestDto.getRepeatDetail().getEndedAt() == null ?
+                            LocalDate.of(9999,12,31) : createChecklistRequestDto.getRepeatDetail().getEndedAt())
                     .build();
 
+            // If eventPeriod is yearly
+            if (createChecklistRequestDto.getRepeatDetail().getEventPeriod().equals("yearly")) {
+                //
+                LocalDate date = createChecklistRequestDto.getDate();
+                checklistMetaEntity.modifyMonthAndDay(
+                        Integer.toString(date.getMonthValue()),
+                        Integer.toString(date.getDayOfMonth())
+                );
+            }
+
             ChecklistMeta checklistMeta = checklistMetaRepository.save(checklistMetaEntity);
-            //TODO-jh-exception : save 에서 exception 이 발생한다면/!
         }
 
         return new CreateChecklistResponseDto(
